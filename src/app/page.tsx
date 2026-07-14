@@ -5,14 +5,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Navbar } from "@/components/ui/navbar";
 import { GooeyText } from "@/components/ui/gooey-text";
-import { ProjectCard } from "@/components/ui/project-card";
+import { ProjectCardStack } from "@/components/ui/card-stack";
 import { ZoomParallax } from "@/components/ui/zoom-parallax";
-import { ContainerScroll } from "@/components/ui/container-scroll";
+
 import { ProcessSection } from "@/components/ui/process-section";
 import { Preloader } from "@/components/ui/preloader";
 import { ContactForm } from "@/components/ui/contact-form";
 import { TextRevealByWord } from "@/components/ui/text-reveal";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -113,51 +113,6 @@ export default function Home() {
       {/* Zoom Parallax Showcase */}
       <ZoomParallax images={parallaxImages} />
 
-      {/* Breathable Spacer Section */}
-      <div className="py-24 md:py-36 bg-black flex items-center justify-center border-t border-white/20">
-        <div className="max-w-3xl mx-auto text-center px-6 select-none">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.3em] text-white/30 block mb-3">02 / BRAND EXPANSION</span>
-          <div className="h-[1px] w-12 bg-white/20 mx-auto"></div>
-        </div>
-      </div>
-
-      {/* 3D Scroll Showcase Section (Third Section) */}
-      <section className="bg-black py-12 md:py-20 border-t border-white/20 relative overflow-hidden">
-        <ContainerScroll
-          titleComponent={
-            <div className="text-center max-w-4xl mx-auto flex flex-col items-center justify-center">
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.3em] text-white/30 block mb-4">
-                02 / BRAND EXPANSION
-              </span>
-              <h2 className="text-5xl md:text-8xl font-extrabold text-white tracking-tighter uppercase leading-none">
-                KINETIC IDENTITY
-              </h2>
-            </div>
-          }
-        >
-          <div className="relative h-full w-full">
-            <img
-              src="/images/expand-showcase.png"
-              alt="Kinetic Identity Showcase"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </ContainerScroll>
-
-        {/* Visual Architecture Text Details */}
-        <div className="max-w-4xl mx-auto px-6 py-12 md:py-20 text-left">
-          <span className="text-xs font-semibold uppercase tracking-widest text-white/50 block mb-6">
-            Visual Architecture
-          </span>
-          <h3 className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-8 leading-tight">
-            Forging design systems through <br />
-            uncompromising form & layout.
-          </h3>
-          <p className="text-base md:text-lg text-white/70 leading-relaxed max-w-2xl">
-            Every concept we construct is engineered to command attention. We eliminate visual noise to let the pure form of the logomark, typography, and packaging speak directly to the viewer. This is visual structure at its peak.
-          </p>
-        </div>
-      </section>
 
       {/* Featured Projects Showcase */}
       <section
@@ -183,19 +138,23 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            {featuredProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                id={project.id}
-                title={project.title}
-                category={project.category}
-                year={project.year}
-                imageColor={project.imageColor}
-              />
-            ))}
-          </div>
+          {/* Card Stack Fan */}
+          <ProjectCardStack
+            items={featuredProjects}
+            cardWidth={520}
+            cardHeight={340}
+            spreadPx={190}
+            spreadDeg={9}
+            depthPx={80}
+            tiltXDeg={9}
+            activeLiftPx={30}
+            activeScale={1.04}
+            inactiveScale={0.91}
+            springStiffness={290}
+            springDamping={28}
+            loop
+            showDots
+          />
         </div>
       </section>
 
