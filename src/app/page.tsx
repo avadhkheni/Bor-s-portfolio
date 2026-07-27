@@ -7,7 +7,6 @@ import { Navbar } from "@/components/ui/navbar";
 import { GooeyText } from "@/components/ui/gooey-text";
 import { ProjectCardStack } from "@/components/ui/card-stack";
 import { ZoomParallax } from "@/components/ui/zoom-parallax";
-
 import { ProcessSection } from "@/components/ui/process-section";
 import { Preloader } from "@/components/ui/preloader";
 import { ContactForm } from "@/components/ui/contact-form";
@@ -17,6 +16,37 @@ import { ArrowDown } from "lucide-react";
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
+
+const parallaxImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
+    alt: 'Modern architecture building',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
+    alt: 'Urban cityscape at sunset',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=800&h=800&fit=crop&crop=entropy&auto=format&q=80',
+    alt: 'Abstract geometric pattern',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
+    alt: 'Mountain landscape',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=800&fit=crop&crop=entropy&auto=format&q=80',
+    alt: 'Minimalist design elements',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
+    alt: 'Ocean waves and beach',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
+    alt: 'Forest trees and sunlight',
+  },
+];
 
 const featuredProjects = [
   {
@@ -49,16 +79,6 @@ const featuredProjects = [
   }
 ];
 
-const parallaxImages = [
-  { src: "/images/best-work.png", alt: "Best Work - Minimalist Skincare Identity" },
-  { src: "/images/project-1.png", alt: "Stationery Design" },
-  { src: "/images/project-2.png", alt: "Box Packaging" },
-  { src: "/images/project-3.png", alt: "Logo Detailing Detail" },
-  { src: "/images/project-1.png", alt: "Stationery Visual" },
-  { src: "/images/project-2.png", alt: "Packaging Box Visual" },
-  { src: "/images/project-3.png", alt: "Logo Debossing Detail" }
-];
-
 export default function Home() {
   const heroRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -78,41 +98,36 @@ export default function Home() {
     return () => ctx.revert();
   }, [isLoading]);
 
-  const scrollToWork = () => {
-    document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <>
       <Preloader onComplete={() => setIsLoading(false)} />
       <div className={`flex-1 flex flex-col bg-background font-sans radial-grid transition-opacity duration-1000 ${isLoading ? "opacity-0" : "opacity-100"}`}>
-      <Navbar />
+        <Navbar />
 
-      {/* Hero Section */}
-      <section
-        ref={heroRef}
-        id="hero"
-        className="relative min-h-screen flex flex-col justify-center items-center py-20 px-6 md:px-12 overflow-hidden bg-black"
-      >
-        {/* Large abstract neon blur background */}
-        <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-5xl rounded-full bg-gradient-to-tr from-white/5 to-white/0 blur-[120px] opacity-60" />
+        {/* Hero Section */}
+        <section
+          ref={heroRef}
+          id="hero"
+          className="relative min-h-screen flex flex-col justify-center items-center py-20 px-6 md:px-12 overflow-hidden bg-black"
+        >
+          {/* Large abstract neon blur background */}
+          <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-5xl rounded-full bg-gradient-to-tr from-white/5 to-white/0 blur-[120px] opacity-60" />
 
-        <div className="text-center relative z-10 max-w-4xl mx-auto flex flex-col items-center justify-center">
-          {/* Morphing Gooey Text Component */}
-          <div className="hero-fade-in h-28 md:h-36 flex items-center justify-center w-full relative">
-            <GooeyText
-              texts={["IDENTITY", "PACKAGING", "STRATEGY", "AESTHETICS", "TYPOGRAPHY"]}
-              morphTime={1.2}
-              cooldownTime={0.4}
-              textClassName="font-extrabold tracking-tighter text-white text-5xl sm:text-7xl md:text-8xl"
-            />
+          <div className="text-center relative z-10 max-w-4xl mx-auto flex flex-col items-center justify-center">
+            {/* Morphing Gooey Text Component */}
+            <div className="hero-fade-in h-28 md:h-36 flex items-center justify-center w-full relative">
+              <GooeyText
+                texts={["IDENTITY", "PACKAGING", "STRATEGY", "AESTHETICS", "TYPOGRAPHY"]}
+                morphTime={1.2}
+                cooldownTime={0.4}
+                textClassName="font-extrabold tracking-tighter text-white text-5xl sm:text-7xl md:text-8xl"
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Zoom Parallax Showcase */}
-      <ZoomParallax images={parallaxImages} />
-
+        {/* Zoom Parallax Showcase */}
+        <ZoomParallax images={parallaxImages} />
 
       {/* Featured Projects Showcase */}
       <section

@@ -93,7 +93,7 @@ export function ProjectCard({
   }, [index]);
 
   // 3D tilt + cursor glow
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const card = cardRef.current;
     const glow = glowRef.current;
     const globe = globeRef.current;
