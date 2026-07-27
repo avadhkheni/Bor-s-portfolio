@@ -88,7 +88,7 @@ export function TextRevealByWord({ text, className }: TextRevealByWordProps) {
 
         {/* Philosophy Footer */}
         <div className="flex justify-center items-center gap-4 text-xs font-bold uppercase tracking-widest text-white/50 select-none">
-          <span>ÆTHER DESIGN PHILOSOPHY</span>
+          <span>DESIGN PHILOSOPHY</span>
           <span className="h-1.5 w-1.5 rounded-full bg-white" />
           <span>EST. 2020</span>
         </div>

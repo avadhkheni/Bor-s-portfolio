@@ -34,14 +34,15 @@ export function ContactForm() {
           {/* Left Info Column */}
           <div className="lg:col-span-5 flex flex-col justify-between h-full">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-white">
-                Inquiries
-              </span>
-              <h2 className="mt-4 text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
-                Let's co-create <br />
-                <span className="bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-                  your brand's future
+              <div className="flex items-center gap-2">
+                <span className="w-1 h-3.5 bg-red-600 rounded-full inline-block" />
+                <span className="text-xs font-semibold uppercase tracking-widest text-white">
+                  Inquiries
                 </span>
+              </div>
+              <h2 className="mt-4 text-4xl md:text-5xl font-bold tracking-tight text-neutral-300 leading-tight">
+                Let's co-create <br />
+                <span className="text-neutral-400">your brand's future</span>
               </h2>
               <p className="mt-6 text-base text-white/70 max-w-sm leading-relaxed">
                 Whether initializing a new venture or elevating an established name, let's talk design.
@@ -189,7 +190,7 @@ export function ContactForm() {
         
         {/* Sub-footer Copyright */}
         <div className="mt-24 pt-8 border-t border-white/20 flex flex-col md:flex-row items-center justify-between text-xs text-white/40 gap-4">
-          <p>© {new Date().getFullYear()} ÆTHER STUDIO. ALL RIGHTS RESERVED.</p>
+          <p>© {new Date().getFullYear()} STUDIO. ALL RIGHTS RESERVED.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

@@ -19,32 +19,32 @@ if (typeof window !== "undefined") {
 
 const parallaxImages = [
   {
-    src: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
-    alt: 'Modern architecture building',
+    src: '/images2/1.jpg',
+    alt: 'Visual Identity Showcase 1',
   },
   {
-    src: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
-    alt: 'Urban cityscape at sunset',
+    src: '/images2/2.jpg',
+    alt: 'Brand Design Showcase 2',
   },
   {
-    src: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=800&h=800&fit=crop&crop=entropy&auto=format&q=80',
-    alt: 'Abstract geometric pattern',
+    src: '/images2/3.jpg',
+    alt: 'Package Design Showcase 3',
   },
   {
-    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
-    alt: 'Mountain landscape',
+    src: '/images2/4.jpg',
+    alt: 'Creative Direction Showcase 4',
   },
   {
-    src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=800&fit=crop&crop=entropy&auto=format&q=80',
-    alt: 'Minimalist design elements',
+    src: '/images2/5.jpg',
+    alt: 'Typography Showcase 5',
   },
   {
-    src: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
-    alt: 'Ocean waves and beach',
+    src: '/images2/6.jpg',
+    alt: 'Aesthetics Showcase 6',
   },
   {
-    src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80',
-    alt: 'Forest trees and sunlight',
+    src: '/images2/7.jpg',
+    alt: 'Editorial Design Showcase 7',
   },
 ];
 
@@ -54,28 +54,64 @@ const featuredProjects = [
     title: "AETHER — Minimal Skincare Identity",
     category: "Packaging & Brand Identity",
     year: "2026",
-    imageColor: "from-zinc-800 to-zinc-950"
+    imageColor: "from-zinc-800 to-zinc-950",
+    imageSrc: "/images2/8.jpg"
   },
   {
     id: "vortex",
     title: "VORTEX — Kinetic FinTech Platform",
     category: "Digital Branding & UI System",
     year: "2025",
-    imageColor: "from-zinc-900 to-zinc-950"
+    imageColor: "from-zinc-900 to-zinc-950",
+    imageSrc: "/images2/9.jpg"
   },
   {
     id: "nova",
     title: "NOVA — Cyber Beverage Campaign",
     category: "3D Art & Package Design",
     year: "2025",
-    imageColor: "from-zinc-800 to-zinc-900"
+    imageColor: "from-zinc-800 to-zinc-900",
+    imageSrc: "/images2/10.jpg"
   },
   {
     id: "helios",
     title: "HELIOS — Eco Hospitality Branding",
     category: "Creative Direction & Print",
     year: "2024",
-    imageColor: "from-zinc-900 to-black"
+    imageColor: "from-zinc-900 to-black",
+    imageSrc: "/images2/11.jpg"
+  },
+  {
+    id: "kinetic",
+    title: "KINETIC — Spatial Audio Identity",
+    category: "Hardware & Sound Branding",
+    year: "2024",
+    imageColor: "from-slate-900 to-zinc-950",
+    imageSrc: "/images2/12.jpg"
+  },
+  {
+    id: "aurora",
+    title: "AURORA — Luxury Chrono Timepieces",
+    category: "Watchmaking & Industrial",
+    year: "2024",
+    imageColor: "from-stone-900 to-zinc-950",
+    imageSrc: "/images2/13.jpg"
+  },
+  {
+    id: "solaris",
+    title: "SOLARIS — Sustainable Architecture",
+    category: "Environmental Branding",
+    year: "2023",
+    imageColor: "from-neutral-900 to-black",
+    imageSrc: "/images2/14.jpg"
+  },
+  {
+    id: "nebula",
+    title: "NEBULA — High-Performance Apparel",
+    category: "Textile & Product Identity",
+    year: "2023",
+    imageColor: "from-zinc-900 to-neutral-950",
+    imageSrc: "/images2/15.jpg"
   }
 ];
 
@@ -138,14 +174,15 @@ export default function Home() {
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-24">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-white">
-                Selected Work
-              </span>
-              <h2 className="mt-4 text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
-                Case studies in <br />
-                <span className="bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-                  visual distinction
+              <div className="flex items-center gap-2">
+                <span className="w-1 h-3.5 bg-red-600 rounded-full inline-block" />
+                <span className="text-xs font-semibold uppercase tracking-widest text-white">
+                  Selected Work
                 </span>
+              </div>
+              <h2 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight text-neutral-300 leading-tight">
+                Proven results, <br />
+                <span className="text-neutral-400">stunning designs</span>
               </h2>
             </div>
             <p className="mt-4 md:mt-0 text-white/70 max-w-xs leading-relaxed text-sm">
@@ -167,6 +204,10 @@ export default function Home() {
             inactiveScale={0.91}
             springStiffness={290}
             springDamping={28}
+            maxVisible={7}
+            autoAdvance
+            intervalMs={2800}
+            pauseOnHover
             loop
             showDots
           />

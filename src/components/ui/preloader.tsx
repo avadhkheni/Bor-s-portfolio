@@ -22,7 +22,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
     "MINIMALISM",
     "PACKAGING",
     "EXPERIENCE",
-    "ÆTHER"
+    "DESIGN"
   ];
 
   React.useEffect(() => {
@@ -78,7 +78,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
     >
       {/* Top logo block */}
       <div className="flex justify-between items-center w-full">
-        <span className="text-sm font-bold tracking-widest text-white/40">ÆTHER STUDIO</span>
+        <span className="text-sm font-bold tracking-widest text-white/40">STUDIO</span>
         <span className="text-xs font-semibold tracking-widest text-white/40 uppercase">LOADING...</span>
       </div>
 

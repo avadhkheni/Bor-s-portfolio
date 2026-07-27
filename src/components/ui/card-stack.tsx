@@ -2,7 +2,9 @@
 
 import * as React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, SquareArrowOutUpRight } from "lucide-react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 // ─── Wireframe Globe ────────────────────────────────────────────────────────
 
@@ -28,251 +30,302 @@ function GlobeIcon() {
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type ProjectStackItem = {
-  id: string;
+export type CardStackItem = {
+  id: string | number;
   title: string;
-  category: string;
-  year: string;
-  imageColor: string;
+  category?: string;
+  year?: string;
+  imageColor?: string;
+  description?: string;
+  imageSrc?: string;
   imageUrl?: string;
   href?: string;
+  ctaLabel?: string;
+  tag?: string;
 };
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+export type ProjectStackItem = CardStackItem;
+
+export type CardStackProps<T extends CardStackItem> = {
+  items: T[];
+
+  /** Selected index on mount */
+  initialIndex?: number;
+
+  /** How many cards are visible around the active (odd recommended) */
+  maxVisible?: number;
+
+  /** Card sizing */
+  cardWidth?: number;
+  cardHeight?: number;
+
+  /** How much cards overlap each other (0..0.8). Higher = more overlap */
+  overlap?: number;
+
+  /** Total fan angle (deg). Higher = wider arc */
+  spreadDeg?: number;
+
+  /** Horizontal gap override (px) */
+  spreadPx?: number;
+
+  /** 3D / depth feel */
+  perspectivePx?: number;
+  depthPx?: number;
+  tiltXDeg?: number;
+
+  /** Active emphasis */
+  activeLiftPx?: number;
+  activeScale?: number;
+  inactiveScale?: number;
+
+  /** Motion */
+  springStiffness?: number;
+  springDamping?: number;
+
+  /** Behavior */
+  loop?: boolean;
+  autoAdvance?: boolean;
+  intervalMs?: number;
+  pauseOnHover?: boolean;
+
+  /** UI */
+  showDots?: boolean;
+  className?: string;
+
+  /** Hooks */
+  onChangeIndex?: (index: number, item: T) => void;
+
+  /** Custom renderer (optional) */
+  renderCard?: (item: T, state: { active: boolean }) => React.ReactNode;
+};
 
 function wrapIndex(n: number, len: number) {
   if (len <= 0) return 0;
   return ((n % len) + len) % len;
 }
 
+/** Minimal signed offset from active index to i, with wrapping (for loop behavior). */
 function signedOffset(i: number, active: number, len: number, loop: boolean) {
   const raw = i - active;
   if (!loop || len <= 1) return raw;
+
+  // consider wrapped alternative
   const alt = raw > 0 ? raw - len : raw + len;
   return Math.abs(alt) < Math.abs(raw) ? alt : raw;
 }
 
-// ─── Inner Card Face ─────────────────────────────────────────────────────────
+// ─── Default Inner Card Face (Matches Project Aesthetic) ──────────────────────
 
-function ProjectCardFace({
+function DefaultProjectCardFace({
   item,
-  isActive,
+  active,
 }: {
-  item: ProjectStackItem;
-  isActive: boolean;
+  item: CardStackItem;
+  active: boolean;
 }) {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-[inherit] bg-[#0d0d0d]">
       {/* Background gradient wash */}
       <div
-        className={`absolute inset-0 bg-gradient-to-br ${item.imageColor} opacity-25 transition-opacity duration-500`}
-        style={{ opacity: isActive ? 0.35 : 0.18 }}
+        className={`absolute inset-0 bg-gradient-to-br ${item.imageColor || "from-zinc-900 to-black"} transition-opacity duration-500`}
+        style={{ opacity: active ? 0.6 : 0.3 }}
       />
 
       {/* Optional real image */}
-      {item.imageUrl && (
+      {(item.imageUrl || item.imageSrc) && (
         <img
-          src={item.imageUrl}
-          alt={item.title}
-          className="absolute inset-0 h-full w-full object-cover opacity-20"
+          src={item.imageUrl || item.imageSrc}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
           draggable={false}
         />
       )}
-
-      {/* Globe — subtly brighter on active */}
-      <div
-        className="absolute inset-0 flex items-center justify-center transition-opacity duration-500"
-        style={{ opacity: isActive ? 0.45 : 0.22 }}
-      >
-        <div
-          className="text-white/70 transition-transform duration-700"
-          style={{
-            width: "clamp(80px, 30%, 130px)",
-            height: "clamp(80px, 30%, 130px)",
-            transform: isActive ? "scale(1.06)" : "scale(1)",
-          }}
-        >
-          <GlobeIcon />
-        </div>
-      </div>
-
-      {/* Year badge — top left */}
-      <div className="absolute top-4 left-4 z-10">
-        <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-widest text-white/80 backdrop-blur-sm">
-          {item.year}
-        </span>
-      </div>
-
-      {/* Bottom vignette */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[1]"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.18) 40%, transparent 65%)",
-        }}
-      />
-      {/* Top vignette */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[1]"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 28%)",
-        }}
-      />
-
-      {/* Content row — bottom */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 flex items-end justify-between p-5">
-        <div className="flex max-w-[78%] flex-col gap-0.5">
-          <p className="mb-1 text-[10px] font-bold uppercase leading-none tracking-[0.22em] text-white/50">
-            {item.category}
-          </p>
-          <h3
-            className="font-bold leading-snug tracking-tight text-white"
-            style={{ fontSize: "clamp(13px, 2vw, 17px)" }}
-          >
-            {item.title}
-          </h3>
-        </div>
-
-        {/* Arrow button */}
-        <div
-          className="ml-4 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all duration-300"
-          style={
-            isActive
-              ? { borderColor: "white", background: "white", color: "black" }
-              : {}
-          }
-        >
-          <ArrowUpRight className="h-4 w-4" />
-        </div>
-      </div>
     </div>
   );
 }
 
-// ─── Card Stack ───────────────────────────────────────────────────────────────
+// ─── Main Card Stack Component ────────────────────────────────────────────────
 
-export type ProjectCardStackProps = {
-  items: ProjectStackItem[];
-  initialIndex?: number;
-  /** How many cards visible on each side of active */
-  sideCards?: number;
-  cardWidth?: number;
-  cardHeight?: number;
-  /** Horizontal gap between stacked cards (px) */
-  spreadPx?: number;
-  /** Fan rotation step per offset (deg) */
-  spreadDeg?: number;
-  /** Z-depth separation per step (px) */
-  depthPx?: number;
-  /** Background-card tilt on X axis (deg) */
-  tiltXDeg?: number;
-  /** Lift the active card upward (px) */
-  activeLiftPx?: number;
-  activeScale?: number;
-  inactiveScale?: number;
-  springStiffness?: number;
-  springDamping?: number;
-  loop?: boolean;
-  showDots?: boolean;
-  className?: string;
-};
-
-export function ProjectCardStack({
+export function CardStack<T extends CardStackItem>({
   items,
   initialIndex = 0,
-  sideCards = 3,
+  maxVisible = 7,
+
   cardWidth = 520,
   cardHeight = 340,
-  spreadPx = 200,
+
+  overlap = 0.48,
   spreadDeg = 10,
+  spreadPx,
+
+  perspectivePx = 1100,
   depthPx = 90,
   tiltXDeg = 10,
+
   activeLiftPx = 28,
   activeScale = 1.04,
   inactiveScale = 0.92,
-  springStiffness = 300,
-  springDamping = 30,
+
+  springStiffness = 290,
+  springDamping = 28,
+
   loop = true,
+  autoAdvance = false,
+  intervalMs = 2800,
+  pauseOnHover = true,
+
   showDots = true,
   className,
-}: ProjectCardStackProps) {
+
+  onChangeIndex,
+  renderCard,
+}: CardStackProps<T>) {
   const reduceMotion = useReducedMotion();
   const len = items.length;
 
-  const [active, setActive] = React.useState(() => wrapIndex(initialIndex, len));
+  const [active, setActive] = React.useState(() =>
+    wrapIndex(initialIndex, len),
+  );
+  const [hovering, setHovering] = React.useState(false);
 
+  // keep active in bounds if items change
   React.useEffect(() => {
     setActive((a) => wrapIndex(a, len));
   }, [len]);
 
-  const goTo = (idx: number) => setActive(wrapIndex(idx, len));
-  const prev = () => goTo(active - 1);
-  const next = () => goTo(active + 1);
+  React.useEffect(() => {
+    if (!len) return;
+    onChangeIndex?.(active, items[active]!);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
 
+  const maxOffset = Math.max(0, Math.floor(maxVisible / 2));
+
+  const cardSpacing =
+    spreadPx !== undefined
+      ? spreadPx
+      : Math.max(10, Math.round(cardWidth * (1 - overlap)));
+  const stepDeg = maxOffset > 0 ? spreadDeg / maxOffset : 0;
+
+  const canGoPrev = loop || active > 0;
+  const canGoNext = loop || active < len - 1;
+
+  const prev = React.useCallback(() => {
+    if (!len) return;
+    if (!canGoPrev) return;
+    setActive((a) => wrapIndex(a - 1, len));
+  }, [canGoPrev, len]);
+
+  const next = React.useCallback(() => {
+    if (!len) return;
+    if (!canGoNext) return;
+    setActive((a) => wrapIndex(a + 1, len));
+  }, [canGoNext, len]);
+
+  // keyboard navigation (when container focused)
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") prev();
     if (e.key === "ArrowRight") next();
   };
 
+  // autoplay
+  React.useEffect(() => {
+    if (!autoAdvance) return;
+    if (reduceMotion) return;
+    if (!len) return;
+    if (pauseOnHover && hovering) return;
+
+    const id = window.setInterval(
+      () => {
+        if (loop || active < len - 1) next();
+      },
+      Math.max(700, intervalMs),
+    );
+
+    return () => window.clearInterval(id);
+  }, [
+    autoAdvance,
+    intervalMs,
+    hovering,
+    pauseOnHover,
+    reduceMotion,
+    len,
+    loop,
+    active,
+    next,
+  ]);
+
   if (!len) return null;
 
+  const activeItem = items[active]!;
+
   return (
-    <div className={`w-full ${className ?? ""}`}>
+    <div
+      className={cn("w-full", className)}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
       {/* Stage */}
       <div
         className="relative w-full"
-        style={{ height: cardHeight + 120 }}
+        style={{ height: Math.max(380, cardHeight + 80) }}
         tabIndex={0}
         onKeyDown={onKeyDown}
       >
-        {/* Ambient spotlight glow under cards */}
+        {/* background wash / spotlight */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto rounded-full blur-3xl"
-          style={{
-            height: 80,
-            width: "60%",
-            background: "radial-gradient(ellipse, rgba(255,255,255,0.05) 0%, transparent 70%)",
-          }}
+          className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-40 w-[76%] rounded-full bg-white/5 blur-3xl"
           aria-hidden="true"
         />
 
-        {/* Perspective container */}
         <div
           className="absolute inset-0 flex items-end justify-center"
-          style={{ perspective: "1200px" }}
+          style={{
+            perspective: `${perspectivePx}px`,
+          }}
         >
           <AnimatePresence initial={false}>
             {items.map((item, i) => {
               const off = signedOffset(i, active, len, loop);
               const abs = Math.abs(off);
-              if (abs > sideCards) return null;
+              const visible = abs <= maxOffset;
+
+              // hide far-away cards cleanly
+              if (!visible) return null;
+
+              // fan geometry
+              const rotateZ = off * stepDeg;
+              const x = off * cardSpacing;
+              const y = abs * 12;
+              const z = -abs * depthPx;
 
               const isActive = off === 0;
-              const x = off * spreadPx;
-              const y = abs * 14;
-              const rotateZ = off * spreadDeg;
-              const rotateX = isActive ? 0 : tiltXDeg;
+
               const scale = isActive ? activeScale : inactiveScale;
               const lift = isActive ? -activeLiftPx : 0;
+
+              const rotateX = isActive ? 0 : tiltXDeg;
+
               const zIndex = 100 - abs;
 
-              // Drag only on active
+              // drag only on the active card
               const dragProps = isActive
                 ? {
                     drag: "x" as const,
                     dragConstraints: { left: 0, right: 0 },
-                    dragElastic: 0.15,
+                    dragElastic: 0.18,
                     onDragEnd: (
-                      _e: MouseEvent | TouchEvent | PointerEvent,
-                      info: { offset: { x: number }; velocity: { x: number } }
+                      _e: any,
+                      info: { offset: { x: number }; velocity: { x: number } },
                     ) => {
                       if (reduceMotion) return;
-                      const t = info.offset.x;
+                      const travel = info.offset.x;
                       const v = info.velocity.x;
-                      const thresh = Math.min(140, cardWidth * 0.2);
-                      if (t > thresh || v > 600) prev();
-                      else if (t < -thresh || v < -600) next();
+                      const threshold = Math.min(160, cardWidth * 0.22);
+
+                      // swipe logic
+                      if (travel > threshold || v > 650) prev();
+                      else if (travel < -threshold || v < -650) next();
                     },
                   }
                 : {};
@@ -280,11 +333,13 @@ export function ProjectCardStack({
               return (
                 <motion.div
                   key={item.id}
-                  className={`absolute bottom-0 overflow-hidden rounded-2xl border border-white/10 shadow-2xl will-change-transform select-none ${
+                  className={cn(
+                    "absolute bottom-0 rounded-2xl border border-white/10 shadow-2xl overflow-hidden",
+                    "will-change-transform select-none",
                     isActive
                       ? "cursor-grab active:cursor-grabbing"
-                      : "cursor-pointer"
-                  }`}
+                      : "cursor-pointer",
+                  )}
                   style={{
                     width: cardWidth,
                     height: cardHeight,
@@ -294,7 +349,14 @@ export function ProjectCardStack({
                   initial={
                     reduceMotion
                       ? false
-                      : { opacity: 0, y: y + 50, x, rotateZ, rotateX, scale }
+                      : {
+                          opacity: 0,
+                          y: y + 40,
+                          x,
+                          rotateZ,
+                          rotateX,
+                          scale,
+                        }
                   }
                   animate={{
                     opacity: 1,
@@ -304,7 +366,6 @@ export function ProjectCardStack({
                     rotateX,
                     scale,
                   }}
-                  exit={{ opacity: 0, scale: 0.85 }}
                   transition={{
                     type: "spring",
                     stiffness: springStiffness,
@@ -313,15 +374,18 @@ export function ProjectCardStack({
                   onClick={() => !isActive && setActive(i)}
                   {...dragProps}
                 >
-                  {/* translateZ on inner wrapper for real depth */}
                   <div
                     className="h-full w-full"
                     style={{
-                      transform: `translateZ(${-abs * depthPx}px)`,
+                      transform: `translateZ(${z}px)`,
                       transformStyle: "preserve-3d",
                     }}
                   >
-                    <ProjectCardFace item={item} isActive={isActive} />
+                    {renderCard ? (
+                      renderCard(item, { active: isActive })
+                    ) : (
+                      <DefaultProjectCardFace item={item} active={isActive} />
+                    )}
                   </div>
                 </motion.div>
               );
@@ -330,27 +394,43 @@ export function ProjectCardStack({
         </div>
       </div>
 
-      {/* Dots */}
-      {showDots && (
-        <div className="mt-8 flex items-center justify-center gap-2">
-          {items.map((it, idx) => {
-            const on = idx === active;
-            return (
-              <button
-                key={it.id}
-                onClick={() => goTo(idx)}
-                aria-label={`Go to ${it.title}`}
-                className="transition-all duration-300 rounded-full"
-                style={{
-                  width: on ? 24 : 8,
-                  height: 8,
-                  background: on ? "white" : "rgba(255,255,255,0.25)",
-                }}
-              />
-            );
-          })}
+      {/* Dots navigation centered at bottom */}
+      {showDots ? (
+        <div className="mt-8 flex items-center justify-center gap-3">
+          <div className="flex items-center gap-2">
+            {items.map((it, idx) => {
+              const on = idx === active;
+              return (
+                <button
+                  key={it.id}
+                  onClick={() => setActive(idx)}
+                  className={cn(
+                    "h-2 rounded-full transition-all duration-300",
+                    on
+                      ? "w-6 bg-white"
+                      : "w-2 bg-white/30 hover:bg-white/50",
+                  )}
+                  aria-label={`Go to ${it.title}`}
+                />
+              );
+            })}
+          </div>
+          {activeItem.href ? (
+            <Link
+              href={activeItem.href}
+              target="_blank"
+              rel="noreferrer"
+              className="text-white/60 hover:text-white transition ml-2"
+              aria-label="Open link"
+            >
+              <SquareArrowOutUpRight className="h-4 w-4" />
+            </Link>
+          ) : null}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
+
+// Export alias for backward compatibility
+export const ProjectCardStack = CardStack;

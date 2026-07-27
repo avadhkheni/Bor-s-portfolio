@@ -23,7 +23,7 @@ const steps: Step[] = [
     description: "Deep dive into your company mission, market space, competitor analysis, and audience persona to define a clear creative positioning.",
     icon: <Compass className="h-6 w-6 text-white" />,
     details: ["Competitor Benchmarking", "Brand Positioning Plan", "Visual Archetypes"],
-    image: "/images/project-1.png"
+    image: "/images2/16.jpg"
   },
   {
     num: "02",
@@ -31,7 +31,7 @@ const steps: Step[] = [
     description: "Translating brand strategy into high-end aesthetics: logos, signature typography systems, custom color palettes, and typography rules.",
     icon: <Palette className="h-6 w-6 text-white/80" />,
     details: ["Custom Typography Curations", "Concept Mockups", "Logo Systems"],
-    image: "/images/project-2.png"
+    image: "/images2/17.jpg"
   },
   {
     num: "03",
@@ -39,7 +39,7 @@ const steps: Step[] = [
     description: "Extending the brand identity to physical touchpoints. Designing premium boxes, stationery, tags, and custom print layouts.",
     icon: <BookOpen className="h-6 w-6 text-white/60" />,
     details: ["Physical Mockups", "Material Recommendation", "Print Templates"],
-    image: "/images/project-3.png"
+    image: "/images2/18.jpg"
   },
   {
     num: "04",
@@ -47,7 +47,7 @@ const steps: Step[] = [
     description: "Compiling a complete brand book containing implementation guidelines, followed by handoff of premium vector and print assets.",
     icon: <Rocket className="h-6 w-6 text-white" />,
     details: ["Brand Guidelines PDF", "Vector & Raster Deliverables", "Brand Consulting Support"],
-    image: "/images/best-work.png"
+    image: "/images2/19.jpg"
   }
 ];
 
@@ -151,14 +151,15 @@ export function ProcessSection() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         {/* Section Heading */}
         <div className="max-w-2xl mb-16 md:mb-24">
-          <span className="text-xs font-semibold uppercase tracking-widest text-white/70">
-            Methodology
-          </span>
-          <h2 className="mt-4 text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
-            A structured workflow for <br />
-            <span className="bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-              uncompromising visual results
+          <div className="flex items-center gap-2">
+            <span className="w-1 h-3.5 bg-red-600 rounded-full inline-block" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-white">
+              Methodology
             </span>
+          </div>
+          <h2 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight text-neutral-300 leading-tight">
+            A structured workflow for <br />
+            <span className="text-neutral-400">uncompromising visual results</span>
           </h2>
         </div>
 

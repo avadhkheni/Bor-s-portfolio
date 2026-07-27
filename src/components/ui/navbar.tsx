@@ -31,15 +31,6 @@ export function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        {/* Brand Logo */}
-        <a
-          href="#"
-          id="nav-logo"
-          className="text-2xl font-bold tracking-widest text-white hover:text-white/80 transition-colors flex items-center gap-2"
-        >
-          <span className="text-white font-light">Æ</span>THER
-        </a>
-
         {/* Desktop Links */}
         <nav id="desktop-nav" className="hidden md:flex items-center gap-8">
           <button
