@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import gsap from "gsap";
+import { gsap } from "@/lib/gsap";
 import Image from "next/image";
 import { Compass, Palette, BookOpen, Rocket } from "lucide-react";
 import { motion, HTMLMotionProps } from "framer-motion";

@@ -22,7 +22,6 @@ export default function RootLayout({
     <html
       lang="en"
       className="h-full antialiased"
-      style={{ scrollBehavior: "smooth" }}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-white/30 selection:text-white">
         {children}

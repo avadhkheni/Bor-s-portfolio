@@ -1,13 +1,8 @@
 "use client";
 
 import * as React from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { ArrowUpRight } from "lucide-react";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface ProjectCardProps {
   id: string;

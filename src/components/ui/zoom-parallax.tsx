@@ -29,7 +29,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
   const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
 
   return (
-    <div ref={container} className="relative h-[300vh] border-t border-white/20">
+    <div ref={container} className="relative h-[300vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
         {images.map(({ src, alt }, index) => {
           const scale = scales[index % scales.length];
@@ -64,7 +64,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
                   : ""
               } `}
             >
-              <div className="relative h-[25vh] w-[25vw] overflow-hidden rounded-none border border-white/20 bg-zinc-950">
+              <div className="relative h-[25vh] w-[25vw]">
                 <img
                   src={src || "/placeholder.svg"}
                   alt={alt || `Parallax image ${index + 1}`}

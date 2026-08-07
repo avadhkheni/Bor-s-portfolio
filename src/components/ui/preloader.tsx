@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import gsap from "gsap";
+import { gsap } from "@/lib/gsap";
 
 interface PreloaderProps {
   onComplete: () => void;
@@ -27,49 +27,47 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
   React.useEffect(() => {
     const counterObj = { value: 0 };
-    
-    const tl = gsap.timeline({
-      onComplete: () => {
-        // Slide preloader up with dynamic spring physics ease
-        gsap.to(containerRef.current, {
-          yPercent: -100,
-          duration: 1.4,
-          ease: "power4.inOut",
-          onComplete: onComplete
-        });
-      }
-    });
 
-    // Fast loading counter tween
-    tl.to(counterObj, {
-      value: 100,
-      duration: 3,
-      ease: "power3.out",
-      onUpdate: () => {
-        const val = Math.floor(counterObj.value);
-        setCount(val);
-        
-        // Increment the branding keyword sequentially based on count progression
-        const index = Math.min(
-          Math.floor((val / 100) * words.length),
-          words.length - 1
-        );
-        setWordIndex(index);
-      }
-    });
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        onComplete: () => {
+          gsap.to(containerRef.current, {
+            yPercent: -100,
+            duration: 1.4,
+            ease: "power4.inOut",
+            onComplete: onComplete
+          });
+        }
+      });
 
-    // Exit transition elements fade out before screen slides away
-    tl.to([counterRef.current, wordRef.current], {
-      opacity: 0,
-      y: -60,
-      duration: 0.4,
-      ease: "power2.in"
-    }, "-=0.4");
+      tl.to(counterObj, {
+        value: 100,
+        duration: 3,
+        ease: "power3.out",
+        onUpdate: () => {
+          const val = Math.floor(counterObj.value);
+          setCount(val);
+
+          const index = Math.min(
+            Math.floor((val / 100) * words.length),
+            words.length - 1
+          );
+          setWordIndex(index);
+        }
+      });
+
+      tl.to([counterRef.current, wordRef.current], {
+        opacity: 0,
+        y: -60,
+        duration: 0.4,
+        ease: "power2.in"
+      }, "-=0.4");
+    }, containerRef);
 
     return () => {
-      tl.kill();
+      ctx.revert();
     };
-  }, []);
+  }, [onComplete]);
 
   return (
     <div

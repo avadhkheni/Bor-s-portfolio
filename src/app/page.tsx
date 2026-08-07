@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { Navbar } from "@/components/ui/navbar";
 import { GooeyText } from "@/components/ui/gooey-text";
 import { ProjectCardStack } from "@/components/ui/card-stack";
@@ -13,38 +12,36 @@ import { ContactForm } from "@/components/ui/contact-form";
 import { TextRevealByWord } from "@/components/ui/text-reveal";
 import { ArrowDown } from "lucide-react";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import Lenis from "lenis";
 
 const parallaxImages = [
   {
-    src: '/images2/1.jpg',
-    alt: 'Visual Identity Showcase 1',
+    src: "/images2/1.jpg",
+    alt: "Brand identity design showcase",
   },
   {
-    src: '/images2/2.jpg',
-    alt: 'Brand Design Showcase 2',
+    src: "/images2/2.jpg",
+    alt: "Minimalist packaging aesthetic",
   },
   {
-    src: '/images2/3.jpg',
-    alt: 'Package Design Showcase 3',
+    src: "/images2/3.jpg",
+    alt: "High-end product photography",
   },
   {
-    src: '/images2/4.jpg',
-    alt: 'Creative Direction Showcase 4',
+    src: "/images2/4.jpg",
+    alt: "Creative directional brand art",
   },
   {
-    src: '/images2/5.jpg',
-    alt: 'Typography Showcase 5',
+    src: "/images2/5.jpg",
+    alt: "Custom typography and layout",
   },
   {
-    src: '/images2/6.jpg',
-    alt: 'Aesthetics Showcase 6',
+    src: "/images2/6.jpg",
+    alt: "Spatial audio identity mockup",
   },
   {
-    src: '/images2/7.jpg',
-    alt: 'Editorial Design Showcase 7',
+    src: "/images2/7.jpg",
+    alt: "Cyber beverage package composition",
   },
 ];
 
@@ -120,18 +117,44 @@ export default function Home() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (isLoading) return;
+    const lenis = new Lenis();
 
-    const ctx = gsap.context(() => {
-      // Hero content entrance animations (starts right as preloader leaves)
-      gsap.fromTo(
-        ".hero-fade-in",
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 1.4, ease: "power4.out", stagger: 0.15, delay: 0.1 }
-      );
-    });
+    const handleScroll = () => {
+      ScrollTrigger.update();
+    };
+    lenis.on("scroll", handleScroll);
 
-    return () => ctx.revert();
+    const updateTicker = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(updateTicker);
+    gsap.ticker.lagSmoothing(0);
+
+    let ctx: gsap.Context | null = null;
+    let refreshTimer: NodeJS.Timeout | null = null;
+
+    if (!isLoading) {
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          ".hero-fade-in",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 1.4, ease: "power4.out", stagger: 0.15, delay: 0.1 }
+        );
+      });
+
+      // Refresh ScrollTrigger after DOM layout stabilizes post-preloader
+      refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
+    }
+
+    return () => {
+      if (refreshTimer) clearTimeout(refreshTimer);
+      ctx?.revert();
+      gsap.ticker.remove(updateTicker);
+      lenis.off("scroll", handleScroll);
+      lenis.destroy();
+    };
   }, [isLoading]);
 
   return (
@@ -151,12 +174,12 @@ export default function Home() {
 
           <div className="text-center relative z-10 max-w-4xl mx-auto flex flex-col items-center justify-center">
             {/* Morphing Gooey Text Component */}
-            <div className="hero-fade-in h-28 md:h-36 flex items-center justify-center w-full relative">
+            <div className="hero-fade-in h-24 sm:h-28 md:h-36 flex items-center justify-center w-full relative">
               <GooeyText
                 texts={["IDENTITY", "PACKAGING", "STRATEGY", "AESTHETICS", "TYPOGRAPHY"]}
                 morphTime={1.2}
                 cooldownTime={0.4}
-                textClassName="font-extrabold tracking-tighter text-white text-5xl sm:text-7xl md:text-8xl"
+                textClassName="font-extrabold tracking-tighter text-white text-3xl sm:text-7xl md:text-8xl"
               />
             </div>
           </div>
