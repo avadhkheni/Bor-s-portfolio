@@ -25,6 +25,13 @@ export function Preloader({ onComplete }: PreloaderProps) {
     "DESIGN"
   ];
 
+  const onCompleteRef = React.useRef(onComplete);
+  const [isFinished, setIsFinished] = React.useState(false);
+
+  React.useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
   React.useEffect(() => {
     const counterObj = { value: 0 };
 
@@ -35,7 +42,10 @@ export function Preloader({ onComplete }: PreloaderProps) {
             yPercent: -100,
             duration: 1.4,
             ease: "power4.inOut",
-            onComplete: onComplete
+            onComplete: () => {
+              setIsFinished(true);
+              onCompleteRef.current?.();
+            }
           });
         }
       });
@@ -67,7 +77,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
     return () => {
       ctx.revert();
     };
-  }, [onComplete]);
+  }, []);
+
+  if (isFinished) return null;
 
   return (
     <div

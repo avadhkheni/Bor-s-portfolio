@@ -157,9 +157,13 @@ export default function Home() {
     };
   }, [isLoading]);
 
+  const handlePreloaderComplete = React.useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
   return (
     <>
-      <Preloader onComplete={() => setIsLoading(false)} />
+      <Preloader onComplete={handlePreloaderComplete} />
       <div className={`flex-1 flex flex-col bg-background font-sans radial-grid transition-opacity duration-1000 ${isLoading ? "opacity-0" : "opacity-100"}`}>
         <Navbar />
 
