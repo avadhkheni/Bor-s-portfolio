@@ -172,6 +172,10 @@ export default function AdminPage() {
       if (savedTab) {
         setActiveTabState(savedTab);
       }
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("mode") === "register" || params.get("register") === "true") {
+        setAuthMode("register");
+      }
     } catch {}
   }, []);
 
