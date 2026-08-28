@@ -7,48 +7,13 @@ import { Compass, Palette, BookOpen, Rocket } from "lucide-react";
 import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface Step {
-  num: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  details: string[];
-  image: string;
-}
+import { useSiteContent } from "@/lib/content-context";
 
-const steps: Step[] = [
-  {
-    num: "01",
-    title: "Discovery & Strategy",
-    description: "Deep dive into your company mission, market space, competitor analysis, and audience persona to define a clear creative positioning.",
-    icon: <Compass className="h-6 w-6 text-white" />,
-    details: ["Competitor Benchmarking", "Brand Positioning Plan", "Visual Archetypes"],
-    image: "/images2/16.jpg"
-  },
-  {
-    num: "02",
-    title: "Visual Identity Design",
-    description: "Translating brand strategy into high-end aesthetics: logos, signature typography systems, custom color palettes, and typography rules.",
-    icon: <Palette className="h-6 w-6 text-white/80" />,
-    details: ["Custom Typography Curations", "Concept Mockups", "Logo Systems"],
-    image: "/images2/17.jpg"
-  },
-  {
-    num: "03",
-    title: "Packaging & Collateral",
-    description: "Extending the brand identity to physical touchpoints. Designing premium boxes, stationery, tags, and custom print layouts.",
-    icon: <BookOpen className="h-6 w-6 text-white/60" />,
-    details: ["Physical Mockups", "Material Recommendation", "Print Templates"],
-    image: "/images2/18.jpg"
-  },
-  {
-    num: "04",
-    title: "Brand Book & Delivery",
-    description: "Compiling a complete brand book containing implementation guidelines, followed by handoff of premium vector and print assets.",
-    icon: <Rocket className="h-6 w-6 text-white" />,
-    details: ["Brand Guidelines PDF", "Vector & Raster Deliverables", "Brand Consulting Support"],
-    image: "/images2/19.jpg"
-  }
+const defaultIcons = [
+  <Compass key="0" className="h-6 w-6 text-white" />,
+  <Palette key="1" className="h-6 w-6 text-white/80" />,
+  <BookOpen key="2" className="h-6 w-6 text-white/60" />,
+  <Rocket key="3" className="h-6 w-6 text-white" />,
 ];
 
 interface CardStickyProps extends HTMLMotionProps<"div"> {
@@ -111,7 +76,10 @@ const CardSticky = React.forwardRef<HTMLDivElement, CardStickyProps>(
 CardSticky.displayName = "CardSticky";
 
 export function ProcessSection() {
+  const { data } = useSiteContent();
   const containerRef = React.useRef<HTMLDivElement>(null);
+
+  const steps = data?.process?.steps || [];
 
   React.useEffect(() => {
     const ctx = gsap.context(() => {
@@ -154,20 +122,24 @@ export function ProcessSection() {
           <div className="flex items-center gap-2">
             <span className="w-1 h-3.5 bg-red-600 rounded-full inline-block" />
             <span className="text-xs font-semibold uppercase tracking-widest text-white">
-              Methodology
+              {data?.process?.badge || "Methodology"}
             </span>
           </div>
           <h2 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight text-neutral-300 leading-tight">
-            A structured workflow for <br />
-            <span className="text-neutral-400">uncompromising visual results</span>
+            {data?.process?.title || "A structured workflow for uncompromising visual results"}
           </h2>
+          {data?.process?.subtitle && (
+            <p className="mt-3 text-sm md:text-base text-white/50 leading-relaxed">
+              {data.process.subtitle}
+            </p>
+          )}
         </div>
 
         {/* Sticky Scroll Container */}
         <ContainerScroll className="flex flex-col gap-12 max-w-4xl mx-auto pb-24">
           {steps.map((step, i) => (
             <CardSticky
-              key={step.num}
+              key={step.num || i}
               index={i}
               incrementY={30} // Offset spacing for stacked card headers
               incrementZ={15}  // 3D perspective camera Z-depth offset
@@ -182,7 +154,7 @@ export function ProcessSection() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 border border-white/10 shadow-inner">
-                      {step.icon}
+                      {defaultIcons[i % defaultIcons.length]}
                     </div>
                     <span className="text-3xl md:text-4xl font-extrabold tracking-tighter text-white/20 select-none">
                       {step.num}
@@ -199,29 +171,33 @@ export function ProcessSection() {
                 </div>
 
                 {/* Bullet Points Details */}
-                <div className="border-t border-white/10 pt-4 mt-auto">
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {step.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-xs md:text-sm text-white/50 font-medium">
-                        <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {step.details && step.details.length > 0 && (
+                  <div className="border-t border-white/10 pt-4 mt-auto">
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {step.details.map((detail, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-xs md:text-sm text-white/50 font-medium">
+                          <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
+                          {detail}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
               {/* Right Column: Image Showcase */}
-              <div className="relative w-full md:w-[320px] lg:w-[400px] aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-lg shrink-0 group">
-                <Image
-                  src={step.image}
-                  alt={step.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-w-768px) 100vw, 400px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
-              </div>
+              {step.image && (
+                <div className="relative w-full md:w-[320px] lg:w-[400px] aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-lg shrink-0 group">
+                  <Image
+                    src={step.image}
+                    alt={step.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-w-768px) 100vw, 400px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                </div>
+              )}
             </CardSticky>
           ))}
         </ContainerScroll>

@@ -9,11 +9,21 @@ interface Image {
 }
 
 interface ZoomParallaxProps {
-  /** Array of images to be displayed in the parallax effect max 7 images */
-  images: Image[];
+  images?: Image[];
 }
 
+const defaultParallaxImages: Image[] = [
+  { src: "/images2/1.jpg", alt: "Brand identity design showcase" },
+  { src: "/images2/2.jpg", alt: "Minimalist packaging aesthetic" },
+  { src: "/images2/3.jpg", alt: "High-end product photography" },
+  { src: "/images2/4.jpg", alt: "Creative directional brand art" },
+  { src: "/images2/5.jpg", alt: "Custom typography and layout" },
+  { src: "/images2/6.jpg", alt: "Spatial audio identity mockup" },
+  { src: "/images2/7.jpg", alt: "Cyber beverage package composition" },
+];
+
 export function ZoomParallax({ images }: ZoomParallaxProps) {
+  const displayImages: Image[] = (images && images.length > 0) ? images : defaultParallaxImages;
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
     target: container,
@@ -31,7 +41,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
   return (
     <div ref={container} className="relative h-[300vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
-        {images.map(({ src, alt }, index) => {
+        {displayImages.map(({ src, alt }, index) => {
           const scale = scales[index % scales.length];
 
           return (

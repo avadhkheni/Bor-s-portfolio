@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { ContentProvider } from "@/lib/content-context";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,7 +26,9 @@ export default function RootLayout({
       className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-white/30 selection:text-white">
-        {children}
+        <ContentProvider>
+          {children}
+        </ContentProvider>
       </body>
     </html>
   );

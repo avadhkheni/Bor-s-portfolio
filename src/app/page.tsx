@@ -4,115 +4,22 @@ import * as React from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { Navbar } from "@/components/ui/navbar";
 import { GooeyText } from "@/components/ui/gooey-text";
-import { ProjectCardStack } from "@/components/ui/card-stack";
 import { ZoomParallax } from "@/components/ui/zoom-parallax";
 import { ProcessSection } from "@/components/ui/process-section";
 import { Preloader } from "@/components/ui/preloader";
 import { ContactForm } from "@/components/ui/contact-form";
 import { TextRevealByWord } from "@/components/ui/text-reveal";
-import { ArrowDown } from "lucide-react";
+import Link from "next/link";
+import { MovingShowcase } from "@/components/ui/moving-showcase";
+import { DynamicCustomSectionsList } from "@/components/ui/dynamic-custom-sections";
+import { ArrowDown, Compass, ArrowUpRight } from "lucide-react";
+import { DEFAULT_PAGES_DATA } from "@/lib/default-pages-data";
 
+import { useSiteContent } from "@/lib/content-context";
 import Lenis from "lenis";
 
-const parallaxImages = [
-  {
-    src: "/images2/1.jpg",
-    alt: "Brand identity design showcase",
-  },
-  {
-    src: "/images2/2.jpg",
-    alt: "Minimalist packaging aesthetic",
-  },
-  {
-    src: "/images2/3.jpg",
-    alt: "High-end product photography",
-  },
-  {
-    src: "/images2/4.jpg",
-    alt: "Creative directional brand art",
-  },
-  {
-    src: "/images2/5.jpg",
-    alt: "Custom typography and layout",
-  },
-  {
-    src: "/images2/6.jpg",
-    alt: "Spatial audio identity mockup",
-  },
-  {
-    src: "/images2/7.jpg",
-    alt: "Cyber beverage package composition",
-  },
-];
-
-const featuredProjects = [
-  {
-    id: "aether",
-    title: "AETHER — Minimal Skincare Identity",
-    category: "Packaging & Brand Identity",
-    year: "2026",
-    imageColor: "from-zinc-800 to-zinc-950",
-    imageSrc: "/images2/8.jpg"
-  },
-  {
-    id: "vortex",
-    title: "VORTEX — Kinetic FinTech Platform",
-    category: "Digital Branding & UI System",
-    year: "2025",
-    imageColor: "from-zinc-900 to-zinc-950",
-    imageSrc: "/images2/9.jpg"
-  },
-  {
-    id: "nova",
-    title: "NOVA — Cyber Beverage Campaign",
-    category: "3D Art & Package Design",
-    year: "2025",
-    imageColor: "from-zinc-800 to-zinc-900",
-    imageSrc: "/images2/10.jpg"
-  },
-  {
-    id: "helios",
-    title: "HELIOS — Eco Hospitality Branding",
-    category: "Creative Direction & Print",
-    year: "2024",
-    imageColor: "from-zinc-900 to-black",
-    imageSrc: "/images2/11.jpg"
-  },
-  {
-    id: "kinetic",
-    title: "KINETIC — Spatial Audio Identity",
-    category: "Hardware & Sound Branding",
-    year: "2024",
-    imageColor: "from-slate-900 to-zinc-950",
-    imageSrc: "/images2/12.jpg"
-  },
-  {
-    id: "aurora",
-    title: "AURORA — Luxury Chrono Timepieces",
-    category: "Watchmaking & Industrial",
-    year: "2024",
-    imageColor: "from-stone-900 to-zinc-950",
-    imageSrc: "/images2/13.jpg"
-  },
-  {
-    id: "solaris",
-    title: "SOLARIS — Sustainable Architecture",
-    category: "Environmental Branding",
-    year: "2023",
-    imageColor: "from-neutral-900 to-black",
-    imageSrc: "/images2/14.jpg"
-  },
-  {
-    id: "nebula",
-    title: "NEBULA — High-Performance Apparel",
-    category: "Textile & Product Identity",
-    year: "2023",
-    imageColor: "from-zinc-900 to-neutral-950",
-    imageSrc: "/images2/15.jpg"
-  }
-];
-
 export default function Home() {
+  const { data } = useSiteContent();
   const heroRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -176,88 +83,99 @@ export default function Home() {
           {/* Large abstract neon blur background */}
           <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-5xl rounded-full bg-gradient-to-tr from-white/5 to-white/0 blur-[120px] opacity-60" />
 
-          <div className="text-center relative z-10 max-w-4xl mx-auto flex flex-col items-center justify-center">
+          <div className="text-center relative z-10 max-w-5xl mx-auto flex flex-col items-center justify-center w-full">
             {/* Morphing Gooey Text Component */}
-            <div className="hero-fade-in h-24 sm:h-28 md:h-36 flex items-center justify-center w-full relative">
+            <div className="hero-fade-in h-32 sm:h-44 md:h-56 flex items-center justify-center w-full relative">
               <GooeyText
-                texts={["IDENTITY", "PACKAGING", "STRATEGY", "AESTHETICS", "TYPOGRAPHY"]}
-                morphTime={1.2}
-                cooldownTime={0.4}
-                textClassName="font-extrabold tracking-tighter text-white text-3xl sm:text-7xl md:text-8xl"
+                texts={data?.hero?.words || ["IDENTITY", "PACKAGING", "STRATEGY", "AESTHETICS", "TYPOGRAPHY"]}
+                morphTime={data?.hero?.morphTime || 1.2}
+                cooldownTime={data?.hero?.cooldownTime || 0.4}
+                textClassName="font-extrabold tracking-tighter text-white text-4xl sm:text-7xl md:text-9xl"
               />
             </div>
           </div>
         </section>
 
         {/* Zoom Parallax Showcase */}
-        <ZoomParallax images={parallaxImages} />
+        <ZoomParallax images={data?.parallaxImages} />
 
-      {/* Featured Projects Showcase */}
-      <section
-        id="work"
-        className="py-24 md:py-32 px-6 md:px-12 border-t border-white/20 bg-background relative"
-      >
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-24">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-1 h-3.5 bg-red-600 rounded-full inline-block" />
-                <span className="text-xs font-semibold uppercase tracking-widest text-white">
-                  Selected Work
-                </span>
-              </div>
-              <h2 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight text-neutral-300 leading-tight">
-                Proven results, <br />
-                <span className="text-neutral-400">stunning designs</span>
-              </h2>
-            </div>
-            <p className="mt-4 md:mt-0 text-white/70 max-w-xs leading-relaxed text-sm">
-              We design cohesive identities that speak clearly across physical packaging and interactive screen interfaces.
-            </p>
-          </div>
+        {/* Moving Showcase Rows */}
+        <MovingShowcase />
 
-          {/* Card Stack Fan */}
-          <ProjectCardStack
-            items={featuredProjects}
-            cardWidth={520}
-            cardHeight={340}
-            spreadPx={190}
-            spreadDeg={9}
-            depthPx={80}
-            tiltXDeg={9}
-            activeLiftPx={30}
-            activeScale={1.04}
-            inactiveScale={0.91}
-            springStiffness={290}
-            springDamping={28}
-            maxVisible={7}
-            autoAdvance
-            intervalMs={2800}
-            pauseOnHover
-            loop
-            showDots
+        {/* Philosophy Section */}
+        <section
+          id="philosophy"
+          className="relative bg-black border-t border-white/20"
+        >
+          <div className="pointer-events-none absolute bottom-0 right-0 w-[40vw] h-[40vw] rounded-full bg-white/[0.02] blur-[120px]" />
+          
+          <TextRevealByWord 
+            text={data?.philosophy?.quote || '"A brand is no longer what we tell the consumer it is — it is **what** **consumers** **tell** **each** **other** it is. We build the visual frameworks that command that conversation."'} 
           />
-        </div>
-      </section>
+        </section>
 
-      {/* Philosophy Section */}
-      <section
-        id="philosophy"
-        className="relative bg-black border-t border-white/20"
-      >
-        <div className="pointer-events-none absolute bottom-0 right-0 w-[40vw] h-[40vw] rounded-full bg-white/[0.02] blur-[120px]" />
-        
-        <TextRevealByWord 
-          text='"A brand is no longer what we tell the consumer it is — it is **what** **consumers** **tell** **each** **other** it is. We build the visual frameworks that command that conversation."' 
-        />
-      </section>
+        {/* Methodology Section */}
+        <ProcessSection />
 
-      {/* Methodology Section */}
-      <ProcessSection />
+        {/* Dynamic Custom Sections (Configured via Admin Panel) */}
+        <DynamicCustomSectionsList sections={data?.customSections} />
 
-      {/* Contact Section */}
-      <ContactForm />
+        {/* Explore All Studio Subpages Section - Only shown when user has published custom pages */}
+        {(() => {
+          const publishedPages = Object.values(data?.customPages || {}).filter((p) => p.isPublished !== false);
+          if (publishedPages.length === 0) return null;
+          return (
+            <section id="pages-directory" className="py-24 px-6 md:px-12 bg-black border-t border-white/10 relative overflow-hidden">
+              <div className="max-w-7xl mx-auto space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                  <div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-white/70 mb-4">
+                      <Compass className="w-3.5 h-3.5 text-blue-400" />
+                      <span>Site Architecture</span>
+                    </div>
+                    <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+                      Explore Studio Pages
+                    </h2>
+                    <p className="mt-3 text-base text-white/60 max-w-xl">
+                      Deep-dive into our capabilities, design research labs, essays, pricing tiers, and client knowledgebase.
+                    </p>
+                  </div>
+                  <div className="text-xs font-mono text-white/40">
+                    {publishedPages.length} Active Subpage{publishedPages.length === 1 ? "" : "s"}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5">
+                  {publishedPages.map((p) => (
+                    <Link
+                      key={p.slug}
+                      href={`/p/${p.slug}`}
+                      className="group p-5 rounded-2xl bg-[#0e0f18] hover:bg-white/[0.08] border border-white/10 hover:border-blue-500/50 transition-all flex flex-col justify-between space-y-4 hover:-translate-y-1 shadow-lg"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] uppercase font-mono tracking-wider text-white/40 group-hover:text-blue-400 transition-colors">
+                          {p.category}
+                        </span>
+                        <ArrowUpRight className="w-4 h-4 text-white/30 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">
+                          {p.title}
+                        </h3>
+                        <p className="text-[11px] text-white/50 line-clamp-2 mt-1">
+                          {p.subtitle}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        })()}
+
+        {/* Contact Section */}
+        <ContactForm />
       </div>
     </>
   );

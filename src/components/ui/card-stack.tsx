@@ -124,7 +124,10 @@ function DefaultProjectCardFace({
   active: boolean;
 }) {
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-[inherit] bg-[#0d0d0d]">
+    <Link
+      href={`/project/${item.id}`}
+      className="relative block h-full w-full overflow-hidden rounded-[inherit] bg-[#0d0d0d] group cursor-pointer"
+    >
       {/* Background gradient wash */}
       <div
         className={`absolute inset-0 bg-gradient-to-br ${item.imageColor || "from-zinc-900 to-black"} transition-opacity duration-500`}
@@ -135,12 +138,29 @@ function DefaultProjectCardFace({
       {(item.imageUrl || item.imageSrc) && (
         <img
           src={item.imageUrl || item.imageSrc}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
+          alt={item.title}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           draggable={false}
         />
       )}
-    </div>
+
+      {/* Bottom overlay with title */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-6 flex flex-col justify-end">
+        {item.category && (
+          <span className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-1">
+            {item.category}
+          </span>
+        )}
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg md:text-xl font-bold text-white tracking-tight">
+            {item.title}
+          </h3>
+          <span className="text-xs text-blue-400 font-bold group-hover:underline">
+            View Page →
+          </span>
+        </div>
+      </div>
+    </Link>
   );
 }
 

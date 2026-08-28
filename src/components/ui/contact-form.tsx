@@ -3,7 +3,10 @@
 import * as React from "react";
 import { Send, CheckCircle2 } from "lucide-react";
 
+import { useSiteContent } from "@/lib/content-context";
+
 export function ContactForm() {
+  const { data } = useSiteContent();
   const [formState, setFormState] = React.useState({
     name: "",
     email: "",
@@ -23,6 +26,20 @@ export function ContactForm() {
 
   const projectTypes = ["Identity", "Packaging", "Full Strategy", "Other"];
 
+  const contactData = data?.contact || {
+    badge: "Inquiries",
+    title: "Let's co-create your brand's future",
+    subtitle: "Whether initializing a new venture or elevating an established name, let's talk design.",
+    email: "inquire@aetherdesign.studio",
+    socials: [
+      { name: "Behance", url: "https://behance.net" },
+      { name: "Dribbble", url: "https://dribbble.com" },
+      { name: "LinkedIn", url: "https://linkedin.com" },
+      { name: "Instagram", url: "https://instagram.com" }
+    ],
+    copyright: "STUDIO. ALL RIGHTS RESERVED."
+  };
+
   return (
     <section
       id="contact"
@@ -37,15 +54,14 @@ export function ContactForm() {
               <div className="flex items-center gap-2">
                 <span className="w-1 h-3.5 bg-red-600 rounded-full inline-block" />
                 <span className="text-xs font-semibold uppercase tracking-widest text-white">
-                  Inquiries
+                  {contactData.badge || "Inquiries"}
                 </span>
               </div>
               <h2 className="mt-4 text-4xl md:text-5xl font-bold tracking-tight text-neutral-300 leading-tight">
-                Let's co-create <br />
-                <span className="text-neutral-400">your brand's future</span>
+                {contactData.title || "Let's co-create your brand's future"}
               </h2>
               <p className="mt-6 text-base text-white/70 max-w-sm leading-relaxed">
-                Whether initializing a new venture or elevating an established name, let's talk design.
+                {contactData.subtitle || "Whether initializing a new venture or elevating an established name, let's talk design."}
               </p>
             </div>
 
@@ -53,24 +69,34 @@ export function ContactForm() {
               <div>
                 <p className="text-xs uppercase font-semibold text-white/50 tracking-wider">Direct Email</p>
                 <a
-                  href="mailto:inquire@aetherdesign.studio"
+                  href={`mailto:${contactData.email || "inquire@aetherdesign.studio"}`}
                   className="mt-1 block text-lg font-bold text-white hover:text-white/80 transition-colors"
                 >
-                  inquire@aetherdesign.studio
+                  {contactData.email || "inquire@aetherdesign.studio"}
                 </a>
               </div>
-              <div>
-                <p className="text-xs uppercase font-semibold text-white/50 tracking-wider">Social Channels</p>
-                <div className="mt-3 flex flex-wrap gap-4 text-sm font-medium">
-                  <a href="#" className="text-white/70 hover:text-white transition-colors">Behance</a>
-                  <span className="text-white/30">•</span>
-                  <a href="#" className="text-white/70 hover:text-white transition-colors">Dribbble</a>
-                  <span className="text-white/30">•</span>
-                  <a href="#" className="text-white/70 hover:text-white transition-colors">LinkedIn</a>
-                  <span className="text-white/30">•</span>
-                  <a href="#" className="text-white/70 hover:text-white transition-colors">Instagram</a>
+              {contactData.socials && contactData.socials.length > 0 && (
+                <div>
+                  <p className="text-xs uppercase font-semibold text-white/50 tracking-wider">Social Channels</p>
+                  <div className="mt-3 flex flex-wrap gap-4 text-sm font-medium">
+                    {contactData.socials.map((social, idx) => (
+                      <React.Fragment key={idx}>
+                        <a
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-white/70 hover:text-white transition-colors"
+                        >
+                          {social.name}
+                        </a>
+                        {idx < contactData.socials.length - 1 && (
+                          <span className="text-white/30">•</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -190,7 +216,7 @@ export function ContactForm() {
         
         {/* Sub-footer Copyright */}
         <div className="mt-24 pt-8 border-t border-white/20 flex flex-col md:flex-row items-center justify-between text-xs text-white/40 gap-4">
-          <p>© {new Date().getFullYear()} STUDIO. ALL RIGHTS RESERVED.</p>
+          <p>© {new Date().getFullYear()} {contactData.copyright || "STUDIO. ALL RIGHTS RESERVED."}</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

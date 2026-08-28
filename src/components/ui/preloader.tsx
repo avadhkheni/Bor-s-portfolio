@@ -2,19 +2,21 @@
 
 import * as React from "react";
 import { gsap } from "@/lib/gsap";
+import { useSiteContent } from "@/lib/content-context";
 
 interface PreloaderProps {
   onComplete: () => void;
 }
 
 export function Preloader({ onComplete }: PreloaderProps) {
+  const { data } = useSiteContent();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const counterRef = React.useRef<HTMLDivElement>(null);
   const wordRef = React.useRef<HTMLDivElement>(null);
   const [count, setCount] = React.useState(0);
   const [wordIndex, setWordIndex] = React.useState(0);
 
-  const words = [
+  const words = data?.preloader?.words || [
     "POSITIONING",
     "STRATEGY",
     "TYPOGRAPHY",
@@ -24,6 +26,11 @@ export function Preloader({ onComplete }: PreloaderProps) {
     "EXPERIENCE",
     "DESIGN"
   ];
+
+  const studioLabel = data?.preloader?.studioLabel || data?.brand?.name || "STUDIO";
+  const loadingLabel = data?.preloader?.loadingLabel || "LOADING...";
+  const bottomLeft = data?.preloader?.bottomLeft || "VISUAL ARCHITECTURE";
+  const bottomRight = data?.preloader?.bottomRight || "CREATING DISTINCT DESIGN EMPIRES";
 
   const onCompleteRef = React.useRef(onComplete);
   const [isFinished, setIsFinished] = React.useState(false);
@@ -77,7 +84,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
     return () => {
       ctx.revert();
     };
-  }, []);
+  }, [words.length]);
 
   if (isFinished) return null;
 
@@ -88,17 +95,17 @@ export function Preloader({ onComplete }: PreloaderProps) {
     >
       {/* Top logo block */}
       <div className="flex justify-between items-center w-full">
-        <span className="text-sm font-bold tracking-widest text-white/40">STUDIO</span>
-        <span className="text-xs font-semibold tracking-widest text-white/40 uppercase">LOADING...</span>
+        <span className="text-sm font-bold tracking-widest text-white/40 uppercase">{studioLabel}</span>
+        <span className="text-xs font-semibold tracking-widest text-white/40 uppercase">{loadingLabel}</span>
       </div>
 
       {/* Middle massive block */}
       <div className="flex flex-col items-start justify-center flex-1 max-w-5xl mx-auto w-full my-auto">
         <div 
           ref={wordRef}
-          className="text-4xl sm:text-6xl md:text-8xl font-extrabold tracking-tighter text-white/30 h-20 sm:h-28 md:h-36 flex items-center select-none"
+          className="text-4xl sm:text-6xl md:text-8xl font-extrabold tracking-tighter text-white/30 h-20 sm:h-28 md:h-36 flex items-center select-none uppercase"
         >
-          {words[wordIndex]}
+          {words[wordIndex] || words[0]}
         </div>
         <div 
           ref={counterRef}
@@ -111,8 +118,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
       {/* Bottom info */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end w-full gap-4 text-xs font-bold text-white/20 uppercase tracking-widest">
-        <div>VISUAL ARCHITECTURE</div>
-        <div>CREATING DISTINCT DESIGN EMPIRES</div>
+        <div>{bottomLeft}</div>
+        <div>{bottomRight}</div>
       </div>
     </div>
   );
