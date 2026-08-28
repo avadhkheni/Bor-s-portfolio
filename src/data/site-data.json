@@ -1,0 +1,352 @@
+{
+  "brand": {
+    "name": "AETHER",
+    "tagline": "VISUAL & BRAND DESIGN STUDIO • EST. 2026",
+    "navCtaText": "Let's Talk"
+  },
+  "preloader": {
+    "studioLabel": "STUDIO",
+    "loadingLabel": "LOADING...",
+    "bottomLeft": "VISUAL ARCHITECTURE",
+    "bottomRight": "CREATING DISTINCT DESIGN EMPIRES",
+    "words": [
+      "POSITIONING",
+      "STRATEGY",
+      "TYPOGRAPHY",
+      "AESTHETICS",
+      "MINIMALISM",
+      "PACKAGING",
+      "EXPERIENCE",
+      "DESIGN"
+    ]
+  },
+  "hero": {
+    "subtitle": "DISCIPLINED CREATIVE DIRECTION FOR SYSTEMIC IDENTITIES",
+    "words": [
+      "IDENTITY",
+      "PACKAGING",
+      "STRATEGY",
+      "AESTHETICS",
+      "TYPOGRAPHY"
+    ],
+    "morphTime": 1.2,
+    "cooldownTime": 0.4,
+    "scrollText": "SCROLL TO EXPLORE"
+  },
+  "parallaxImages": [
+    {
+      "src": "/images2/2.jpg",
+      "alt": "Minimalist packaging aesthetic"
+    },
+    {
+      "src": "/images2/1.jpg",
+      "alt": "Brand identity design showcase"
+    },
+    {
+      "src": "/images2/3.jpg",
+      "alt": "High-end product photography"
+    },
+    {
+      "src": "/images2/4.jpg",
+      "alt": "Creative directional brand art"
+    },
+    {
+      "src": "/images2/5.jpg",
+      "alt": "Custom typography and layout"
+    },
+    {
+      "src": "/images2/6.jpg",
+      "alt": "Spatial audio identity mockup"
+    },
+    {
+      "src": "/images2/7.jpg",
+      "alt": "Cyber beverage package composition"
+    }
+  ],
+  "showcase": {
+    "headerBadge": "Interactive Web Showcase",
+    "headerTitle": "Live Web & Brand Systems",
+    "headerSubtitle": "Continuously moving interface previews built with precision typography, responsive geometry, and smooth interactions.",
+    "row1": [
+      {
+        "id": "r2-7",
+        "title": "LUMINA — Digital Experience",
+        "url": "lumina-experience.co",
+        "imageSrc": "/images2/WhatsApp Image 2026-08-21 at 10.29.30 PM.jpeg",
+        "tag": "Digital Art"
+      },
+      {
+        "id": "mr-mug",
+        "title": "MR. MUG — Vintage Character Café",
+        "url": "mr-mug.coffee",
+        "imageSrc": "/images2/33.jpg",
+        "tag": "Mascot & Cafe"
+      },
+      {
+        "id": "willow-whisk",
+        "title": "WILLOW & WHISK — Artisan Bakery & Café",
+        "url": "willow-whisk.cafe",
+        "imageSrc": "/images2/27.jpg",
+        "tag": "Bakery & Cafe"
+      }
+    ],
+    "row2": [
+      {
+        "id": "natura",
+        "title": "NATURA — Organic Snack & Beverage",
+        "url": "natura-snack.com",
+        "imageSrc": "/images2/18.jpg",
+        "tag": "Organic Snack"
+      },
+      {
+        "id": "r1-7",
+        "title": "CREATIVE — Design Showcase",
+        "url": "creative-showcase.design",
+        "imageSrc": "/images2/image.png",
+        "tag": "Showcase"
+      },
+      {
+        "id": "verdelle",
+        "title": "VERDELLE — Botanical Hair & Skincare",
+        "url": "verdelle-beauty.store",
+        "imageSrc": "/images2/22.jpg",
+        "tag": "Skincare"
+      }
+    ]
+  },
+  "projects": {
+    "willow-whisk": {
+      "id": "willow-whisk",
+      "title": "WILLOW & WHISK — Artisan Bakery & Café",
+      "category": "Packaging & Brand Identity",
+      "year": "2026",
+      "url": "willow-whisk.cafe",
+      "imageSrc": "/images2/27.jpg",
+      "secondaryImages": [
+        "/images2/28.jpg",
+        "/images2/29.jpg",
+        "/images2/30.jpg",
+        "/images2/31.jpg",
+        "/images2/32.jpg",
+        "/images2/34.jpg",
+        "/images2/35.jpg",
+        "/images2/36.jpg"
+      ],
+      "tag": "Bakery & Cafe",
+      "description": "A Jaipur-based artisan bakery and café brand identity system. Featuring handcrafted pastry boxes, specialty coffee packaging, architectural outdoor signage, and a cohesive digital presence.",
+      "challenge": "Developing a cozy, inviting brand presence that appeals to both local coffee lovers and tourists seeking specialty roasted coffee and artisanal sourdough.",
+      "solution": "Crafted warm earth-tone typography, hand-drawn character illustrations, tactile cardboard packaging, and high-impact subway campaign graphics.",
+      "client": "Willow & Whisk Bakery Jaipur",
+      "role": "Lead Packaging & Brand Identity Designer",
+      "tools": [
+        "Brand Strategy",
+        "Packaging Design",
+        "Signage Art Direction",
+        "Digital Systems"
+      ]
+    },
+    "verdelle": {
+      "id": "verdelle",
+      "title": "VERDELLE — Botanical Hair & Skincare",
+      "category": "Packaging & Beauty Identity",
+      "year": "2026",
+      "url": "verdelle-beauty.store",
+      "imageSrc": "/images2/22.jpg",
+      "secondaryImages": [
+        "/images2/23.jpg",
+        "/images2/24.jpg",
+        "/images2/25.jpg",
+        "/images2/26.jpg"
+      ],
+      "tag": "Skincare",
+      "description": "Ethical botanical hair care and skin formulation brand identity centered on 100% raw Honduran Batana oil and natural ingredient transparency.",
+      "challenge": "Differentiating an organic ethical beauty brand with elegant, minimalist packaging that highlights natural ingredients.",
+      "solution": "Emphasized authentic skin model photography, warm terracotta stationery, frosted glass cosmetic jars, and botanical line-art tube packaging.",
+      "client": "Verdelle Organics",
+      "role": "Creative Direction & Cosmetic Packaging",
+      "tools": [
+        "Cosmetic Packaging",
+        "Photography Direction",
+        "Brand Identity"
+      ]
+    },
+    "natura": {
+      "id": "natura",
+      "title": "NATURA — Organic Snack & Beverage",
+      "category": "Packaging & Product Identity",
+      "year": "2025",
+      "url": "natura-snack.com",
+      "imageSrc": "/images2/18.jpg",
+      "secondaryImages": [
+        "/images2/19.jpg",
+        "/images2/20.jpg",
+        "/images2/21.jpg"
+      ],
+      "tag": "Organic Snack",
+      "description": "A vibrant organic snack and takeaway beverage identity system with playfulness at its core. 'Snack Smart, Live Bright.'",
+      "challenge": "Creating a high-energy, cheerful snack brand that communicates organic health benefits without feeling dry or overly clinical.",
+      "solution": "Formulated vibrant red display lettering, playful rainbow pattern collateral, and sustainable takeaway cup designs.",
+      "client": "Natura Foods Ltd",
+      "role": "Brand Identity & Packaging Specialist",
+      "tools": [
+        "Packaging",
+        "Illustration",
+        "Brand Collateral"
+      ]
+    },
+    "mr-mug": {
+      "id": "mr-mug",
+      "title": "MR. MUG — Vintage Character Café",
+      "category": "Brand Mascot & Signage Design",
+      "year": "2025",
+      "url": "mr-mug.coffee",
+      "imageSrc": "/images2/33.jpg",
+      "secondaryImages": [
+        "/images2/33.jpg"
+      ],
+      "tag": "Mascot & Cafe",
+      "description": "Nostalgic retro mascot branding and wall signage for a specialty espresso bar.",
+      "challenge": "Designing a memorable retro brand mascot that stands out on street corner signage.",
+      "solution": "Hand-drawn vintage mug character with bold 1970s typographic layout.",
+      "client": "Mr. Mug Coffee Co.",
+      "role": "Illustration & Brand Designer",
+      "tools": [
+        "Vector Illustration",
+        "Signage",
+        "Print Design"
+      ]
+    },
+    "r1-7": {
+      "id": "r1-7",
+      "title": "CREATIVE — Design Showcase",
+      "category": "Interactive & Brand System",
+      "year": "2026",
+      "url": "creative-showcase.design",
+      "imageSrc": "/images2/image.png",
+      "secondaryImages": [
+        "/images2/image.png"
+      ],
+      "tag": "Showcase",
+      "description": "An ultra-modern visual portfolio showcase featuring high-contrast typography and interactive layout previews.",
+      "challenge": "Presenting multiple visual projects seamlessly without layout degradation.",
+      "solution": "Designed custom web layouts, full-resolution lightboxes, and smooth marquee interactions.",
+      "client": "Creative Showcase Studio",
+      "role": "Lead Interactive Designer",
+      "tools": [
+        "Next.js",
+        "Framer Motion",
+        "Tailwind CSS"
+      ]
+    },
+    "r2-7": {
+      "id": "r2-7",
+      "title": "LUMINA — Digital Experience",
+      "category": "3D Motion & Spatial UI",
+      "year": "2026",
+      "url": "lumina-experience.co",
+      "imageSrc": "/images2/WhatsApp Image 2026-08-21 at 10.29.30 PM.jpeg",
+      "secondaryImages": [
+        "/images2/WhatsApp Image 2026-08-21 at 10.29.30 PM.jpeg"
+      ],
+      "tag": "Digital Art",
+      "description": "A spatial visual identity and 3D digital experience platform for luxury fashion and architectural installation showcases.",
+      "challenge": "Balancing heavy 3D visual assets with low latency page transitions.",
+      "solution": "Implemented progressive WebGL asset streaming and dynamic responsive layout containers.",
+      "client": "Lumina Labs",
+      "role": "Spatial Designer & Art Director",
+      "tools": [
+        "Three.js",
+        "React",
+        "GSAP"
+      ]
+    }
+  },
+  "philosophy": {
+    "badge": "Manifesto",
+    "quote": "\"A brand is no longer what we tell the consumer it is — it is what consumers tell each other it is. We build the visual frameworks that command that conversation.\"",
+    "author": "AETHER DESIGN PHILOSOPHY — 2026"
+  },
+  "process": {
+    "badge": "Methodology",
+    "title": "A structured workflow for uncompromising visual results",
+    "subtitle": "A four-phase architectural journey transforming raw vision into enduring market authority.",
+    "steps": [
+      {
+        "num": "01",
+        "title": "Visual Identity Design",
+        "description": "Translating brand strategy into high-end aesthetics: logos, signature typography systems, custom color palettes, and typography rules.",
+        "details": [
+          "Custom Typography Curations",
+          "Concept Mockups",
+          "Logo Systems"
+        ],
+        "image": "/images2/17.jpg"
+      },
+      {
+        "num": "02",
+        "title": "Discovery & Strategy",
+        "description": "Deep dive into your company mission, market space, competitor analysis, and audience persona to define a clear creative positioning.",
+        "details": [
+          "Competitor Benchmarking",
+          "Brand Positioning Plan",
+          "Visual Archetypes"
+        ],
+        "image": "/images2/16.jpg"
+      },
+      {
+        "num": "03",
+        "title": "Packaging & Collateral",
+        "description": "Extending the brand identity to physical touchpoints. Designing premium boxes, stationery, tags, and custom print layouts.",
+        "details": [
+          "Physical Mockups",
+          "Material Recommendation",
+          "Print Templates"
+        ],
+        "image": "/images2/18.jpg"
+      },
+      {
+        "num": "04",
+        "title": "Brand Book & Delivery",
+        "description": "Compiling a complete brand book containing implementation guidelines, followed by handoff of premium vector and print assets.",
+        "details": [
+          "Brand Guidelines PDF",
+          "Vector & Raster Deliverables",
+          "Brand Consulting Support"
+        ],
+        "image": "/images2/19.jpg"
+      }
+    ]
+  },
+  "contact": {
+    "badge": "Inquiries",
+    "title": "Let's co-create your brand's future",
+    "subtitle": "Whether initializing a new venture or elevating an established name, let's talk design.",
+    "email": "inquire@aetherdesign.studio",
+    "socials": [
+      {
+        "name": "Behance",
+        "url": "https://behance.net"
+      },
+      {
+        "name": "Dribbble",
+        "url": "https://dribbble.com"
+      },
+      {
+        "name": "LinkedIn",
+        "url": "https://linkedin.com"
+      },
+      {
+        "name": "Instagram",
+        "url": "https://instagram.com"
+      }
+    ],
+    "copyright": "STUDIO. ALL RIGHTS RESERVED."
+  },
+  "cloudStorage": {
+    "provider": "imgbb",
+    "imgbbApiKey": "e096040c24517d83096c2bfa306c3cae",
+    "cloudHistory": [
+      "https://i.ibb.co/v6DN0qbk/13.jpg"
+    ]
+  }
+}
