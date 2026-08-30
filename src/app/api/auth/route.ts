@@ -138,13 +138,17 @@ export async function GET(request: NextRequest) {
       maxAccounts: 2,
       isRegistrationLocked: security.accounts.length >= 2,
       hasSmtpConfigured: Boolean(security.smtp?.user && security.smtp?.pass),
+      hasGoogleConfigured: Boolean(
+        (process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) &&
+        process.env.GOOGLE_CLIENT_SECRET
+      ),
       smtpConfig: security.smtp
         ? {
             service: security.smtp.service || "gmail",
             user: security.smtp.user,
             host: security.smtp.host || "smtp.gmail.com",
             port: security.smtp.port || 465,
-            fromName: security.smtp.fromName || "AETHER Studio Security",
+            fromName: security.smtp.fromName || "Studio Security",
           }
         : null,
       accountsSummary: isAuthenticated
@@ -232,7 +236,7 @@ export async function POST(request: NextRequest) {
               success: false,
               error: `Invalid email or password. Attempt ${currentFails} of 5.`,
             },
-            { status: 401 }
+            { status: 400 }
           );
         }
       }
@@ -345,67 +349,6 @@ export async function POST(request: NextRequest) {
         sameSite: "lax",
         path: "/",
         maxAge: 60 * 60 * 24 * 7, // 7 days
-      });
-
-      return response;
-    }
-
-    // -------------------------------------------------------------------------
-    // ACTION 2.5: GOOGLE DIRECT SIGN-IN (STRICT MAX 2 ACCOUNTS ENFORCED)
-    // -------------------------------------------------------------------------
-    if (action === "google_login") {
-      if (!cleanEmail || !cleanEmail.includes("@")) {
-        return NextResponse.json({ success: false, error: "Valid Google email required." }, { status: 400 });
-      }
-
-      // Check if this Google email is already an existing admin account
-      let account = security.accounts.find((a) => a.email.toLowerCase() === cleanEmail);
-
-      // If not yet an account, check if we can register as account #2
-      if (!account) {
-        if (security.accounts.length >= 2) {
-          return NextResponse.json(
-            {
-              success: false,
-              error: "Security Lockout: Maximum limit of 2 Admin Accounts reached. This Google account is not authorized to access the admin portal.",
-            },
-            { status: 403 }
-          );
-        }
-
-        // Register as admin account
-        const isFirst = security.accounts.length === 0;
-        account = {
-          id: `admin-google-${Date.now().toString(36)}`,
-          email: cleanEmail,
-          passwordHash: hashPassword(`google-auth-${Date.now()}`),
-          role: isFirst ? "owner" : "admin",
-          createdAt: new Date().toISOString(),
-          lastLogin: new Date().toISOString(),
-        };
-        security.accounts.push(account);
-      } else {
-        account.lastLogin = new Date().toISOString();
-      }
-
-      siteData.security = security;
-      await writeSiteData(siteData);
-
-      const sessionToken = createSignedSessionToken(cleanEmail, account.role);
-      const response = NextResponse.json({
-        success: true,
-        message: `Welcome, ${cleanEmail}! Signed in via Google.`,
-        user: { email: cleanEmail, role: account.role },
-      });
-
-      response.cookies.set({
-        name: AUTH_COOKIE_NAME,
-        value: sessionToken,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
       });
 
       return response;
@@ -569,7 +512,7 @@ export async function POST(request: NextRequest) {
         secure: smtpSettings.port === 587 ? false : true,
         user: (smtpSettings.user || "").trim(),
         pass: (smtpSettings.pass || "").trim(),
-        fromName: smtpSettings.fromName || "AETHER Studio Security",
+        fromName: smtpSettings.fromName || "Studio Security",
       };
 
       siteData.security = security;

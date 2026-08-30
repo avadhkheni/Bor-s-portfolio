@@ -19,7 +19,7 @@ export async function sendOtpEmail(
   const host = smtpConfig?.host || process.env.SMTP_HOST || "smtp.gmail.com";
   const port = smtpConfig?.port || Number(process.env.SMTP_PORT) || 465;
   const isSecure = smtpConfig?.secure !== undefined ? smtpConfig.secure : port === 465;
-  const fromName = smtpConfig?.fromName || "AETHER Studio Security";
+  const fromName = smtpConfig?.fromName || "Studio Security";
 
   // If no email credentials configured, return fallback notification
   if (!user || !pass) {
@@ -119,7 +119,7 @@ export async function sendOtpEmail(
                 <tr>
                   <td align="center" style="padding-top: 24px;">
                     <p style="margin: 0; font-size: 10px; color: rgba(255,255,255,0.3); font-family: monospace; letter-spacing: 0.05em;">
-                      © ${new Date().getFullYear()} AETHER STUDIO • SECURE ADMIN PORTAL
+                      © ${new Date().getFullYear()} STUDIO • SECURE ADMIN PORTAL
                     </p>
                   </td>
                 </tr>
@@ -135,8 +135,8 @@ export async function sendOtpEmail(
     await transporter.sendMail({
       from: `"${fromName}" <${user}>`,
       to: toEmail,
-      subject: `🔐 [AETHER STUDIO] Your Admin Verification Code: ${otpCode}`,
-      text: `Your AETHER Studio 2FA verification code is: ${otpCode}. It expires in 5 minutes. Strict limit: Maximum 2 admin accounts allowed.`,
+      subject: `🔐 [SECURITY] Your Admin Verification Code: ${otpCode}`,
+      text: `Your Studio 2FA verification code is: ${otpCode}. It expires in 5 minutes. Strict limit: Maximum 2 admin accounts allowed.`,
       html: htmlContent,
     });
 

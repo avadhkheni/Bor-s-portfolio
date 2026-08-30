@@ -79,6 +79,49 @@ async function saveCloudUrlToHistory(url: string) {
   }
 }
 
+export async function GET(request: NextRequest) {
+  try {
+    const siteConfig = await getSiteConfig();
+    const cloud = siteConfig?.cloudStorage?.cloudHistory || [];
+    const hasImgbbKey = Boolean(
+      siteConfig?.cloudStorage?.imgbbApiKey || process.env.IMGBB_API_KEY
+    );
+
+    // List locally uploaded files
+    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    let uploads: string[] = [];
+    try {
+      const files = await fs.readdir(uploadsDir);
+      uploads = files
+        .filter((file) => !file.startsWith(".") && ALLOWED_EXTENSIONS.has(path.extname(file).toLowerCase()))
+        .map((file) => `/uploads/${file}`);
+    } catch {
+      uploads = [];
+    }
+
+    // Default / stock showcase images from projects
+    const stock: string[] = [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1200&auto=format&fit=crop",
+    ];
+
+    return NextResponse.json({
+      success: true,
+      cloud,
+      uploads,
+      stock,
+      hasImgbbKey,
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, error: err.message || "Failed to load media" },
+      { status: 200 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // 1. STRICT AUTHENTICATION CHECK

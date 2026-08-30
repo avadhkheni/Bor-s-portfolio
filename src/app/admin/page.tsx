@@ -136,7 +136,7 @@ export default function AdminPage() {
   const [smtpService, setSmtpService] = React.useState("gmail");
   const [smtpUser, setSmtpUser] = React.useState("");
   const [smtpPass, setSmtpPass] = React.useState("");
-  const [smtpFromName, setSmtpFromName] = React.useState("AETHER Studio Security");
+  const [smtpFromName, setSmtpFromName] = React.useState("Studio Security");
   const [isSavingSmtp, setIsSavingSmtp] = React.useState(false);
   const [isTestingSmtp, setIsTestingSmtp] = React.useState(false);
   const [emailDeliveredLive, setEmailDeliveredLive] = React.useState<boolean | null>(null);
@@ -228,18 +228,29 @@ export default function AdminPage() {
         setIsAuthenticated(false);
         setCurrentUser(null);
       }
-      setTotalAccounts(json.totalAccounts || 0);
-      setIsRegistrationLocked(json.isRegistrationLocked || false);
+      const count = json.totalAccounts || 0;
+      const locked = Boolean(json.isRegistrationLocked || count >= 2);
+      setTotalAccounts(count);
+      setIsRegistrationLocked(locked);
       setHasSmtp(Boolean(json.hasSmtpConfigured));
       if (json.smtpConfig) {
         setSmtpUser(json.smtpConfig.user || "");
         setSmtpService(json.smtpConfig.service || "gmail");
-        setSmtpFromName(json.smtpConfig.fromName || "AETHER Studio Security");
+        setSmtpFromName(json.smtpConfig.fromName || "Studio Security");
       }
       if (json.accountsSummary) {
         setAccountsList(json.accountsSummary);
       }
-      if (json.totalAccounts === 0) {
+
+      const params = new URLSearchParams(window.location.search);
+      const wantsRegister = params.get("mode") === "register" || params.get("register") === "true";
+
+      if (locked) {
+        setAuthMode("login");
+        if (wantsRegister) {
+          setAuthError("Registration is closed: Maximum limit of 2 accounts reached. Please sign in.");
+        }
+      } else if (count === 0 || wantsRegister) {
         setAuthMode("register");
       }
     } catch {
@@ -277,6 +288,13 @@ export default function AdminPage() {
     setAuthError(null);
 
     try {
+      if (authMode === "register" && (isRegistrationLocked || totalAccounts >= 2)) {
+        setAuthError("Registration is closed: Maximum limit of 2 accounts reached. Cannot create another account.");
+        setAuthMode("login");
+        setIsSubmittingAuth(false);
+        return;
+      }
+
       if (!authEmail.trim() || !authEmail.includes("@")) {
         setAuthError("Please enter a valid Gmail / Email address.");
         setIsSubmittingAuth(false);
@@ -289,6 +307,8 @@ export default function AdminPage() {
         return;
       }
 
+      const autoRole = totalAccounts === 0 ? "owner" : "admin";
+
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -296,7 +316,7 @@ export default function AdminPage() {
           action: authMode === "register" ? "register" : "request_otp",
           email: authEmail.trim().toLowerCase(),
           password: authPassword,
-          role: authRole,
+          role: autoRole,
         }),
       });
 
@@ -314,6 +334,10 @@ export default function AdminPage() {
           setAuthError(resData.message);
         } else {
           setAuthError(resData.error || "Authentication failed.");
+          if (resData.error && resData.error.includes("Maximum limit of 2 Admin Accounts")) {
+            setAuthMode("login");
+            setIsRegistrationLocked(true);
+          }
         }
       }
     } catch {
@@ -376,54 +400,6 @@ export default function AdminPage() {
       showToast("Error communicating with SMTP server.", "error");
     } finally {
       setIsTestingSmtp(false);
-    }
-  };
-
-  const [isSubmittingGoogle, setIsSubmittingGoogle] = React.useState(false);
-
-  const handleGoogleDirectSignIn = async (emailOverride?: string) => {
-    setIsSubmittingGoogle(true);
-    setAuthError(null);
-    try {
-      let targetGoogleEmail = (emailOverride || authEmail.trim()).toLowerCase();
-
-      if (!targetGoogleEmail) {
-        if (authMode === "register") {
-          const promptInput = window.prompt("Enter the Google / Gmail address to register Admin Account #2:");
-          if (!promptInput || !promptInput.includes("@")) {
-            setAuthError("A valid Gmail address is required to register.");
-            setIsSubmittingGoogle(false);
-            return;
-          }
-          targetGoogleEmail = promptInput.trim().toLowerCase();
-          setAuthEmail(targetGoogleEmail);
-        } else {
-          // If in login mode and input empty, default to avadhkheni1@gmail.com
-          targetGoogleEmail = "avadhkheni1@gmail.com";
-          setAuthEmail(targetGoogleEmail);
-        }
-      }
-
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "google_login",
-          email: targetGoogleEmail,
-        }),
-      });
-
-      const resData = await res.json();
-      if (res.ok && resData.success) {
-        showToast(resData.message || "Signed in with Google successfully!", "success");
-        await checkAuthStatus();
-      } else {
-        setAuthError(resData.error || "Google Sign-In failed.");
-      }
-    } catch {
-      setAuthError("Failed to connect to Google Auth endpoint.");
-    } finally {
-      setIsSubmittingGoogle(false);
     }
   };
 
@@ -1717,58 +1693,49 @@ export default function AdminPage() {
   // LOGIN FORM VIEW (WHEN NOT AUTHENTICATED)
   // =========================================================================
   // =========================================================================
-  // FORTRESS 2FA SECURITY GATEWAY WALL (WHEN NOT AUTHENTICATED)
+  // SIMPLE, CLEAN AUTHENTICATION & REGISTRATION GATEWAY
   // =========================================================================
   if (isAuthenticated === false) {
     return (
-      <div className="min-h-screen bg-[#07080c] text-white flex flex-col items-center justify-center p-6 relative overflow-hidden selection:bg-blue-500/30">
-        <div className="pointer-events-none absolute -top-40 -left-40 w-[60vw] h-[60vw] max-w-2xl rounded-full bg-blue-600/10 blur-[150px]" />
-        <div className="pointer-events-none absolute -bottom-40 -right-40 w-[60vw] h-[60vw] max-w-2xl rounded-full bg-purple-600/10 blur-[150px]" />
-
-        <div className="absolute top-8 left-8">
+      <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col items-center justify-center p-4 sm:p-6 relative selection:bg-zinc-800">
+        <div className="absolute top-6 left-6">
           <Link
             href="/"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/60 hover:text-white transition-colors bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10"
+            className="inline-flex items-center gap-2 text-xs font-medium text-zinc-400 hover:text-zinc-100 transition-colors py-1.5 px-3 rounded-lg hover:bg-zinc-900"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Portfolio
+            <ArrowLeft className="w-4 h-4" /> Back to website
           </Link>
         </div>
 
-        <div className="w-full max-w-lg bg-[#0e0f18]/95 border border-white/15 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-2xl relative z-10 space-y-6">
+        <div className="w-full max-w-[420px] bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-xl relative z-10 space-y-6 backdrop-blur-sm">
           {/* Header */}
           <div className="flex flex-col items-center text-center space-y-2">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/30 mb-2 border border-white/20">
-              <ShieldCheck className="w-8 h-8 text-cyan-300" />
+            <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-200 shadow-sm mb-1">
+              <Shield className="w-5 h-5 text-zinc-300" />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/20 text-cyan-400 border border-blue-500/30">
-                Fortress 2FA Guard
-              </span>
-              <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${
-                totalAccounts >= 2 ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-              }`}>
-                Admins: {totalAccounts} / 2 Max
-              </span>
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">Studio Admin Gateway</h1>
-            <p className="text-xs text-white/50 max-w-sm">
-              Strict two-factor authentication. Maximum of 2 authorized administrator accounts strictly enforced.
+            <h1 className="text-xl font-semibold tracking-tight text-white">
+              {authMode === "register" ? "Create an account" : "Welcome back"}
+            </h1>
+            <p className="text-xs text-zinc-400 max-w-xs">
+              {authMode === "register"
+                ? "Enter your email and choose a password to get started."
+                : "Sign in to access your portfolio management studio."}
             </p>
           </div>
 
-          {/* Mode Switcher Tabs (Sign In vs Register 2nd Admin) */}
-          {authStep === "credentials" && (
-            <div className="grid grid-cols-2 gap-2 p-1.5 bg-black/40 rounded-2xl border border-white/10">
+          {/* Mode Switcher Tabs (Sign In vs Register) - Hidden when 2 accounts exist */}
+          {authStep === "credentials" && totalAccounts < 2 && !isRegistrationLocked && (
+            <div className="grid grid-cols-2 gap-1 p-1 bg-zinc-900/90 rounded-xl border border-zinc-800 text-xs font-medium">
               <button
                 type="button"
                 onClick={() => {
                   setAuthMode("login");
                   setAuthError(null);
                 }}
-                className={`py-2 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-lg transition-all text-center cursor-pointer ${
                   authMode === "login"
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
-                    : "text-white/60 hover:text-white"
+                    ? "bg-zinc-800 text-white shadow-sm font-semibold"
+                    : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
                 Sign In
@@ -1776,46 +1743,40 @@ export default function AdminPage() {
 
               <button
                 type="button"
-                disabled={isRegistrationLocked}
                 onClick={() => {
-                  if (!isRegistrationLocked) {
-                    setAuthMode("register");
-                    setAuthError(null);
-                  }
+                  setAuthMode("register");
+                  setAuthError(null);
                 }}
-                className={`py-2 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  isRegistrationLocked
-                    ? "text-white/30 cursor-not-allowed"
-                    : authMode === "register"
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
-                    : "text-white/60 hover:text-white"
+                className={`py-2 px-3 rounded-lg transition-all text-center cursor-pointer ${
+                  authMode === "register"
+                    ? "bg-zinc-800 text-white shadow-sm font-semibold"
+                    : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
-                <UserPlus className="w-3.5 h-3.5" />
-                <span>{isRegistrationLocked ? "Locked (2/2 Max)" : `Register (${totalAccounts}/2)`}</span>
+                Register
               </button>
             </div>
           )}
 
           {/* Error Message */}
           {authError && (
-            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 flex items-start gap-3 text-red-400 text-xs font-medium">
-              <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
+            <div className="p-3 rounded-xl bg-red-950/40 border border-red-800/40 flex items-start gap-2.5 text-red-300 text-xs leading-relaxed">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-400 mt-0.5" />
               <span>{authError}</span>
             </div>
           )}
 
           {/* ========================================================================= */}
-          {/* STEP 1: CREDENTIALS FORM (EMAIL / GMAIL + PASSWORD) */}
+          {/* STEP 1: CREDENTIALS FORM */}
           {/* ========================================================================= */}
           {authStep === "credentials" && (
             <form onSubmit={handleRequestAuthOtp} className="space-y-4">
-              <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-white/60 block mb-1.5">
-                  Admin Email / Gmail
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-300 block">
+                  Email
                 </label>
                 <div className="relative">
-                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none">
                     <Mail className="w-4 h-4" />
                   </div>
                   <input
@@ -1823,18 +1784,21 @@ export default function AdminPage() {
                     required
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
-                    placeholder="e.g. avadh@gmail.com"
-                    className="w-full bg-black/50 border border-white/15 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    placeholder="name@example.com"
+                    className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-white/60 block mb-1.5">
-                  Password (Min. 6 Characters)
-                </label>
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-zinc-300 block">
+                    Password
+                  </label>
+                  <span className="text-[11px] text-zinc-500">Min. 6 chars</span>
+                </div>
                 <div className="relative">
-                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none">
                     <Key className="w-4 h-4" />
                   </div>
                   <input
@@ -1843,81 +1807,34 @@ export default function AdminPage() {
                     value={authPassword}
                     onChange={(e) => setAuthPassword(e.target.value)}
                     placeholder="••••••••••••"
-                    className="w-full bg-black/50 border border-white/15 rounded-xl pl-10 pr-11 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors font-mono"
+                    className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-10 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors font-mono"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-0.5 cursor-pointer"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              {authMode === "register" && (
-                <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-white/60 block mb-1.5">
-                    Account Role
-                  </label>
-                  <select
-                    value={authRole}
-                    onChange={(e) => setAuthRole(e.target.value as "owner" | "admin")}
-                    className="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500"
-                  >
-                    <option value="owner">Primary Studio Owner (Account #1)</option>
-                    <option value="admin">Co-Administrator (Account #2)</option>
-                  </select>
-                </div>
-              )}
-
               <button
                 type="submit"
                 disabled={isSubmittingAuth}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-blue-600/30 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
+                className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-sm transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 mt-2"
               >
                 {isSubmittingAuth ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <>
-                    <Fingerprint className="w-4 h-4 text-cyan-300" />
-                    <span>{authMode === "register" ? "Create Account & Get 2FA Code" : "Send 6-Digit 2FA Code →"}</span>
-                  </>
+                  <span>{authMode === "register" ? "Create account" : "Sign in"}</span>
                 )}
               </button>
 
               {/* OR DIVIDER */}
-              <div className="flex items-center gap-3 my-3">
-                <div className="flex-1 h-px bg-white/10" />
-                <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider">or fast direct login</span>
-                <div className="flex-1 h-px bg-white/10" />
-              </div>
-
-              {/* DIRECT GOOGLE SIGN-IN BUTTON */}
-              <button
-                type="button"
-                onClick={() => handleGoogleDirectSignIn()}
-                disabled={isSubmittingGoogle}
-                className="w-full py-3 rounded-xl bg-white hover:bg-zinc-100 text-zinc-900 font-bold text-xs uppercase tracking-wider shadow-lg transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-60"
-              >
-                {isSubmittingGoogle ? (
-                  <div className="w-4 h-4 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                    </svg>
-                    <span>{authMode === "register" ? "Register & Sign in with Google" : "Sign in with Google"}</span>
-                  </>
-                )}
-              </button>
-              <div className="text-[10px] text-center text-white/40 flex items-center justify-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-cyan-400" />
-                <span>Strict Limit: Only 2 Admin Accounts Allowed</span>
-              </div>
+              <p className="text-[11px] text-center text-zinc-500 pt-1">
+                Portfolio Studio Access
+              </p>
             </form>
           )}
 
@@ -1925,42 +1842,37 @@ export default function AdminPage() {
           {/* STEP 2: 6-DIGIT OTP VERIFICATION FORM */}
           {/* ========================================================================= */}
           {authStep === "otp" && (
-            <form onSubmit={handleVerifyAuthOtp} className="space-y-5 animate-fade-in">
-              <div className="p-4 rounded-2xl bg-blue-950/40 border border-blue-500/30 space-y-2">
-                <div className="flex items-center justify-between text-xs text-blue-300 font-semibold">
-                  <span className="flex items-center gap-1.5">
-                    <KeyRound className="w-4 h-4 text-cyan-400" /> 2FA Code Sent
-                  </span>
-                  <span className="font-mono text-cyan-400 font-bold">
+            <form onSubmit={handleVerifyAuthOtp} className="space-y-4">
+              <div className="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2">
+                <div className="flex items-center justify-between text-xs text-zinc-400">
+                  <span>Verification code sent</span>
+                  <span className="font-mono text-zinc-300">
                     {otpTimer > 0
-                      ? `Expires in ${Math.floor(otpTimer / 60)}:${String(otpTimer % 60).padStart(2, "0")}`
-                      : "Code Expired"}
+                      ? `${Math.floor(otpTimer / 60)}:${String(otpTimer % 60).padStart(2, "0")}`
+                      : "Expired"}
                   </span>
                 </div>
-                {emailDeliveredLive ? (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Real verification code sent directly to <strong>{authEmail}</strong>. Please check your inbox!</span>
-                  </div>
-                ) : (
-                  <p className="text-xs text-white/70">
-                    Verification code generated for <strong>{authEmail}</strong>.
-                  </p>
-                )}
+                <p className="text-xs text-zinc-300">
+                  {emailDeliveredLive ? (
+                    <>A verification code was emailed to <span className="text-white font-medium">{authEmail}</span>.</>
+                  ) : (
+                    <>Verification code generated for <span className="text-white font-medium">{authEmail}</span>.</>
+                  )}
+                </p>
 
                 {activeOtpCode && (
-                  <div className="mt-2 p-2.5 rounded-xl bg-black/60 border border-cyan-500/40 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] font-mono uppercase text-white/50 block">Your 2FA OTP Code:</span>
-                      <span className="text-lg font-mono font-extrabold tracking-widest text-cyan-400">{activeOtpCode}</span>
+                  <div className="mt-2 p-2 rounded-lg bg-zinc-950 border border-zinc-800 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-zinc-500">Test Code:</span>
+                      <span className="text-sm font-mono font-bold text-zinc-100 tracking-wider">{activeOtpCode}</span>
                     </div>
                     <button
                       type="button"
                       onClick={() => {
                         setAuthOtp(activeOtpCode);
-                        showToast("OTP code pasted into input!", "success");
+                        showToast("Code filled", "success");
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer border border-cyan-500/30"
+                      className="text-[11px] font-medium px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors cursor-pointer"
                     >
                       Use Code
                     </button>
@@ -1968,9 +1880,9 @@ export default function AdminPage() {
                 )}
               </div>
 
-              <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-white/60 block mb-2 text-center">
-                  Enter 6-Digit One-Time Code
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-300 block text-center">
+                  Enter 6-digit code
                 </label>
                 <input
                   type="text"
@@ -1980,34 +1892,31 @@ export default function AdminPage() {
                   value={authOtp}
                   onChange={(e) => setAuthOtp(e.target.value.replace(/\D/g, ""))}
                   placeholder="••••••"
-                  className="w-full bg-black/60 border-2 border-cyan-500/50 focus:border-cyan-400 rounded-2xl py-3 text-center text-2xl font-mono font-bold tracking-[0.5em] text-white focus:outline-none transition-colors"
+                  className="w-full bg-zinc-900/70 border border-zinc-800 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 rounded-xl py-2.5 text-center text-xl font-mono tracking-[0.4em] text-zinc-100 focus:outline-none transition-colors"
                 />
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5 pt-1">
                 <button
                   type="button"
                   onClick={() => {
                     setAuthStep("credentials");
                     setAuthError(null);
                   }}
-                  className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl border border-zinc-800 hover:bg-zinc-900 text-zinc-300 hover:text-white font-medium text-xs transition-colors cursor-pointer"
                 >
-                  ← Back
+                  Back
                 </button>
 
                 <button
                   type="submit"
                   disabled={isSubmittingAuth || authOtp.length !== 6}
-                  className="flex-[2] py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/30 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="flex-[2] py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-xs transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {isSubmittingAuth ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <>
-                      <Lock className="w-4 h-4" />
-                      <span>Verify &amp; Unlock</span>
-                    </>
+                    <span>Verify &amp; Continue</span>
                   )}
                 </button>
               </div>
@@ -4960,7 +4869,7 @@ export default function AdminPage() {
                         type="text"
                         value={smtpFromName}
                         onChange={(e) => setSmtpFromName(e.target.value)}
-                        placeholder="AETHER Studio Security"
+                        placeholder="Studio Security"
                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500"
                       >
                       </input>
