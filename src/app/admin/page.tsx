@@ -116,8 +116,10 @@ export default function AdminPage() {
   // Auth Form State
   const [authMode, setAuthMode] = React.useState<"login" | "register">("login");
   const [authStep, setAuthStep] = React.useState<"credentials" | "otp">("credentials");
+  const [authName, setAuthName] = React.useState("");
   const [authEmail, setAuthEmail] = React.useState("");
   const [authPassword, setAuthPassword] = React.useState("");
+  const [authConfirmPassword, setAuthConfirmPassword] = React.useState("");
   const [authRole, setAuthRole] = React.useState<"owner" | "admin">("admin");
   const [authOtp, setAuthOtp] = React.useState("");
   const [activeOtpCode, setActiveOtpCode] = React.useState<string | null>(null);
@@ -125,6 +127,7 @@ export default function AdminPage() {
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isSubmittingAuth, setIsSubmittingAuth] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
   // Security Tab Change Password State
   const [newPasswordEmail, setNewPasswordEmail] = React.useState("");
@@ -288,11 +291,25 @@ export default function AdminPage() {
     setAuthError(null);
 
     try {
-      if (authMode === "register" && (isRegistrationLocked || totalAccounts >= 2)) {
-        setAuthError("Registration is closed: Maximum limit of 2 accounts reached. Cannot create another account.");
-        setAuthMode("login");
-        setIsSubmittingAuth(false);
-        return;
+      if (authMode === "register") {
+        if (isRegistrationLocked || totalAccounts >= 2) {
+          setAuthError("Registration is closed: Maximum limit of 2 accounts reached. Cannot create another account.");
+          setAuthMode("login");
+          setIsSubmittingAuth(false);
+          return;
+        }
+
+        if (!authName.trim() || authName.trim().length < 2) {
+          setAuthError("Please enter your full name (at least 2 characters).");
+          setIsSubmittingAuth(false);
+          return;
+        }
+
+        if (authPassword !== authConfirmPassword) {
+          setAuthError("Passwords do not match. Please re-enter your password.");
+          setIsSubmittingAuth(false);
+          return;
+        }
       }
 
       if (!authEmail.trim() || !authEmail.includes("@")) {
@@ -314,6 +331,7 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: authMode === "register" ? "register" : "request_otp",
+          name: authName.trim(),
           email: authEmail.trim().toLowerCase(),
           password: authPassword,
           role: autoRole,
@@ -1770,7 +1788,29 @@ export default function AdminPage() {
           {/* STEP 1: CREDENTIALS FORM */}
           {/* ========================================================================= */}
           {authStep === "credentials" && (
-            <form onSubmit={handleRequestAuthOtp} className="space-y-4">
+            <form onSubmit={handleRequestAuthOtp} className="space-y-3.5">
+              {/* Full Name field (Register mode only) */}
+              {authMode === "register" && (
+                <div className="space-y-1.5 animate-fade-in">
+                  <label className="text-xs font-medium text-zinc-300 block">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none">
+                      <User className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={authName}
+                      onChange={(e) => setAuthName(e.target.value)}
+                      placeholder="e.g. Avadh Kheni"
+                      className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors"
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-300 block">
                   Email
@@ -1818,6 +1858,35 @@ export default function AdminPage() {
                   </button>
                 </div>
               </div>
+
+              {/* Confirm Password field (Register mode only) */}
+              {authMode === "register" && (
+                <div className="space-y-1.5 animate-fade-in">
+                  <label className="text-xs font-medium text-zinc-300 block">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none">
+                      <Key className="w-4 h-4" />
+                    </div>
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      required
+                      value={authConfirmPassword}
+                      onChange={(e) => setAuthConfirmPassword(e.target.value)}
+                      placeholder="••••••••••••"
+                      className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-10 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-0.5 cursor-pointer"
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <button
                 type="submit"

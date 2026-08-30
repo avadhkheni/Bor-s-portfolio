@@ -89,10 +89,11 @@ function verifySessionToken(token: string): { valid: boolean; email?: string } {
 }
 
 // Create signed session token (7 days expiry)
-function createSignedSessionToken(email: string, role: string): string {
+function createSignedSessionToken(email: string, role: string, name?: string): string {
   const payload = {
     email,
     role,
+    name,
     iat: Date.now(),
     exp: Date.now() + 7 * 24 * 60 * 60 * 1000,
   };
@@ -116,7 +117,7 @@ export async function GET(request: NextRequest) {
 
     const sessionCookie = request.cookies.get(AUTH_COOKIE_NAME)?.value;
     let isAuthenticated = false;
-    let currentUser: { email: string; role: string } | null = null;
+    let currentUser: { email: string; role: string; name?: string } | null = null;
 
     if (sessionCookie) {
       const verification = verifySessionToken(sessionCookie);
@@ -126,7 +127,7 @@ export async function GET(request: NextRequest) {
         );
         if (found) {
           isAuthenticated = true;
-          currentUser = { email: found.email, role: found.role };
+          currentUser = { email: found.email, role: found.role, name: found.name };
         }
       }
     }
@@ -154,6 +155,7 @@ export async function GET(request: NextRequest) {
       accountsSummary: isAuthenticated
         ? security.accounts.map((a) => ({
             id: a.id,
+            name: a.name || a.email.split("@")[0],
             email: a.email,
             role: a.role,
             createdAt: a.createdAt,
@@ -329,8 +331,10 @@ export async function POST(request: NextRequest) {
       await writeSiteData(siteData);
 
       // Create signed secure session token
-      const userRole = security.accounts[accountIndex]?.role || "admin";
-      const sessionToken = createSignedSessionToken(cleanEmail, userRole);
+      const account = security.accounts[accountIndex];
+      const userRole = account?.role || "admin";
+      const userName = account?.name;
+      const sessionToken = createSignedSessionToken(cleanEmail, userRole, userName);
 
       const response = NextResponse.json({
         success: true,
@@ -338,6 +342,7 @@ export async function POST(request: NextRequest) {
         user: {
           email: cleanEmail,
           role: userRole,
+          name: userName,
         },
       });
 
@@ -358,6 +363,9 @@ export async function POST(request: NextRequest) {
     // ACTION 3: REGISTER NEW ADMIN ACCOUNT (STRICT MAX 2 ACCOUNTS ENFORCED)
     // -------------------------------------------------------------------------
     if (action === "register") {
+      const { email, password, name } = body;
+      const cleanName = (name || "").trim();
+
       if (security.accounts.length >= 2) {
         return NextResponse.json(
           {
@@ -365,6 +373,13 @@ export async function POST(request: NextRequest) {
             error: "Security Policy: Maximum limit of 2 Admin Accounts has been reached. No further accounts can be created.",
           },
           { status: 403 }
+        );
+      }
+
+      if (!cleanName || cleanName.length < 2) {
+        return NextResponse.json(
+          { success: false, error: "Please enter your full name (minimum 2 characters)." },
+          { status: 400 }
         );
       }
 
@@ -394,6 +409,7 @@ export async function POST(request: NextRequest) {
       const isFirstAccount = security.accounts.length === 0;
       const newAdmin: AdminUser = {
         id: `admin-${Date.now().toString(36)}`,
+        name: cleanName,
         email: cleanEmail,
         passwordHash: hashPassword(password),
         role: isFirstAccount ? "owner" : (role || "admin"),

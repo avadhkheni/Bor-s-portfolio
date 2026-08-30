@@ -173,6 +173,7 @@ export interface CustomPage {
 
 export interface AdminUser {
   id: string;
+  name?: string;
   email: string;
   passwordHash: string;
   role: "owner" | "admin";
