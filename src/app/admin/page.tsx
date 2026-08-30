@@ -1225,7 +1225,7 @@ export default function AdminPage() {
           animation: "fade-up",
           glowColor: "none",
           items: [
-            { id: "l1", title: "AETHER" },
+            { id: "l1", title: "STUDIO" },
             { id: "l2", title: "VERDELLE" },
             { id: "l3", title: "WILLOW & WHISK" },
             { id: "l4", title: "LUMINA LABS" },
@@ -1308,7 +1308,7 @@ export default function AdminPage() {
           items: [
             { id: "aw1", title: "Awwwards Site of the Day", subtitle: "Lumina Labs Flagship", tag: "Awwwards", value: "2025" },
             { id: "aw2", title: "D&AD Wood Pencil", subtitle: "Verdelle Packaging System", tag: "D&AD", value: "2024" },
-            { id: "aw3", title: "FWA of the Month", subtitle: "Aether Spatial Experience", tag: "FWA", value: "2024" },
+            { id: "aw3", title: "FWA of the Month", subtitle: "Spatial Experience", tag: "FWA", value: "2024" },
             { id: "aw4", title: "Type Directors Club TDC70", subtitle: "Custom Foundry Letterforms", tag: "TDC", value: "2023" },
           ],
         };
@@ -4001,7 +4001,7 @@ export default function AdminPage() {
                     <input
                       type="text"
                       value={data.brand?.name ?? ""}
-                      placeholder="e.g. AETHER"
+                      placeholder="e.g. PORTFOLIO"
                       onChange={(e) =>
                         setData((prev) => ({
                           ...prev,
@@ -4023,7 +4023,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setData((prev) => ({
                           ...prev,
-                          brand: { ...prev.brand, navCtaText: e.target.value, name: prev.brand?.name ?? "AETHER", tagline: prev.brand?.tagline ?? "" },
+                          brand: { ...prev.brand, navCtaText: e.target.value, name: prev.brand?.name ?? "PORTFOLIO", tagline: prev.brand?.tagline ?? "" },
                         }))
                       }
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500"
@@ -4041,7 +4041,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setData((prev) => ({
                           ...prev,
-                          brand: { ...prev.brand, tagline: e.target.value, name: prev.brand?.name ?? "AETHER", navCtaText: prev.brand?.navCtaText ?? "Let's Talk" },
+                          brand: { ...prev.brand, tagline: e.target.value, name: prev.brand?.name ?? "PORTFOLIO", navCtaText: prev.brand?.navCtaText ?? "Let's Talk" },
                         }))
                       }
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500"
@@ -4287,7 +4287,7 @@ export default function AdminPage() {
                     <input
                       type="text"
                       value={data.philosophy?.author ?? ""}
-                      placeholder="AETHER DESIGN PHILOSOPHY — 2026"
+                      placeholder="DESIGN PHILOSOPHY — 2026"
                       onChange={(e) =>
                         setData((prev) => ({
                           ...prev,
@@ -5188,7 +5188,7 @@ export default function AdminPage() {
                       value={editingProject.title ?? ""}
                       onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-blue-500"
-                      placeholder="e.g. AETHER — Brand Design"
+                      placeholder="e.g. Brand Design"
                     />
                   </div>
 
@@ -5201,7 +5201,7 @@ export default function AdminPage() {
                       value={editingProject.id ?? ""}
                       onChange={(e) => setEditingProject({ ...editingProject, id: e.target.value })}
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white font-mono focus:outline-none focus:border-blue-500"
-                      placeholder="e.g. aether-brand"
+                      placeholder="e.g. brand-identity"
                     />
                   </div>
 
@@ -5240,7 +5240,7 @@ export default function AdminPage() {
                       value={editingProject.url ?? ""}
                       onChange={(e) => setEditingProject({ ...editingProject, url: e.target.value })}
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white font-mono focus:outline-none focus:border-blue-500"
-                      placeholder="e.g. aether.design"
+                      placeholder="e.g. studio.design"
                     />
                   </div>
 

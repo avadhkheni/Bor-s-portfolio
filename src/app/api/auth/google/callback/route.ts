@@ -7,7 +7,7 @@ import { AdminUser, SecuritySettings, SiteData } from "@/lib/site-types";
 const RUNTIME_DATA_PATH = path.join(process.cwd(), "data", "site-data.json");
 const FALLBACK_DATA_PATH = path.join(process.cwd(), "src", "data", "site-data.json");
 const AUTH_COOKIE_NAME = "portfolio_admin_session";
-const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || "aether-fortress-secure-key-2026";
+const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || "portfolio-secure-session-key-2026";
 
 async function readSiteData(): Promise<SiteData> {
   try {

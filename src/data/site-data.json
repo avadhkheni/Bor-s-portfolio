@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "AETHER",
+    "name": "PORTFOLIO",
     "tagline": "VISUAL & BRAND DESIGN STUDIO • EST. 2026",
     "navCtaText": "Let's Talk"
   },
@@ -264,7 +264,7 @@
   "philosophy": {
     "badge": "Manifesto",
     "quote": "\"A brand is no longer what we tell the consumer it is — it is what consumers tell each other it is. We build the visual frameworks that command that conversation.\"",
-    "author": "AETHER DESIGN PHILOSOPHY — 2026"
+    "author": "DESIGN PHILOSOPHY — 2026"
   },
   "process": {
     "badge": "Methodology",
@@ -321,7 +321,7 @@
     "badge": "Inquiries",
     "title": "Let's co-create your brand's future",
     "subtitle": "Whether initializing a new venture or elevating an established name, let's talk design.",
-    "email": "inquire@aetherdesign.studio",
+    "email": "inquire@studio.design",
     "socials": [
       {
         "name": "Behance",

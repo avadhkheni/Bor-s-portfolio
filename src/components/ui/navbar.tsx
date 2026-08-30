@@ -28,7 +28,7 @@ export function Navbar() {
     }
   };
 
-  const brandName = data?.brand?.name || "AETHER";
+  const brandName = data?.brand?.name || "PORTFOLIO";
   const ctaText = data?.brand?.navCtaText || "Let's Talk";
 
   const allPages = React.useMemo(() => {

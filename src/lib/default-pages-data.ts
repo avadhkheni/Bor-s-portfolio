@@ -146,7 +146,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
         badge: "Catalog",
         items: [
           { title: "Verdelle Botanics", subtitle: "2025 • Luxury Identity & Glassware", tag: "Packaging & Web", image: "/images2/30.jpg" },
-          { title: "Aether Dynamics", subtitle: "2025 • High-Speed EV Branding", tag: "Kinetic UI", image: "/images2/31.jpg" },
+          { title: "Apex Dynamics", subtitle: "2025 • High-Speed EV Branding", tag: "Kinetic UI", image: "/images2/31.jpg" },
           { title: "Willow & Whisk", subtitle: "2024 • Artisanal Bakery Packaging", tag: "Print System", image: "/images2/32.jpg" },
           { title: "Lumina Research Labs", subtitle: "2024 • AI Infrastructure Flagship", tag: "Next.js WebGL", image: "/images2/33.jpg" },
           { title: "Natura Apothecary", subtitle: "2023 • Minimalist Skin Wellness", tag: "Full Scope", image: "/images2/34.jpg" },
@@ -217,7 +217,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
         items: [
           { title: "Awwwards Site of the Month", subtitle: "Lumina Labs Flagship (2025)", tag: "Awwwards", description: "Recognized for kinetic motion fluidity and typography." },
           { title: "D&AD Graphite Pencil", subtitle: "Verdelle Botanics Packaging (2024)", tag: "D&AD", description: "Awarded for sustainable structural box craftsmanship." },
-          { title: "FWA of the Day", subtitle: "Aether EV Interactive (2024)", tag: "FWA", description: "Recognized for WebGL spatial visualizer." },
+          { title: "FWA of the Day", subtitle: "Apex EV Interactive (2024)", tag: "FWA", description: "Recognized for WebGL spatial visualizer." },
           { title: "Type Directors Club TDC69", subtitle: "Studio Editorial Specimen (2023)", tag: "TDC", description: "Honored for custom serif typography design." },
         ],
       },
@@ -352,7 +352,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
         badge: "Roster",
         items: [
           { title: "Verdelle Organics", subtitle: "Botanical Skin Wellness", tag: "Identity + Web" },
-          { title: "Aether EV", subtitle: "Autonomous Performance", tag: "Digital Flagship" },
+          { title: "Apex EV", subtitle: "Autonomous Performance", tag: "Digital Flagship" },
           { title: "Lumina Labs", subtitle: "Machine Intelligence", tag: "Brand Strategy" },
           { title: "Willow & Whisk", subtitle: "Artisanal Gastronomy", tag: "Packaging" },
         ],

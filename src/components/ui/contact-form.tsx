@@ -30,7 +30,7 @@ export function ContactForm() {
     badge: "Inquiries",
     title: "Let's co-create your brand's future",
     subtitle: "Whether initializing a new venture or elevating an established name, let's talk design.",
-    email: "inquire@aetherdesign.studio",
+    email: "inquire@studio.design",
     socials: [
       { name: "Behance", url: "https://behance.net" },
       { name: "Dribbble", url: "https://dribbble.com" },
@@ -69,10 +69,10 @@ export function ContactForm() {
               <div>
                 <p className="text-xs uppercase font-semibold text-white/50 tracking-wider">Direct Email</p>
                 <a
-                  href={`mailto:${contactData.email || "inquire@aetherdesign.studio"}`}
+                  href={`mailto:${contactData.email || "inquire@studio.design"}`}
                   className="mt-1 block text-lg font-bold text-white hover:text-white/80 transition-colors"
                 >
-                  {contactData.email || "inquire@aetherdesign.studio"}
+                  {contactData.email || "inquire@studio.design"}
                 </a>
               </div>
               {contactData.socials && contactData.socials.length > 0 && (

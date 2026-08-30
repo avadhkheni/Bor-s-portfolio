@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AETHER | Premium Brand & Visual Identity Designer",
+  title: "PORTFOLIO | Brand & Visual Identity Designer",
   description: "Specializing in high-fidelity visual identity design, custom packaging, creative brand strategy, and kinetic digital experiences. View featured brand case studies.",
   keywords: ["Brand Design", "Visual Identity", "Packaging Design", "Creative Director", "Typography", "Logo Designer", "Portfolio"],
-  authors: [{ name: "Aether Design" }],
+  authors: [{ name: "Design Studio" }],
   openGraph: {
-    title: "AETHER | Premium Brand & Visual Identity Designer",
+    title: "PORTFOLIO | Brand & Visual Identity Designer",
     description: "Showcasing high-fidelity visual identity design, custom packaging, and creative brand strategy.",
     type: "website",
   },
