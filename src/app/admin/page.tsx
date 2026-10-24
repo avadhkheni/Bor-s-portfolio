@@ -615,8 +615,9 @@ export default function AdminPage() {
     }
   };
 
-  const handleSave = async () => {
-    const success = await saveChanges();
+  const handleSave = async (explicitData?: SiteData) => {
+    const dataToSave = explicitData || data;
+    const success = await saveChanges(dataToSave);
     if (success) {
       showToast("All changes published live successfully!", "success");
     } else {
@@ -1005,54 +1006,69 @@ export default function AdminPage() {
   };
 
   const moveParallaxLayer = async (index: number, direction: "up" | "down") => {
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= (data.parallaxImages || []).length) return;
-    const newArr = [...(data.parallaxImages || [])];
-    const temp = newArr[index];
-    newArr[index] = newArr[targetIndex];
-    newArr[targetIndex] = temp;
-    const updated = { ...data, parallaxImages: newArr };
-    setData(updated);
-    await saveChanges(updated);
-    showToast(`Parallax layer moved ${direction}!`, "success");
+    let nextData: SiteData | null = null;
+    setData((prev) => {
+      const currentImages = [...(prev.parallaxImages || [])];
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= currentImages.length) return prev;
+      const temp = currentImages[index];
+      currentImages[index] = currentImages[targetIndex];
+      currentImages[targetIndex] = temp;
+      nextData = { ...prev, parallaxImages: currentImages };
+      return nextData;
+    });
+    if (nextData) {
+      await saveChanges(nextData);
+      showToast(`Parallax layer moved ${direction} & saved!`, "success");
+    }
   };
 
   const moveProcessStep = async (index: number, direction: "up" | "down") => {
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= (data.process?.steps || []).length) return;
-    const newSteps = [...(data.process?.steps || [])];
-    const temp = newSteps[index];
-    newSteps[index] = newSteps[targetIndex];
-    newSteps[targetIndex] = temp;
-    newSteps.forEach((s, idx) => {
-      s.num = String(idx + 1).padStart(2, "0");
+    let nextData: SiteData | null = null;
+    setData((prev) => {
+      const steps = [...(prev.process?.steps || [])];
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= steps.length) return prev;
+      const temp = steps[index];
+      steps[index] = steps[targetIndex];
+      steps[targetIndex] = temp;
+      steps.forEach((s, idx) => {
+        s.num = String(idx + 1).padStart(2, "0");
+      });
+      nextData = {
+        ...prev,
+        process: { ...prev.process, steps },
+      };
+      return nextData;
     });
-    const updated = {
-      ...data,
-      process: { ...data.process, steps: newSteps },
-    };
-    setData(updated);
-    await saveChanges(updated);
-    showToast(`Process step order updated!`, "success");
+    if (nextData) {
+      await saveChanges(nextData);
+      showToast(`Process step order updated & saved!`, "success");
+    }
   };
 
   const moveShowcaseCard = async (row: "row1" | "row2", index: number, direction: "left" | "right") => {
-    const currentList = [...(data.showcase?.[row] || [])];
-    const targetIndex = direction === "left" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= currentList.length) return;
-    const temp = currentList[index];
-    currentList[index] = currentList[targetIndex];
-    currentList[targetIndex] = temp;
-    const updated = {
-      ...data,
-      showcase: {
-        ...data.showcase,
-        [row]: currentList,
-      },
-    };
-    setData(updated);
-    await saveChanges(updated);
-    showToast(`Marquee card moved ${direction}!`, "success");
+    let nextData: SiteData | null = null;
+    setData((prev) => {
+      const currentList = [...(prev.showcase?.[row] || [])];
+      const targetIndex = direction === "left" ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= currentList.length) return prev;
+      const temp = currentList[index];
+      currentList[index] = currentList[targetIndex];
+      currentList[targetIndex] = temp;
+      nextData = {
+        ...prev,
+        showcase: {
+          ...prev.showcase,
+          [row]: currentList,
+        },
+      };
+      return nextData;
+    });
+    if (nextData) {
+      await saveChanges(nextData);
+      showToast(`Marquee card moved ${direction} & saved!`, "success");
+    }
   };
 
   const setProjectQuickPlacement = async (projectId: string, placement: "row1" | "row2" | "none") => {

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { promises as fs } from "fs";
 import path from "path";
 import crypto from "crypto";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const RUNTIME_DATA_FILE_PATH = path.join(process.cwd(), "data", "site-data.json");
 const FALLBACK_DATA_FILE_PATH = path.join(process.cwd(), "src", "data", "site-data.json");
@@ -98,7 +102,13 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(sanitizedData);
+    return NextResponse.json(sanitizedData, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        "CDN-Cache-Control": "no-store",
+        "Vercel-CDN-Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
     console.error("Error reading site data:", error);
     return NextResponse.json({ error: "Failed to load content" }, { status: 500 });
@@ -133,27 +143,39 @@ export async function POST(request: NextRequest) {
       await saveSiteDataToMongo(mergedData);
     }
 
-    // 2. Also keep disk file synced for local safety
+    // 2. Keep runtime disk file synced
     try {
       const runtimeDir = path.dirname(RUNTIME_DATA_FILE_PATH);
       await fs.mkdir(runtimeDir, { recursive: true });
       await fs.writeFile(RUNTIME_DATA_FILE_PATH, JSON.stringify(mergedData, null, 2), "utf-8");
     } catch {}
 
-    // In production builds, also attempt to keep fallback synced
-    if (process.env.NODE_ENV === "production") {
-      try {
-        const fallbackDir = path.dirname(FALLBACK_DATA_FILE_PATH);
-        await fs.mkdir(fallbackDir, { recursive: true });
-        await fs.writeFile(FALLBACK_DATA_FILE_PATH, JSON.stringify(mergedData, null, 2), "utf-8");
-      } catch {}
-    }
+    // 3. Keep fallback git repository file synced
+    try {
+      const fallbackDir = path.dirname(FALLBACK_DATA_FILE_PATH);
+      await fs.mkdir(fallbackDir, { recursive: true });
+      await fs.writeFile(FALLBACK_DATA_FILE_PATH, JSON.stringify(mergedData, null, 2), "utf-8");
+    } catch {}
 
-    return NextResponse.json({
-      success: true,
-      message: "Site content updated successfully",
-      timestamp: Date.now(),
-    });
+    // 4. Force immediate on-demand cache purge so live pages reflect changes immediately
+    try {
+      revalidatePath("/", "layout");
+      revalidatePath("/admin");
+      revalidatePath("/p/[slug]", "page");
+    } catch {}
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Site content updated successfully",
+        timestamp: Date.now(),
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error writing site data:", error);
     return NextResponse.json({ error: "Failed to save content" }, { status: 500 });

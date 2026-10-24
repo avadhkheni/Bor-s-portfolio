@@ -85,7 +85,20 @@ async function runTests() {
   assert.equal(fail4.status, 429, "Attempt while locked out must be immediately blocked with 429");
   console.log("✔ Integration 4 Passed: 3 failed attempts strictly triggers 15-minute lockout (HTTP 429)");
 
-  console.log("\n>>> ALL INTEGRATION TESTS PASSED SUCCESSFULLY! <<<\n");
+  // Test 5: Verify Live Content Positions & Cache-Busting Headers
+  console.log("\n[Integration 5]: Testing Live Position Persistence & Cache-Control...");
+  const liveContentRes = await fetch(`${BASE_URL}/api/content?_t=${Date.now()}`);
+  assert.equal(liveContentRes.status, 200, "Live content API must respond 200");
+  const cacheHeader = liveContentRes.headers.get("cache-control");
+  assert.ok(cacheHeader && cacheHeader.includes("no-store"), "Live content must declare no-store cache control");
+  const liveJson = await liveContentRes.json();
+  assert.ok(Array.isArray(liveJson.parallaxImages), "parallaxImages must be an array");
+  assert.equal(liveJson.parallaxImages[0].src, "/images2/4.jpg", "Layer 1 must be /images2/4.jpg");
+  assert.equal(liveJson.parallaxImages[1].src, "/images2/2.jpg", "Layer 2 must be /images2/2.jpg");
+  assert.equal(liveJson.parallaxImages[2].src, "/images2/1.jpg", "Layer 3 must be /images2/1.jpg");
+  console.log("✔ Integration 5 Passed: Position order is strictly verified and live cache-busting headers confirmed");
+
+  console.log("\n>>> ALL 5 INTEGRATION TESTS PASSED SUCCESSFULLY! <<<\n");
 }
 
 runTests().catch((err) => {

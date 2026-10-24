@@ -76,9 +76,10 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
             >
               <div className="relative h-[25vh] w-[25vw]">
                 <img
+                  key={`${src}-${index}`}
                   src={src || "/placeholder.svg"}
                   alt={alt || `Parallax image ${index + 1}`}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-opacity duration-300"
                 />
               </div>
             </motion.div>

@@ -35,6 +35,10 @@
   },
   "parallaxImages": [
     {
+      "src": "/images2/4.jpg",
+      "alt": "Creative directional brand art"
+    },
+    {
       "src": "/images2/2.jpg",
       "alt": "Minimalist packaging aesthetic"
     },
@@ -43,23 +47,19 @@
       "alt": "Brand identity design showcase"
     },
     {
-      "src": "/images2/3.jpg",
-      "alt": "High-end product photography"
-    },
-    {
-      "src": "/images2/4.jpg",
-      "alt": "Creative directional brand art"
-    },
-    {
       "src": "/images2/5.jpg",
       "alt": "Custom typography and layout"
+    },
+    {
+      "src": "/images2/3.jpg",
+      "alt": "High-end product photography"
     },
     {
       "src": "/images2/6.jpg",
       "alt": "Spatial audio identity mockup"
     },
     {
-      "src": "/images2/7.jpg",
+      "src": "https://i.ibb.co/v6DN0qbk/13.jpg",
       "alt": "Cyber beverage package composition"
     }
   ],

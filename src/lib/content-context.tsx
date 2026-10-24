@@ -46,9 +46,12 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
         // ignore storage error
       }
 
-      // Then fetch latest from server API
+      // Then fetch latest from server API with timestamp cache-busting
       try {
-        const res = await fetch("/api/content", { cache: "no-store" });
+        const res = await fetch(`/api/content?_t=${Date.now()}`, {
+          cache: "no-store",
+          headers: { "Cache-Control": "no-cache" }
+        });
         if (res.ok) {
           const serverData = await res.json();
           if (isMounted && serverData && !serverData.error) {
@@ -68,8 +71,27 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
 
     loadData();
 
+    // Listen for live updates across tabs or within app
+    const handleLiveSync = () => {
+      try {
+        const cached = localStorage.getItem(STORAGE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (isMounted) {
+            setData(parsed);
+            setSavedData(parsed);
+          }
+        }
+      } catch {}
+    };
+
+    window.addEventListener("portfolio_content_updated", handleLiveSync);
+    window.addEventListener("storage", handleLiveSync);
+
     return () => {
       isMounted = false;
+      window.removeEventListener("portfolio_content_updated", handleLiveSync);
+      window.removeEventListener("storage", handleLiveSync);
     };
   }, []);
 
@@ -95,9 +117,13 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
         });
 
         if (res.ok) {
+          setData(dataToSave);
           setSavedData(dataToSave);
           setLastSaved(Date.now());
           localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+          try {
+            window.dispatchEvent(new Event("portfolio_content_updated"));
+          } catch {}
           return true;
         } else {
           console.error("Save failed with status:", res.status);
