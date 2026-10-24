@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Send, CheckCircle2 } from "lucide-react";
+import { Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
 import { useSiteContent } from "@/lib/content-context";
 
@@ -14,14 +14,34 @@ export function ContactForm() {
     message: ""
   });
   const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formState.name || !formState.email || !formState.message) return;
+    if (!formState.name || !formState.email || !formState.message || isSubmitting) return;
     
-    // Simulate submission
-    setIsSubmitted(true);
-    setFormState({ name: "", email: "", projectType: "Identity", message: "" });
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formState)
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        setIsSubmitted(true);
+        setFormState({ name: "", email: "", projectType: "Identity", message: "" });
+      } else {
+        setErrorMessage(result.error || "Failed to send message. Please try again.");
+      }
+    } catch {
+      setErrorMessage("Network error occurred. Please check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const projectTypes = ["Identity", "Packaging", "Full Strategy", "Other"];
@@ -30,7 +50,7 @@ export function ContactForm() {
     badge: "Inquiries",
     title: "Let's co-create your brand's future",
     subtitle: "Whether initializing a new venture or elevating an established name, let's talk design.",
-    email: "inquire@studio.design",
+    email: "info@artsavvy.co.in",
     socials: [
       { name: "Behance", url: "https://behance.net" },
       { name: "Dribbble", url: "https://dribbble.com" },
@@ -69,10 +89,10 @@ export function ContactForm() {
               <div>
                 <p className="text-xs uppercase font-semibold text-white/50 tracking-wider">Direct Email</p>
                 <a
-                  href={`mailto:${contactData.email || "inquire@studio.design"}`}
+                  href={`mailto:${contactData.email || "info@artsavvy.co.in"}`}
                   className="mt-1 block text-lg font-bold text-white hover:text-white/80 transition-colors"
                 >
-                  {contactData.email || "inquire@studio.design"}
+                  {contactData.email || "info@artsavvy.co.in"}
                 </a>
               </div>
               {contactData.socials && contactData.socials.length > 0 && (
@@ -104,10 +124,11 @@ export function ContactForm() {
           <div className="lg:col-span-7 rounded-3xl border border-white/20 bg-white/[0.01] p-8 md:p-12 glass">
             {isSubmitted ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <CheckCircle2 className="h-16 w-16 text-white animate-bounce mb-6" />
-                <h3 className="text-2xl font-bold text-white tracking-tight">Message Received</h3>
-                <p className="mt-3 text-sm text-white/70 max-w-xs">
-                  Thank you for reaching out. We will get back to you within 24 business hours.
+                <CheckCircle2 className="h-16 w-16 text-emerald-400 mb-6" />
+                <h3 className="text-2xl font-bold text-white tracking-tight">Message Dispatched!</h3>
+                <p className="mt-3 text-sm text-white/70 max-w-sm">
+                  Thank you for reaching out. Your project details have been successfully sent to{" "}
+                  <span className="text-white font-medium">{contactData.email || "info@artsavvy.co.in"}</span>. We will review your inquiry and get back to you shortly.
                 </p>
                 <button
                   onClick={() => setIsSubmitted(false)}
@@ -118,6 +139,12 @@ export function ContactForm() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} id="contact-form" className="space-y-8">
+                {errorMessage && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-red-950/60 border border-red-800/60 text-red-200 text-sm">
+                    <AlertCircle className="h-5 w-5 shrink-0 text-red-400" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
                 
                 {/* Project Types Toggle */}
                 <div>
@@ -203,10 +230,24 @@ export function ContactForm() {
                 <button
                   type="submit"
                   id="contact-submit-button"
-                  className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-white text-background hover:bg-white hover:text-black font-bold tracking-wider uppercase text-xs transition-all duration-300 cursor-pointer shadow-lg hover:shadow-white/10"
+                  disabled={isSubmitting}
+                  className={`flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-white text-background font-bold tracking-wider uppercase text-xs transition-all duration-300 shadow-lg ${
+                    isSubmitting
+                      ? "opacity-70 cursor-not-allowed"
+                      : "hover:bg-white hover:text-black cursor-pointer hover:shadow-white/10"
+                  }`}
                 >
-                  Initiate Project
-                  <Send className="h-4 w-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Sending Inquiry...
+                    </>
+                  ) : (
+                    <>
+                      Initiate Project
+                      <Send className="h-4 w-4" />
+                    </>
+                  )}
                 </button>
 
               </form>
