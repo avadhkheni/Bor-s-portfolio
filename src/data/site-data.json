@@ -76,18 +76,18 @@
         "tag": "Digital Art"
       },
       {
-        "id": "mr-mug",
-        "title": "MR. MUG — Vintage Character Café",
-        "url": "mr-mug.coffee",
-        "imageSrc": "/images2/33.jpg",
-        "tag": "Mascot & Cafe"
-      },
-      {
         "id": "willow-whisk",
         "title": "WILLOW & WHISK — Artisan Bakery & Café",
         "url": "willow-whisk.cafe",
         "imageSrc": "/images2/27.jpg",
         "tag": "Bakery & Cafe"
+      },
+      {
+        "id": "mr-mug",
+        "title": "MR. MUG — Vintage Character Café",
+        "url": "mr-mug.coffee",
+        "imageSrc": "/images2/33.jpg",
+        "tag": "Mascot & Cafe"
       }
     ],
     "row2": [
@@ -273,17 +273,6 @@
     "steps": [
       {
         "num": "01",
-        "title": "Visual Identity Design",
-        "description": "Translating brand strategy into high-end aesthetics: logos, signature typography systems, custom color palettes, and typography rules.",
-        "details": [
-          "Custom Typography Curations",
-          "Concept Mockups",
-          "Logo Systems"
-        ],
-        "image": "/images2/17.jpg"
-      },
-      {
-        "num": "02",
         "title": "Discovery & Strategy",
         "description": "Deep dive into your company mission, market space, competitor analysis, and audience persona to define a clear creative positioning.",
         "details": [
@@ -294,7 +283,7 @@
         "image": "/images2/16.jpg"
       },
       {
-        "num": "03",
+        "num": "02",
         "title": "Packaging & Collateral",
         "description": "Extending the brand identity to physical touchpoints. Designing premium boxes, stationery, tags, and custom print layouts.",
         "details": [
@@ -303,6 +292,17 @@
           "Print Templates"
         ],
         "image": "/images2/18.jpg"
+      },
+      {
+        "num": "03",
+        "title": "Visual Identity Design",
+        "description": "Translating brand strategy into high-end aesthetics: logos, signature typography systems, custom color palettes, and typography rules.",
+        "details": [
+          "Custom Typography Curations",
+          "Concept Mockups",
+          "Logo Systems"
+        ],
+        "image": "/images2/17.jpg"
       },
       {
         "num": "04",
@@ -344,7 +344,6 @@
   },
   "cloudStorage": {
     "provider": "imgbb",
-    "imgbbApiKey": "e096040c24517d83096c2bfa306c3cae",
     "cloudHistory": [
       "https://i.ibb.co/v6DN0qbk/13.jpg"
     ]
@@ -359,7 +358,7 @@
         "passwordHash": "80508f030c3b2dc8fe9209c62f06825814d75b33dc0f7516e36b356c006b2d1a",
         "role": "owner",
         "createdAt": "2026-10-25T01:00:00.000Z",
-        "lastLogin": ""
+        "lastLogin": "2026-10-24T21:17:33.385Z"
       },
       {
         "id": "admin-avadhkheni",

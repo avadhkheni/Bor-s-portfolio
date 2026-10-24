@@ -2,9 +2,11 @@ import { MongoClient, Db } from "mongodb";
 import dns from "dns";
 import { SiteData } from "./site-types";
 
-try {
-  dns.setServers(["8.8.8.8", "8.8.4.4"]);
-} catch {}
+if (process.platform === "win32") {
+  try {
+    dns.setServers(["8.8.8.8", "8.8.4.4"]);
+  } catch {}
+}
 
 const options = {};
 

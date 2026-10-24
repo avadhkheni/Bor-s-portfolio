@@ -247,13 +247,14 @@ export async function POST(request: NextRequest) {
 
       // Check Rate Limiting Lockout (IP + Email)
       const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+      const isLocalhost = clientIp === "127.0.0.1" || clientIp === "::1" || clientIp === "localhost";
       const emailKey = `email:${cleanEmail}`;
       const ipKey = `ip:${clientIp}`;
 
       const emailLimit = cleanEmail ? failedAttemptsMap[emailKey] : null;
-      const ipLimit = failedAttemptsMap[ipKey];
+      const ipLimit = !isLocalhost ? failedAttemptsMap[ipKey] : null;
 
-      // Check if either email or IP is currently locked out
+      // Check if either email or external IP is currently locked out
       const activeLock =
         emailLimit && emailLimit.lockedUntil > Date.now()
           ? emailLimit
@@ -288,7 +289,7 @@ export async function POST(request: NextRequest) {
       if (!isPasswordValid) {
         // Increment failed attempt counter
         const currentEmailFails = (emailLimit?.count || 0) + 1;
-        const currentIpFails = (ipLimit?.count || 0) + 1;
+        const currentIpFails = !isLocalhost ? (ipLimit?.count || 0) + 1 : 0;
         const highestFails = Math.max(currentEmailFails, currentIpFails);
 
         if (highestFails >= 3) {
@@ -297,10 +298,12 @@ export async function POST(request: NextRequest) {
             count: highestFails,
             lockedUntil,
           };
-          failedAttemptsMap[ipKey] = {
-            count: highestFails,
-            lockedUntil,
-          };
+          if (!isLocalhost) {
+            failedAttemptsMap[ipKey] = {
+              count: highestFails,
+              lockedUntil,
+            };
+          }
           return NextResponse.json(
             {
               success: false,
@@ -315,10 +318,12 @@ export async function POST(request: NextRequest) {
             count: highestFails,
             lockedUntil: 0,
           };
-          failedAttemptsMap[ipKey] = {
-            count: highestFails,
-            lockedUntil: 0,
-          };
+          if (!isLocalhost) {
+            failedAttemptsMap[ipKey] = {
+              count: highestFails,
+              lockedUntil: 0,
+            };
+          }
           const attemptsLeft = 3 - highestFails;
           return NextResponse.json(
             {
@@ -332,7 +337,12 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Credentials Valid! Generate 6-Digit 2FA OTP Code
+      // Credentials Valid! Clear any past failed counters immediately
+      delete failedAttemptsMap[emailKey];
+      delete failedAttemptsMap[ipKey];
+      delete failedAttemptsMap[cleanEmail];
+
+      // Generate 6-Digit 2FA OTP Code
       const otpCode = generateOtpCode();
       const otpRecord = {
         email: cleanEmail,
