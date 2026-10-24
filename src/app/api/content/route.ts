@@ -36,6 +36,32 @@ function isAuthorized(request: NextRequest): boolean {
   }
 }
 
+import { isMongoConfigured, getSiteDataFromMongo, saveSiteDataToMongo } from "@/lib/mongodb";
+
+// Read raw data from disk or MongoDB
+async function getEffectiveSiteData(): Promise<any> {
+  if (isMongoConfigured()) {
+    const mongoData = await getSiteDataFromMongo();
+    if (mongoData && Object.keys(mongoData).length > 0) {
+      return mongoData;
+    }
+  }
+
+  // Fallback to local files
+  let fileData = await readRawFile();
+
+  // If MongoDB is configured but empty, seed it with the current file data!
+  if (isMongoConfigured() && fileData && Object.keys(fileData).length > 0) {
+    try {
+      await saveSiteDataToMongo(fileData);
+    } catch (e) {
+      console.warn("MongoDB initial seed failed:", e);
+    }
+  }
+
+  return fileData;
+}
+
 // Read raw data from disk
 async function readRawFile(): Promise<any> {
   try {
@@ -53,7 +79,7 @@ async function readRawFile(): Promise<any> {
 
 export async function GET(request: NextRequest) {
   try {
-    const data = await readRawFile();
+    const data = await getEffectiveSiteData();
 
     // Check if requester is an authenticated admin
     const adminAccess = isAuthorized(request);
@@ -95,19 +121,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid data payload" }, { status: 400 });
     }
 
-    // Preserve existing security configuration on disk so content saves don't erase accounts
-    const existingData = await readRawFile();
+    // Preserve existing security configuration so content saves don't erase accounts
+    const existingData = await getEffectiveSiteData();
     const mergedData = {
       ...updatedData,
       security: existingData.security || updatedData.security,
     };
 
-    // Ensure data directory exists outside src to avoid triggering dev server reload
-    const runtimeDir = path.dirname(RUNTIME_DATA_FILE_PATH);
-    await fs.mkdir(runtimeDir, { recursive: true });
-    await fs.writeFile(RUNTIME_DATA_FILE_PATH, JSON.stringify(mergedData, null, 2), "utf-8");
+    // 1. If MongoDB is configured, save to MongoDB Cloud!
+    if (isMongoConfigured()) {
+      await saveSiteDataToMongo(mergedData);
+    }
 
-    // In production builds, also keep fallback synced
+    // 2. Also keep disk file synced for local safety
+    try {
+      const runtimeDir = path.dirname(RUNTIME_DATA_FILE_PATH);
+      await fs.mkdir(runtimeDir, { recursive: true });
+      await fs.writeFile(RUNTIME_DATA_FILE_PATH, JSON.stringify(mergedData, null, 2), "utf-8");
+    } catch {}
+
+    // In production builds, also attempt to keep fallback synced
     if (process.env.NODE_ENV === "production") {
       try {
         const fallbackDir = path.dirname(FALLBACK_DATA_FILE_PATH);

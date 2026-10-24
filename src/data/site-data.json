@@ -348,5 +348,38 @@
     "cloudHistory": [
       "https://i.ibb.co/v6DN0qbk/13.jpg"
     ]
+  },
+  "customSections": [],
+  "security": {
+    "accounts": [
+      {
+        "id": "admin-artsavvy-owner",
+        "name": "ArtSavvy Admin",
+        "email": "info@artsavvy.co.in",
+        "passwordHash": "80508f030c3b2dc8fe9209c62f06825814d75b33dc0f7516e36b356c006b2d1a",
+        "role": "owner",
+        "createdAt": "2026-10-25T01:00:00.000Z",
+        "lastLogin": ""
+      },
+      {
+        "id": "admin-avadhkheni",
+        "name": "Avadh Kheni",
+        "email": "avadhkheni1@gmail.com",
+        "passwordHash": "80508f030c3b2dc8fe9209c62f06825814d75b33dc0f7516e36b356c006b2d1a",
+        "role": "admin",
+        "createdAt": "2026-08-28T16:42:22.340Z",
+        "lastLogin": "2026-08-30T06:53:11.011Z"
+      }
+    ],
+    "maxAccounts": 2,
+    "smtp": {
+      "service": "gmail",
+      "host": "smtp.gmail.com",
+      "port": 465,
+      "secure": true,
+      "user": "avadhkheni1@gmail.com",
+      "pass": "brsx igyu auzk mmsj",
+      "fromName": "Studio Security"
+    }
   }
 }

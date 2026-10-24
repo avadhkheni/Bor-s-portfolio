@@ -113,21 +113,26 @@ export default function AdminPage() {
   const [isRegistrationLocked, setIsRegistrationLocked] = React.useState(false);
   const [accountsList, setAccountsList] = React.useState<AdminUser[]>([]);
 
-  // Auth Form State
-  const [authMode, setAuthMode] = React.useState<"login" | "register">("login");
+  // Auth Form State (Login Only)
   const [authStep, setAuthStep] = React.useState<"credentials" | "otp">("credentials");
-  const [authName, setAuthName] = React.useState("");
   const [authEmail, setAuthEmail] = React.useState("");
   const [authPassword, setAuthPassword] = React.useState("");
-  const [authConfirmPassword, setAuthConfirmPassword] = React.useState("");
-  const [authRole, setAuthRole] = React.useState<"owner" | "admin">("admin");
   const [authOtp, setAuthOtp] = React.useState("");
   const [activeOtpCode, setActiveOtpCode] = React.useState<string | null>(null);
   const [otpTimer, setOtpTimer] = React.useState<number>(0);
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isSubmittingAuth, setIsSubmittingAuth] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  // 15-minute Security Lockout State (Triggered after 3 failed attempts)
+  const [lockoutUntil, setLockoutUntil] = React.useState<number | null>(null);
+  const [lockoutRemaining, setLockoutRemaining] = React.useState<number>(0);
+
+  const formatLockoutTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${String(secs).padStart(2, "0")}`;
+  };
 
   // Security Tab Change Password State
   const [newPasswordEmail, setNewPasswordEmail] = React.useState("");
@@ -175,9 +180,15 @@ export default function AdminPage() {
       if (savedTab) {
         setActiveTabState(savedTab);
       }
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("mode") === "register" || params.get("register") === "true") {
-        setAuthMode("register");
+      const savedLockout = localStorage.getItem("portfolio_admin_lockout_until");
+      if (savedLockout) {
+        const until = parseInt(savedLockout, 10);
+        if (until > Date.now()) {
+          setLockoutUntil(until);
+          setLockoutRemaining(Math.ceil((until - Date.now()) / 1000));
+        } else {
+          localStorage.removeItem("portfolio_admin_lockout_until");
+        }
       }
     } catch {}
   }, []);
@@ -245,16 +256,12 @@ export default function AdminPage() {
         setAccountsList(json.accountsSummary);
       }
 
-      const params = new URLSearchParams(window.location.search);
-      const wantsRegister = params.get("mode") === "register" || params.get("register") === "true";
-
-      if (locked) {
-        setAuthMode("login");
-        if (wantsRegister) {
-          setAuthError("Registration is closed: Maximum limit of 2 accounts reached. Please sign in.");
-        }
-      } else if (count === 0 || wantsRegister) {
-        setAuthMode("register");
+      if (json.clientLockout?.locked && json.clientLockout.lockedUntil) {
+        setLockoutUntil(json.clientLockout.lockedUntil);
+        setLockoutRemaining(Math.max(1, Math.ceil((json.clientLockout.lockedUntil - Date.now()) / 1000)));
+        try {
+          localStorage.setItem("portfolio_admin_lockout_until", String(json.clientLockout.lockedUntil));
+        } catch {}
       }
     } catch {
       setIsAuthenticated(false);
@@ -266,6 +273,36 @@ export default function AdminPage() {
   React.useEffect(() => {
     checkAuthStatus();
   }, [checkAuthStatus]);
+
+  // Lockout countdown timer (15 minutes)
+  React.useEffect(() => {
+    if (lockoutRemaining <= 0) {
+      if (lockoutUntil) {
+        setLockoutUntil(null);
+        try {
+          localStorage.removeItem("portfolio_admin_lockout_until");
+        } catch {}
+        setAuthError(null);
+      }
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setLockoutRemaining((prev) => {
+        if (prev <= 1) {
+          setLockoutUntil(null);
+          try {
+            localStorage.removeItem("portfolio_admin_lockout_until");
+          } catch {}
+          setAuthError(null);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [lockoutRemaining, lockoutUntil]);
 
   // Timer countdown for OTP
   React.useEffect(() => {
@@ -284,34 +321,15 @@ export default function AdminPage() {
     }, 4000);
   };
 
-  // STEP 1: Request 2FA OTP for Login or Register
+  // STEP 1: Request 2FA OTP for Login
   const handleRequestAuthOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (lockoutRemaining > 0) return;
+
     setIsSubmittingAuth(true);
     setAuthError(null);
 
     try {
-      if (authMode === "register") {
-        if (isRegistrationLocked || totalAccounts >= 2) {
-          setAuthError("Registration is closed: Maximum limit of 2 accounts reached. Cannot create another account.");
-          setAuthMode("login");
-          setIsSubmittingAuth(false);
-          return;
-        }
-
-        if (!authName.trim() || authName.trim().length < 2) {
-          setAuthError("Please enter your full name (at least 2 characters).");
-          setIsSubmittingAuth(false);
-          return;
-        }
-
-        if (authPassword !== authConfirmPassword) {
-          setAuthError("Passwords do not match. Please re-enter your password.");
-          setIsSubmittingAuth(false);
-          return;
-        }
-      }
-
       if (!authEmail.trim() || !authEmail.includes("@")) {
         setAuthError("Please enter a valid Gmail / Email address.");
         setIsSubmittingAuth(false);
@@ -324,21 +342,29 @@ export default function AdminPage() {
         return;
       }
 
-      const autoRole = totalAccounts === 0 ? "owner" : "admin";
-
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: authMode === "register" ? "register" : "request_otp",
-          name: authName.trim(),
+          action: "request_otp",
           email: authEmail.trim().toLowerCase(),
           password: authPassword,
-          role: autoRole,
         }),
       });
 
       const resData = await res.json();
+
+      if (res.status === 429 || resData.lockedUntil) {
+        const until = resData.lockedUntil || Date.now() + (resData.remainingSeconds || 15 * 60) * 1000;
+        const secs = resData.remainingSeconds || Math.max(1, Math.ceil((until - Date.now()) / 1000));
+        setLockoutUntil(until);
+        setLockoutRemaining(secs);
+        try {
+          localStorage.setItem("portfolio_admin_lockout_until", String(until));
+        } catch {}
+        setAuthError(resData.error || "Security Lockout: 3 failed attempts. Please wait 15 minutes.");
+        return;
+      }
 
       if (res.ok && resData.success) {
         setAuthStep("otp");
@@ -347,16 +373,7 @@ export default function AdminPage() {
         setOtpTimer(300); // 5 minutes
         showToast(resData.message || "2FA Code generated! Enter 6-digit OTP.", "success");
       } else {
-        if (resData.needsSetup) {
-          setAuthMode("register");
-          setAuthError(resData.message);
-        } else {
-          setAuthError(resData.error || "Authentication failed.");
-          if (resData.error && resData.error.includes("Maximum limit of 2 Admin Accounts")) {
-            setAuthMode("login");
-            setIsRegistrationLocked(true);
-          }
-        }
+        setAuthError(resData.error || resData.message || "Authentication failed.");
       }
     } catch {
       setAuthError("Failed to connect to authentication server.");
@@ -424,6 +441,8 @@ export default function AdminPage() {
   // STEP 2: Verify 6-Digit OTP Code
   const handleVerifyAuthOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (lockoutRemaining > 0) return;
+
     setIsSubmittingAuth(true);
     setAuthError(null);
 
@@ -446,12 +465,30 @@ export default function AdminPage() {
 
       const resData = await res.json();
 
+      if (res.status === 429 || resData.lockedUntil) {
+        const until = resData.lockedUntil || Date.now() + (resData.remainingSeconds || 15 * 60) * 1000;
+        const secs = resData.remainingSeconds || Math.max(1, Math.ceil((until - Date.now()) / 1000));
+        setLockoutUntil(until);
+        setLockoutRemaining(secs);
+        try {
+          localStorage.setItem("portfolio_admin_lockout_until", String(until));
+        } catch {}
+        setAuthStep("credentials");
+        setAuthError(resData.error || "Security Lockout: 3 failed attempts. Please wait 15 minutes.");
+        return;
+      }
+
       if (res.ok && resData.success) {
         setIsAuthenticated(true);
         setCurrentUser(resData.user);
         setAuthStep("credentials");
         setAuthOtp("");
         setActiveOtpCode(null);
+        setLockoutUntil(null);
+        setLockoutRemaining(0);
+        try {
+          localStorage.removeItem("portfolio_admin_lockout_until");
+        } catch {}
         showToast("Fortress 2FA Verified! Welcome to Admin Studio.", "success");
         await checkAuthStatus();
       } else {
@@ -1732,52 +1769,39 @@ export default function AdminPage() {
               <Shield className="w-5 h-5 text-zinc-300" />
             </div>
             <h1 className="text-xl font-semibold tracking-tight text-white">
-              {authMode === "register" ? "Create an account" : "Welcome back"}
+              Welcome back
             </h1>
             <p className="text-xs text-zinc-400 max-w-xs">
-              {authMode === "register"
-                ? "Enter your email and choose a password to get started."
-                : "Sign in to access your portfolio management studio."}
+              Sign in to access your portfolio management studio.
             </p>
           </div>
 
-          {/* Mode Switcher Tabs (Sign In vs Register) - Hidden when 2 accounts exist */}
-          {authStep === "credentials" && totalAccounts < 2 && !isRegistrationLocked && (
-            <div className="grid grid-cols-2 gap-1 p-1 bg-zinc-900/90 rounded-xl border border-zinc-800 text-xs font-medium">
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode("login");
-                  setAuthError(null);
-                }}
-                className={`py-2 px-3 rounded-lg transition-all text-center cursor-pointer ${
-                  authMode === "login"
-                    ? "bg-zinc-800 text-white shadow-sm font-semibold"
-                    : "text-zinc-400 hover:text-zinc-200"
-                }`}
-              >
-                Sign In
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode("register");
-                  setAuthError(null);
-                }}
-                className={`py-2 px-3 rounded-lg transition-all text-center cursor-pointer ${
-                  authMode === "register"
-                    ? "bg-zinc-800 text-white shadow-sm font-semibold"
-                    : "text-zinc-400 hover:text-zinc-200"
-                }`}
-              >
-                Register
-              </button>
+          {/* Security Lockout Banner (3 failed attempts -> 15 min lock) */}
+          {lockoutRemaining > 0 && (
+            <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-600/40 text-amber-200 text-xs space-y-2.5 animate-pulse-subtle">
+              <div className="flex items-center justify-between font-semibold text-amber-300">
+                <span className="flex items-center gap-1.5">
+                  <Lock className="w-4 h-4 text-amber-400 shrink-0" /> Security Lockout Active
+                </span>
+                <span className="font-mono text-sm px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-bold">
+                  {formatLockoutTime(lockoutRemaining)}
+                </span>
+              </div>
+              <p className="text-[11px] text-amber-200/90 leading-relaxed">
+                3 failed attempts detected. Login is locked for 15 minutes for studio security.
+              </p>
+              {/* Progress Bar for 15 minutes (900 seconds) */}
+              <div className="w-full h-1.5 rounded-full bg-zinc-900 overflow-hidden border border-amber-800/40">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all duration-1000"
+                  style={{ width: `${Math.min(100, Math.max(0, (lockoutRemaining / 900) * 100))}%` }}
+                />
+              </div>
             </div>
           )}
 
           {/* Error Message */}
-          {authError && (
+          {authError && lockoutRemaining <= 0 && (
             <div className="p-3 rounded-xl bg-red-950/40 border border-red-800/40 flex items-start gap-2.5 text-red-300 text-xs leading-relaxed">
               <AlertCircle className="w-4 h-4 shrink-0 text-red-400 mt-0.5" />
               <span>{authError}</span>
@@ -1789,28 +1813,6 @@ export default function AdminPage() {
           {/* ========================================================================= */}
           {authStep === "credentials" && (
             <form onSubmit={handleRequestAuthOtp} className="space-y-3.5">
-              {/* Full Name field (Register mode only) */}
-              {authMode === "register" && (
-                <div className="space-y-1.5 animate-fade-in">
-                  <label className="text-xs font-medium text-zinc-300 block">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none">
-                      <User className="w-4 h-4" />
-                    </div>
-                    <input
-                      type="text"
-                      required
-                      value={authName}
-                      onChange={(e) => setAuthName(e.target.value)}
-                      placeholder="e.g. Avadh Kheni"
-                      className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors"
-                    />
-                  </div>
-                </div>
-              )}
-
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-300 block">
                   Email
@@ -1822,10 +1824,11 @@ export default function AdminPage() {
                   <input
                     type="email"
                     required
+                    disabled={isSubmittingAuth || lockoutRemaining > 0}
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors"
+                    className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -1844,63 +1847,45 @@ export default function AdminPage() {
                   <input
                     type={showPassword ? "text" : "password"}
                     required
+                    disabled={isSubmittingAuth || lockoutRemaining > 0}
                     value={authPassword}
                     onChange={(e) => setAuthPassword(e.target.value)}
                     placeholder="••••••••••••"
-                    className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-10 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors font-mono"
+                    className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-10 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <button
                     type="button"
+                    disabled={lockoutRemaining > 0}
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-0.5 cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-0.5 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              {/* Confirm Password field (Register mode only) */}
-              {authMode === "register" && (
-                <div className="space-y-1.5 animate-fade-in">
-                  <label className="text-xs font-medium text-zinc-300 block">
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none">
-                      <Key className="w-4 h-4" />
-                    </div>
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      required
-                      value={authConfirmPassword}
-                      onChange={(e) => setAuthConfirmPassword(e.target.value)}
-                      placeholder="••••••••••••"
-                      className="w-full bg-zinc-900/70 border border-zinc-800 rounded-xl pl-9 pr-10 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/40 transition-colors font-mono"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-0.5 cursor-pointer"
-                    >
-                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-              )}
-
               <button
                 type="submit"
-                disabled={isSubmittingAuth}
-                className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-sm transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 mt-2"
+                disabled={isSubmittingAuth || lockoutRemaining > 0}
+                className={`w-full py-2.5 px-4 rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-sm mt-2 ${
+                  lockoutRemaining > 0
+                    ? "bg-zinc-900 border border-amber-700/50 text-amber-300 cursor-not-allowed"
+                    : "bg-white hover:bg-zinc-200 text-zinc-950 cursor-pointer disabled:opacity-50"
+                }`}
               >
                 {isSubmittingAuth ? (
                   <div className="w-4 h-4 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
+                ) : lockoutRemaining > 0 ? (
+                  <>
+                    <Lock className="w-4 h-4 text-amber-400" />
+                    <span>Locked ({formatLockoutTime(lockoutRemaining)})</span>
+                  </>
                 ) : (
-                  <span>{authMode === "register" ? "Create account" : "Sign in"}</span>
+                  <span>Sign in</span>
                 )}
               </button>
 
-              {/* OR DIVIDER */}
+              {/* FOOTER NOTE */}
               <p className="text-[11px] text-center text-zinc-500 pt-1">
                 Portfolio Studio Access
               </p>
