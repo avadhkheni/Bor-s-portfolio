@@ -2035,6 +2035,9 @@ export default function AdminPage() {
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <h1 className="font-bold text-sm tracking-tight text-white uppercase">Studio Control Center</h1>
+              <span className="text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full font-mono font-medium hidden sm:inline-block">
+                MongoDB Cloud Live
+              </span>
             </div>
             <p className="text-[11px] text-white/40 font-mono">
               {lastSaved ? `Last synced: ${new Date(lastSaved).toLocaleTimeString()}` : "Ready"}

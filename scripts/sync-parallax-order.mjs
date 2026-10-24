@@ -2,8 +2,14 @@ import { MongoClient } from "mongodb";
 import dns from "dns";
 import { promises as fs } from "fs";
 
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
-const client = new MongoClient(process.env.MONGODB_URI);
+if (process.platform === "win32") {
+  try {
+    dns.setServers(["8.8.8.8", "8.8.4.4"]);
+  } catch {}
+}
+
+const uri = process.env.MONGODB_URI || "mongodb+srv://artsavvy:pradeep%402002@artsavvy.qkycjx3.mongodb.net/portfolio?retryWrites=true&w=majority";
+const client = new MongoClient(uri);
 
 async function run() {
   await client.connect();

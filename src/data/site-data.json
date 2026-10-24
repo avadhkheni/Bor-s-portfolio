@@ -4,22 +4,38 @@
     "tagline": "VISUAL & BRAND DESIGN STUDIO • EST. 2026",
     "navCtaText": "Let's Talk"
   },
-  "preloader": {
-    "studioLabel": "STUDIO",
-    "loadingLabel": "LOADING...",
-    "bottomLeft": "VISUAL ARCHITECTURE",
-    "bottomRight": "CREATING DISTINCT DESIGN EMPIRES",
-    "words": [
-      "POSITIONING",
-      "STRATEGY",
-      "TYPOGRAPHY",
-      "AESTHETICS",
-      "MINIMALISM",
-      "PACKAGING",
-      "EXPERIENCE",
-      "DESIGN"
+  "cloudStorage": {
+    "provider": "imgbb",
+    "cloudHistory": [
+      "https://i.ibb.co/v6DN0qbk/13.jpg"
     ]
   },
+  "contact": {
+    "badge": "Inquiries",
+    "title": "Let's co-create your brand's future",
+    "subtitle": "Whether initializing a new venture or elevating an established name, let's talk design.",
+    "email": "info@artsavvy.co.in",
+    "socials": [
+      {
+        "name": "Behance",
+        "url": "https://behance.net"
+      },
+      {
+        "name": "Dribbble",
+        "url": "https://dribbble.com"
+      },
+      {
+        "name": "LinkedIn",
+        "url": "https://linkedin.com"
+      },
+      {
+        "name": "Instagram",
+        "url": "https://instagram.com"
+      }
+    ],
+    "copyright": "STUDIO. ALL RIGHTS RESERVED."
+  },
+  "customSections": [],
   "hero": {
     "subtitle": "DISCIPLINED CREATIVE DIRECTION FOR SYSTEMIC IDENTITIES",
     "words": [
@@ -63,54 +79,75 @@
       "alt": "Cyber beverage package composition"
     }
   ],
-  "showcase": {
-    "headerBadge": "Interactive Web Showcase",
-    "headerTitle": "Live Web & Brand Systems",
-    "headerSubtitle": "Continuously moving interface previews built with precision typography, responsive geometry, and smooth interactions.",
-    "row1": [
+  "philosophy": {
+    "badge": "Manifesto",
+    "quote": "\"A brand is no longer what we tell the consumer it is — it is what consumers tell each other it is. We build the visual frameworks that command that conversation.\"",
+    "author": "DESIGN PHILOSOPHY — 2026"
+  },
+  "preloader": {
+    "studioLabel": "STUDIO",
+    "loadingLabel": "LOADING...",
+    "bottomLeft": "VISUAL ARCHITECTURE",
+    "bottomRight": "CREATING DISTINCT DESIGN EMPIRES",
+    "words": [
+      "POSITIONING",
+      "STRATEGY",
+      "TYPOGRAPHY",
+      "AESTHETICS",
+      "MINIMALISM",
+      "PACKAGING",
+      "EXPERIENCE",
+      "DESIGN"
+    ]
+  },
+  "process": {
+    "badge": "Methodology",
+    "title": "A structured workflow for uncompromising visual results",
+    "subtitle": "A four-phase architectural journey transforming raw vision into enduring market authority.",
+    "steps": [
       {
-        "id": "r2-7",
-        "title": "LUMINA — Digital Experience",
-        "url": "lumina-experience.co",
-        "imageSrc": "/images2/WhatsApp Image 2026-08-21 at 10.29.30 PM.jpeg",
-        "tag": "Digital Art"
+        "num": "01",
+        "title": "Discovery & Strategy",
+        "description": "Deep dive into your company mission, market space, competitor analysis, and audience persona to define a clear creative positioning.",
+        "details": [
+          "Competitor Benchmarking",
+          "Brand Positioning Plan",
+          "Visual Archetypes"
+        ],
+        "image": "/images2/16.jpg"
       },
       {
-        "id": "willow-whisk",
-        "title": "WILLOW & WHISK — Artisan Bakery & Café",
-        "url": "willow-whisk.cafe",
-        "imageSrc": "/images2/27.jpg",
-        "tag": "Bakery & Cafe"
+        "num": "02",
+        "title": "Packaging & Collateral",
+        "description": "Extending the brand identity to physical touchpoints. Designing premium boxes, stationery, tags, and custom print layouts.",
+        "details": [
+          "Physical Mockups",
+          "Material Recommendation",
+          "Print Templates"
+        ],
+        "image": "/images2/18.jpg"
       },
       {
-        "id": "mr-mug",
-        "title": "MR. MUG — Vintage Character Café",
-        "url": "mr-mug.coffee",
-        "imageSrc": "/images2/33.jpg",
-        "tag": "Mascot & Cafe"
-      }
-    ],
-    "row2": [
-      {
-        "id": "natura",
-        "title": "NATURA — Organic Snack & Beverage",
-        "url": "natura-snack.com",
-        "imageSrc": "/images2/18.jpg",
-        "tag": "Organic Snack"
+        "num": "03",
+        "title": "Visual Identity Design",
+        "description": "Translating brand strategy into high-end aesthetics: logos, signature typography systems, custom color palettes, and typography rules.",
+        "details": [
+          "Custom Typography Curations",
+          "Concept Mockups",
+          "Logo Systems"
+        ],
+        "image": "/images2/17.jpg"
       },
       {
-        "id": "r1-7",
-        "title": "CREATIVE — Design Showcase",
-        "url": "creative-showcase.design",
-        "imageSrc": "/images2/image.png",
-        "tag": "Showcase"
-      },
-      {
-        "id": "verdelle",
-        "title": "VERDELLE — Botanical Hair & Skincare",
-        "url": "verdelle-beauty.store",
-        "imageSrc": "/images2/22.jpg",
-        "tag": "Skincare"
+        "num": "04",
+        "title": "Brand Book & Delivery",
+        "description": "Compiling a complete brand book containing implementation guidelines, followed by handoff of premium vector and print assets.",
+        "details": [
+          "Brand Guidelines PDF",
+          "Vector & Raster Deliverables",
+          "Brand Consulting Support"
+        ],
+        "image": "/images2/19.jpg"
       }
     ]
   },
@@ -261,94 +298,57 @@
       ]
     }
   },
-  "philosophy": {
-    "badge": "Manifesto",
-    "quote": "\"A brand is no longer what we tell the consumer it is — it is what consumers tell each other it is. We build the visual frameworks that command that conversation.\"",
-    "author": "DESIGN PHILOSOPHY — 2026"
-  },
-  "process": {
-    "badge": "Methodology",
-    "title": "A structured workflow for uncompromising visual results",
-    "subtitle": "A four-phase architectural journey transforming raw vision into enduring market authority.",
-    "steps": [
+  "showcase": {
+    "headerBadge": "Interactive Web Showcase",
+    "headerTitle": "Live Web & Brand Systems",
+    "headerSubtitle": "Continuously moving interface previews built with precision typography, responsive geometry, and smooth interactions.",
+    "row1": [
       {
-        "num": "01",
-        "title": "Discovery & Strategy",
-        "description": "Deep dive into your company mission, market space, competitor analysis, and audience persona to define a clear creative positioning.",
-        "details": [
-          "Competitor Benchmarking",
-          "Brand Positioning Plan",
-          "Visual Archetypes"
-        ],
-        "image": "/images2/16.jpg"
+        "id": "r2-7",
+        "title": "LUMINA — Digital Experience",
+        "url": "lumina-experience.co",
+        "imageSrc": "/images2/WhatsApp Image 2026-08-21 at 10.29.30 PM.jpeg",
+        "tag": "Digital Art"
       },
       {
-        "num": "02",
-        "title": "Packaging & Collateral",
-        "description": "Extending the brand identity to physical touchpoints. Designing premium boxes, stationery, tags, and custom print layouts.",
-        "details": [
-          "Physical Mockups",
-          "Material Recommendation",
-          "Print Templates"
-        ],
-        "image": "/images2/18.jpg"
+        "id": "willow-whisk",
+        "title": "WILLOW & WHISK — Artisan Bakery & Café",
+        "url": "willow-whisk.cafe",
+        "imageSrc": "/images2/27.jpg",
+        "tag": "Bakery & Cafe"
       },
       {
-        "num": "03",
-        "title": "Visual Identity Design",
-        "description": "Translating brand strategy into high-end aesthetics: logos, signature typography systems, custom color palettes, and typography rules.",
-        "details": [
-          "Custom Typography Curations",
-          "Concept Mockups",
-          "Logo Systems"
-        ],
-        "image": "/images2/17.jpg"
-      },
-      {
-        "num": "04",
-        "title": "Brand Book & Delivery",
-        "description": "Compiling a complete brand book containing implementation guidelines, followed by handoff of premium vector and print assets.",
-        "details": [
-          "Brand Guidelines PDF",
-          "Vector & Raster Deliverables",
-          "Brand Consulting Support"
-        ],
-        "image": "/images2/19.jpg"
-      }
-    ]
-  },
-  "contact": {
-    "badge": "Inquiries",
-    "title": "Let's co-create your brand's future",
-    "subtitle": "Whether initializing a new venture or elevating an established name, let's talk design.",
-    "email": "info@artsavvy.co.in",
-    "socials": [
-      {
-        "name": "Behance",
-        "url": "https://behance.net"
-      },
-      {
-        "name": "Dribbble",
-        "url": "https://dribbble.com"
-      },
-      {
-        "name": "LinkedIn",
-        "url": "https://linkedin.com"
-      },
-      {
-        "name": "Instagram",
-        "url": "https://instagram.com"
+        "id": "mr-mug",
+        "title": "MR. MUG — Vintage Character Café",
+        "url": "mr-mug.coffee",
+        "imageSrc": "/images2/33.jpg",
+        "tag": "Mascot & Cafe"
       }
     ],
-    "copyright": "STUDIO. ALL RIGHTS RESERVED."
-  },
-  "cloudStorage": {
-    "provider": "imgbb",
-    "cloudHistory": [
-      "https://i.ibb.co/v6DN0qbk/13.jpg"
+    "row2": [
+      {
+        "id": "natura",
+        "title": "NATURA — Organic Snack & Beverage",
+        "url": "natura-snack.com",
+        "imageSrc": "/images2/18.jpg",
+        "tag": "Organic Snack"
+      },
+      {
+        "id": "r1-7",
+        "title": "CREATIVE — Design Showcase",
+        "url": "creative-showcase.design",
+        "imageSrc": "/images2/image.png",
+        "tag": "Showcase"
+      },
+      {
+        "id": "verdelle",
+        "title": "VERDELLE — Botanical Hair & Skincare",
+        "url": "verdelle-beauty.store",
+        "imageSrc": "/images2/22.jpg",
+        "tag": "Skincare"
+      }
     ]
   },
-  "customSections": [],
   "security": {
     "accounts": [
       {
@@ -358,7 +358,7 @@
         "passwordHash": "80508f030c3b2dc8fe9209c62f06825814d75b33dc0f7516e36b356c006b2d1a",
         "role": "owner",
         "createdAt": "2026-10-25T01:00:00.000Z",
-        "lastLogin": "2026-10-24T21:17:33.385Z"
+        "lastLogin": "2026-10-24T21:28:39.733Z"
       },
       {
         "id": "admin-avadhkheni",

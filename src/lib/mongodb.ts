@@ -8,35 +8,46 @@ if (process.platform === "win32") {
   } catch {}
 }
 
-const options = {};
+const DEFAULT_MONGODB_URI =
+  "mongodb+srv://artsavvy:pradeep%402002@artsavvy.qkycjx3.mongodb.net/portfolio?retryWrites=true&w=majority";
 
-let client: MongoClient | null = null;
-let clientPromise: Promise<MongoClient> | null = null;
+const options = {
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+};
 
-declare global {
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
+let cachedClient: MongoClient | null = null;
+
+export function getMongoUri(): string {
+  return process.env.MONGODB_URI || DEFAULT_MONGODB_URI;
 }
 
 export function isMongoConfigured(): boolean {
-  return Boolean(process.env.MONGODB_URI && process.env.MONGODB_URI.startsWith("mongodb"));
+  const uri = getMongoUri();
+  return Boolean(uri && uri.startsWith("mongodb"));
 }
 
 export async function getMongoClient(): Promise<MongoClient | null> {
-  if (!isMongoConfigured()) return null;
-  const uri = process.env.MONGODB_URI || "";
+  const uri = getMongoUri();
+  if (!uri) return null;
 
-  if (process.env.NODE_ENV === "development") {
-    if (!global._mongoClientPromise) {
-      client = new MongoClient(uri, options);
-      global._mongoClientPromise = client.connect();
+  try {
+    if (cachedClient) {
+      try {
+        await cachedClient.db("admin").command({ ping: 1 });
+        return cachedClient;
+      } catch {
+        cachedClient = null;
+      }
     }
-    return global._mongoClientPromise;
-  } else {
-    if (!clientPromise) {
-      client = new MongoClient(uri, options);
-      clientPromise = client.connect();
-    }
-    return clientPromise;
+    const c = new MongoClient(uri, options);
+    await c.connect();
+    cachedClient = c;
+    return cachedClient;
+  } catch (error) {
+    console.error("MongoDB Connection Failed:", error);
+    cachedClient = null;
+    return null;
   }
 }
 
@@ -72,14 +83,18 @@ export async function getSiteDataFromMongo(): Promise<SiteData | null> {
 export async function saveSiteDataToMongo(data: SiteData): Promise<boolean> {
   try {
     const db = await getMongoDb();
-    if (!db) return false;
+    if (!db) {
+      console.error("MongoDB Save Error: No database client available.");
+      return false;
+    }
     const collection = db.collection<MongoSiteDoc>(COLLECTION_NAME);
-    await collection.updateOne(
+    const { _id, ...cleanData } = (data || {}) as unknown as Record<string, unknown>;
+    const res = await collection.updateOne(
       { _id: DOC_ID },
-      { $set: data as unknown as Partial<MongoSiteDoc> },
+      { $set: cleanData as Partial<MongoSiteDoc> },
       { upsert: true }
     );
-    return true;
+    return Boolean(res.acknowledged);
   } catch (error) {
     console.error("MongoDB Write Error:", error);
     return false;
