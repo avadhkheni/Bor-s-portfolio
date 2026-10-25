@@ -28,8 +28,17 @@ export function Navbar() {
     }
   };
 
-  const brandName = data?.brand?.name || "PORTFOLIO";
+  const brandName = data?.brand?.name || "ARTSAVVY";
   const ctaText = data?.brand?.navCtaText || "Let's Talk";
+  const logoType = data?.brand?.logoType || "text";
+  const logoImage = data?.brand?.logoImage || "";
+  const logoHeight = data?.brand?.logoHeight || 32;
+
+  const [imageError, setImageError] = React.useState(false);
+
+  React.useEffect(() => {
+    setImageError(false);
+  }, [logoImage]);
 
   const allPages = React.useMemo(() => {
     if (!data?.customPages) return [];
@@ -50,9 +59,23 @@ export function Navbar() {
           {/* Brand Logo Link */}
           <Link
             href="/"
-            className="text-sm font-extrabold tracking-widest text-white uppercase hover:opacity-80 transition-opacity"
+            className="flex items-center gap-3 hover:opacity-85 transition-opacity group"
+            id="navbar-brand-logo"
           >
-            {brandName}
+            {(logoType === "image" || logoType === "both") && logoImage && !imageError && (
+              <img
+                src={logoImage}
+                alt={brandName}
+                style={{ height: `${logoHeight}px`, maxHeight: "56px" }}
+                className="w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-105"
+                onError={() => setImageError(true)}
+              />
+            )}
+            {(logoType === "text" || logoType === "both" || !logoImage || imageError) && (
+              <span className="text-sm md:text-base font-extrabold tracking-widest text-white uppercase select-none">
+                {brandName}
+              </span>
+            )}
           </Link>
 
           {/* Desktop Links */}

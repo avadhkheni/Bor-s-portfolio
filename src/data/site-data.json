@@ -2,7 +2,10 @@
   "brand": {
     "name": "Artsavvy",
     "tagline": "VISUAL & BRAND DESIGN STUDIO • EST. 2026",
-    "navCtaText": "Let's Talk"
+    "navCtaText": "Let's Talk",
+    "logoType": "both",
+    "logoImage": "",
+    "logoHeight": 32
   },
   "cloudStorage": {
     "provider": "imgbb",

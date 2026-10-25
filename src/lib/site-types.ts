@@ -45,6 +45,9 @@ export interface BrandSettings {
   name: string;
   tagline: string;
   navCtaText: string;
+  logoType?: "text" | "image" | "both";
+  logoImage?: string;
+  logoHeight?: number;
 }
 
 export type SectionTemplateType =

@@ -87,7 +87,7 @@ import {
 } from "@/lib/site-types";
 
 interface MediaPickerTarget {
-  type: "parallax" | "process" | "project-cover" | "project-gallery" | "custom-section-item" | "custom-page-cover" | "custom-page-item";
+  type: "parallax" | "process" | "project-cover" | "project-gallery" | "custom-section-item" | "custom-page-cover" | "custom-page-item" | "brand-logo";
   index?: number;
   sectionId?: string;
   itemIndex?: number;
@@ -801,6 +801,19 @@ export default function AdminPage() {
         setEditingPage({ ...editingPage, blocks: newBlocks });
         showToast("Page item image updated!", "success");
       }
+    } else if (mediaPickerTarget.type === "brand-logo") {
+      setData((prev) => ({
+        ...prev,
+        brand: {
+          ...prev.brand,
+          name: prev.brand?.name ?? "ARTSAVVY",
+          tagline: prev.brand?.tagline ?? "",
+          navCtaText: prev.brand?.navCtaText ?? "Let's Talk",
+          logoImage: url,
+          logoType: prev.brand?.logoType && prev.brand.logoType !== "text" ? prev.brand.logoType : "both",
+        },
+      }));
+      showToast("Brand logo image selected!", "success");
     }
 
     setMediaPickerTarget(null);
@@ -4006,29 +4019,269 @@ export default function AdminPage() {
           {activeTab === "brand" && (
             <div className="space-y-8 animate-fade-in">
               <div>
-                <h2 className="text-xl font-bold text-white tracking-tight">Brand Profile & Header CTA</h2>
+                <h2 className="text-xl font-bold text-white tracking-tight">Brand Logo & Header Navigation</h2>
                 <p className="text-xs text-white/50">
-                  Manage the global studio name, tagline, and navigation button text.
+                  Configure your navbar brand presentation: upload a logo image, show logo and text together, or choose text only.
                 </p>
               </div>
 
+              {/* LIVE NAVBAR HEADER PREVIEW */}
+              <div className="bg-[#12131c] border border-white/10 rounded-2xl p-6 shadow-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-white/60 uppercase tracking-wider flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-blue-400" />
+                    <span>Live Header Logo Preview</span>
+                  </span>
+                  <span className="text-[11px] text-white/40 font-mono">
+                    Mode: {data.brand?.logoType || "both"} • Height: {data.brand?.logoHeight || 32}px
+                  </span>
+                </div>
+
+                <div className="bg-black/80 border border-white/10 rounded-xl p-4 sm:p-6 flex items-center justify-between">
+                  {/* Brand Preview Left */}
+                  <div className="flex items-center gap-3">
+                    {((data.brand?.logoType || "both") === "image" || (data.brand?.logoType || "both") === "both") && data.brand?.logoImage && (
+                      <img
+                        src={data.brand.logoImage}
+                        alt="Logo Preview"
+                        style={{ height: `${data.brand?.logoHeight || 32}px`, maxHeight: "56px" }}
+                        className="w-auto object-contain shrink-0"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    )}
+                    {((data.brand?.logoType || "both") === "text" || (data.brand?.logoType || "both") === "both" || !data.brand?.logoImage) && (
+                      <span className="text-sm md:text-base font-extrabold tracking-widest text-white uppercase select-none">
+                        {data.brand?.name || "ARTSAVVY"}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Nav links preview */}
+                  <div className="hidden sm:flex items-center gap-4 text-xs text-white/40">
+                    <span>Work</span>
+                    <span>Process</span>
+                    <span>Philosophy</span>
+                    <span className="px-3 py-1 rounded-full bg-white/10 text-white text-xs font-medium">
+                      {data.brand?.navCtaText || "Let's Talk"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* LOGO DISPLAY MODE & IMAGE CONFIGURATION */}
               <div className="bg-[#12131c] border border-white/10 rounded-2xl p-6 shadow-xl space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-white/60 uppercase tracking-wider block mb-2">
+                    Navbar Display Mode
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[
+                      { type: "both", label: "Logo & Text (Both)", desc: "Show logo image and brand name side by side" },
+                      { type: "image", label: "Logo Image Only", desc: "Show only the graphic logo icon" },
+                      { type: "text", label: "Text Name Only", desc: "Show clean typographical brand name" },
+                    ].map((opt) => {
+                      const isSelected = (data.brand?.logoType || "both") === opt.type;
+                      return (
+                        <button
+                          key={opt.type}
+                          type="button"
+                          onClick={() =>
+                            setData((prev) => ({
+                              ...prev,
+                              brand: {
+                                ...prev.brand,
+                                name: prev.brand?.name ?? "ARTSAVVY",
+                                tagline: prev.brand?.tagline ?? "",
+                                navCtaText: prev.brand?.navCtaText ?? "Let's Talk",
+                                logoType: opt.type as "text" | "image" | "both",
+                              },
+                            }))
+                          }
+                          className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                            isSelected
+                              ? "bg-blue-600/15 border-blue-500 text-white shadow-lg shadow-blue-500/10"
+                              : "bg-black/30 border-white/10 text-white/70 hover:border-white/20"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-bold text-white">{opt.label}</span>
+                            {isSelected && <CheckCircle2 className="w-4 h-4 text-blue-400" />}
+                          </div>
+                          <p className="text-[11px] text-white/50 leading-relaxed">{opt.desc}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* LOGO IMAGE CONTROLS (Only visible if mode includes image) */}
+                {(data.brand?.logoType || "both") !== "text" && (
+                  <div className="pt-4 border-t border-white/10 space-y-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div>
+                        <label className="text-xs font-semibold text-white/60 uppercase tracking-wider block">
+                          Logo Graphic / Image Asset
+                        </label>
+                        <p className="text-[11px] text-white/40">
+                          Upload transparent PNG, SVG, or choose from cloud media library.
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setMediaPickerTarget({ type: "brand-logo" })}
+                          className="px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <FolderOpen className="w-3.5 h-3.5" />
+                          <span>Choose from Cloud Media</span>
+                        </button>
+
+                        <label className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer">
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Upload New Logo</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const url = await uploadSingleFileToCloud(file);
+                                if (url) {
+                                  setData((prev) => ({
+                                    ...prev,
+                                    brand: {
+                                      ...prev.brand,
+                                      name: prev.brand?.name ?? "ARTSAVVY",
+                                      tagline: prev.brand?.tagline ?? "",
+                                      navCtaText: prev.brand?.navCtaText ?? "Let's Talk",
+                                      logoImage: url,
+                                    },
+                                  }));
+                                  showToast("Logo uploaded and set to navbar!", "success");
+                                }
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Logo Image URL & Preview */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                      <div className="md:col-span-3">
+                        <input
+                          type="text"
+                          value={data.brand?.logoImage || ""}
+                          placeholder="e.g. https://i.ibb.co/... or /logo.png"
+                          onChange={(e) =>
+                            setData((prev) => ({
+                              ...prev,
+                              brand: {
+                                ...prev.brand,
+                                name: prev.brand?.name ?? "ARTSAVVY",
+                                tagline: prev.brand?.tagline ?? "",
+                                navCtaText: prev.brand?.navCtaText ?? "Let's Talk",
+                                logoImage: e.target.value.trim(),
+                              },
+                            }))
+                          }
+                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 font-mono"
+                        />
+                      </div>
+
+                      {/* Small preview thumbnail with remove button */}
+                      <div className="flex items-center gap-3">
+                        {data.brand?.logoImage ? (
+                          <div className="flex items-center gap-2 bg-black/50 border border-white/10 rounded-lg p-1.5 px-3">
+                            <img
+                              src={data.brand.logoImage}
+                              alt="Logo"
+                              className="h-8 max-w-[80px] object-contain"
+                              onError={(e) => {
+                                e.currentTarget.style.display = "none";
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setData((prev) => ({
+                                  ...prev,
+                                  brand: {
+                                    ...prev.brand,
+                                    name: prev.brand?.name ?? "ARTSAVVY",
+                                    tagline: prev.brand?.tagline ?? "",
+                                    navCtaText: prev.brand?.navCtaText ?? "Let's Talk",
+                                    logoImage: "",
+                                  },
+                                }))
+                              }
+                              title="Remove Logo"
+                              className="text-white/40 hover:text-red-400 p-1 transition-colors"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-white/30 italic">No image chosen</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Logo Height Adjustment */}
+                    <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                      <label className="text-xs font-semibold text-white/50 uppercase tracking-wider block">
+                        Logo Height: <span className="text-blue-400 font-mono">{data.brand?.logoHeight || 32}px</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="20"
+                        max="56"
+                        step="2"
+                        value={data.brand?.logoHeight || 32}
+                        onChange={(e) =>
+                          setData((prev) => ({
+                            ...prev,
+                            brand: {
+                              ...prev.brand,
+                              name: prev.brand?.name ?? "ARTSAVVY",
+                              tagline: prev.brand?.tagline ?? "",
+                              navCtaText: prev.brand?.navCtaText ?? "Let's Talk",
+                              logoHeight: Number(e.target.value),
+                            },
+                          }))
+                        }
+                        className="w-48 accent-blue-500"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* TEXT FIELDS (Brand Name, CTA, Tagline) */}
+                <div className="pt-4 border-t border-white/10 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-semibold text-white/50 uppercase tracking-wider block mb-1.5">
-                      Studio / Brand Name
+                      Studio / Brand Name Text
                     </label>
                     <input
                       type="text"
                       value={data.brand?.name ?? ""}
-                      placeholder="e.g. PORTFOLIO"
+                      placeholder="e.g. ARTSAVVY"
                       onChange={(e) =>
                         setData((prev) => ({
                           ...prev,
-                          brand: { ...prev.brand, name: e.target.value, tagline: prev.brand?.tagline ?? "", navCtaText: prev.brand?.navCtaText ?? "Let's Talk" },
+                          brand: {
+                            ...prev.brand,
+                            name: e.target.value,
+                            tagline: prev.brand?.tagline ?? "",
+                            navCtaText: prev.brand?.navCtaText ?? "Let's Talk",
+                          },
                         }))
                       }
-                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 font-bold"
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 font-bold tracking-wider uppercase"
                     />
                   </div>
 
@@ -4043,7 +4296,12 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setData((prev) => ({
                           ...prev,
-                          brand: { ...prev.brand, navCtaText: e.target.value, name: prev.brand?.name ?? "PORTFOLIO", tagline: prev.brand?.tagline ?? "" },
+                          brand: {
+                            ...prev.brand,
+                            navCtaText: e.target.value,
+                            name: prev.brand?.name ?? "ARTSAVVY",
+                            tagline: prev.brand?.tagline ?? "",
+                          },
                         }))
                       }
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500"
@@ -4061,7 +4319,12 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setData((prev) => ({
                           ...prev,
-                          brand: { ...prev.brand, tagline: e.target.value, name: prev.brand?.name ?? "PORTFOLIO", navCtaText: prev.brand?.navCtaText ?? "Let's Talk" },
+                          brand: {
+                            ...prev.brand,
+                            tagline: e.target.value,
+                            name: prev.brand?.name ?? "ARTSAVVY",
+                            navCtaText: prev.brand?.navCtaText ?? "Let's Talk",
+                          },
                         }))
                       }
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500"
@@ -5589,6 +5852,8 @@ export default function AdminPage() {
                       ? `Methodology Step ${(mediaPickerTarget.index ?? 0) + 1}`
                       : mediaPickerTarget.type === "project-cover"
                       ? "Project Primary Cover"
+                      : mediaPickerTarget.type === "brand-logo"
+                      ? "Header Brand Logo"
                       : "Project Gallery"}
                   </span>
                 </h3>
