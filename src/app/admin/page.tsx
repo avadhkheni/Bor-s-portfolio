@@ -835,8 +835,8 @@ export default function AdminPage() {
         category: "Interactive & Brand System",
         year: new Date().getFullYear().toString(),
         url: "example-studio.design",
-        imageSrc: cloudFiles[0] || uploadedFiles[0] || "/images2/27.jpg",
-        secondaryImages: ["/images2/28.jpg", "/images2/29.jpg"],
+        imageSrc: cloudFiles[0] || uploadedFiles[0] || "https://i.ibb.co/xqbmhKS1/27.jpg",
+        secondaryImages: ["https://i.ibb.co/Jw2z9PgQ/28.jpg", "https://i.ibb.co/KxnRXWjZ/29.jpg"],
         tag: "Branding",
         description: "A comprehensive brand identity and kinetic digital experience designed for high-impact presence.",
         challenge: "Developing a refined aesthetic identity that commands attention across digital and physical touchpoints.",
@@ -1272,7 +1272,7 @@ export default function AdminPage() {
               id: "sp1",
               title: "Handcrafted Typographic Systems",
               description: "Every letterform and kerning pair is tested across high-resolution print and retina screens.",
-              image: "/images2/27.jpg",
+              image: "https://i.ibb.co/xqbmhKS1/27.jpg",
             },
             {
               id: "sp2",
@@ -1399,14 +1399,14 @@ export default function AdminPage() {
               title: "Raw Wireframe & Spatial Architecture",
               tag: "Stage 01: Strategy",
               description: "Rigorous wireframe grid establishing visual hierarchy and spatial rhythm.",
-              image: "/images2/28.jpg",
+              image: "https://i.ibb.co/Jw2z9PgQ/28.jpg",
             },
             {
               id: "cp2",
               title: "Polished Kinetic Flagship Masterpiece",
               tag: "Stage 02: Final Craft",
               description: "Hyper-refined typography, ambient lighting, and fluid interactive physics.",
-              image: "/images2/27.jpg",
+              image: "https://i.ibb.co/xqbmhKS1/27.jpg",
             },
           ],
         };
@@ -1427,7 +1427,7 @@ export default function AdminPage() {
               id: "vr1",
               title: "Watch 2026 Studio Reel (60 FPS)",
               description: "Click to experience our high-definition motion showcase.",
-              image: "/images2/29.jpg",
+              image: "https://i.ibb.co/KxnRXWjZ/29.jpg",
             },
           ],
         };
@@ -1444,10 +1444,10 @@ export default function AdminPage() {
           animation: "fade-up",
           glowColor: "none",
           items: [
-            { id: "tm1", title: "Avadh Kheni", subtitle: "Founder & Lead Director", description: "Brand architecture, digital flagships, and spatial motion.", image: "/images2/27.jpg" },
-            { id: "tm2", title: "Elena Vance", subtitle: "Design Systems & Type", description: "Bespoke variable fonts, token systems, and layout rhythm.", image: "/images2/28.jpg" },
-            { id: "tm3", title: "Julian Croft", subtitle: "Creative Frontend Engineer", description: "WebGL shaders, Next.js optimization, and physics engines.", image: "/images2/29.jpg" },
-            { id: "tm4", title: "Sophia Thorne", subtitle: "3D Motion & CGI Artist", description: "Photorealistic lighting, soft-body simulations, and launch films.", image: "/images2/30.jpg" },
+            { id: "tm1", title: "Avadh Kheni", subtitle: "Founder & Lead Director", description: "Brand architecture, digital flagships, and spatial motion.", image: "https://i.ibb.co/xqbmhKS1/27.jpg" },
+            { id: "tm2", title: "Elena Vance", subtitle: "Design Systems & Type", description: "Bespoke variable fonts, token systems, and layout rhythm.", image: "https://i.ibb.co/Jw2z9PgQ/28.jpg" },
+            { id: "tm3", title: "Julian Croft", subtitle: "Creative Frontend Engineer", description: "WebGL shaders, Next.js optimization, and physics engines.", image: "https://i.ibb.co/KxnRXWjZ/29.jpg" },
+            { id: "tm4", title: "Sophia Thorne", subtitle: "3D Motion & CGI Artist", description: "Photorealistic lighting, soft-body simulations, and launch films.", image: "https://i.ibb.co/ynH22M75/30.jpg" },
           ],
         };
         break;
@@ -1482,9 +1482,9 @@ export default function AdminPage() {
           animation: "fade-up",
           glowColor: "none",
           items: [
-            { id: "jp1", title: "The Death of Generic Flat Design", tag: "Design Essay", description: "Why tactile materiality and kinetic weight are reclaiming the digital web.", image: "/images2/27.jpg" },
-            { id: "jp2", title: "Engineering 60 FPS Micro-Interactions", tag: "Technical", description: "Deep dive into spring physics, composite layers, and browser rendering.", image: "/images2/28.jpg" },
-            { id: "jp3", title: "Why Custom Letterforms Build Moats", tag: "Strategy", description: "How proprietary logotypes instantly command higher category positioning.", image: "/images2/29.jpg" },
+            { id: "jp1", title: "The Death of Generic Flat Design", tag: "Design Essay", description: "Why tactile materiality and kinetic weight are reclaiming the digital web.", image: "https://i.ibb.co/xqbmhKS1/27.jpg" },
+            { id: "jp2", title: "Engineering 60 FPS Micro-Interactions", tag: "Technical", description: "Deep dive into spring physics, composite layers, and browser rendering.", image: "https://i.ibb.co/Jw2z9PgQ/28.jpg" },
+            { id: "jp3", title: "Why Custom Letterforms Build Moats", tag: "Strategy", description: "How proprietary logotypes instantly command higher category positioning.", image: "https://i.ibb.co/KxnRXWjZ/29.jpg" },
           ],
         };
         break;
@@ -1658,7 +1658,7 @@ export default function AdminPage() {
       title: "NEW STUDIO SUBPAGE",
       subtitle: "A bespoke dedicated narrative crafted for high-impact presence.",
       badge: "Special Release",
-      coverImage: cloudFiles[0] || uploadedFiles[0] || "/images2/27.jpg",
+      coverImage: cloudFiles[0] || uploadedFiles[0] || "https://i.ibb.co/xqbmhKS1/27.jpg",
       category: "studio",
       variant: "standard-editorial",
       metaDescription: "Dedicated subpage describing bespoke capabilities.",
@@ -2325,7 +2325,7 @@ export default function AdminPage() {
                               setData((prev) => ({ ...prev, parallaxImages: newArr }));
                             }}
                             className="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
-                            placeholder="https://i.ibb.co/... or /images2/1.jpg"
+                            placeholder="https://i.ibb.co/... or https://i.ibb.co/3mZttnPS/1.jpg"
                           />
                         </div>
 
@@ -2472,7 +2472,7 @@ export default function AdminPage() {
                       title: "New Workflow Step",
                       description: "Step description outlining deliverables and methodologies.",
                       details: ["Deliverable 1", "Deliverable 2"],
-                      image: "/images2/16.jpg",
+                      image: "https://i.ibb.co/QjnZJXm8/16.jpg",
                     };
                     setData((prev) => ({
                       ...prev,
@@ -5291,14 +5291,14 @@ export default function AdminPage() {
 
                   <div className="flex-1 w-full space-y-3">
                     <label className="text-xs font-semibold text-white/60 block">
-                      Image Path or Online URL (Supports ImgBB Cloud, /images2/..., or https://...)
+                      Image Path or Online URL (Supports ImgBB Cloud or https://...)
                     </label>
                     <input
                       type="text"
                       value={editingProject.imageSrc ?? ""}
                       onChange={(e) => setEditingProject({ ...editingProject, imageSrc: e.target.value })}
                       className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
-                      placeholder="e.g. https://i.ibb.co/... or /images2/27.jpg"
+                      placeholder="e.g. https://i.ibb.co/... or https://i.ibb.co/xqbmhKS1/27.jpg"
                     />
 
                     <div className="flex flex-wrap items-center gap-3">

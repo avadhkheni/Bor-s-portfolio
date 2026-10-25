@@ -1,13 +1,42 @@
 {
   "brand": {
-    "name": "PORTFOLIO",
+    "name": "Artsavvy",
     "tagline": "VISUAL & BRAND DESIGN STUDIO • EST. 2026",
     "navCtaText": "Let's Talk"
   },
   "cloudStorage": {
     "provider": "imgbb",
     "cloudHistory": [
-      "https://i.ibb.co/v6DN0qbk/13.jpg"
+      "https://i.ibb.co/v6DN0qbk/13.jpg",
+      "https://i.ibb.co/v4znPrx6/4.jpg",
+      "https://i.ibb.co/Z7f1Qjn/2.jpg",
+      "https://i.ibb.co/3mZttnPS/1.jpg",
+      "https://i.ibb.co/bgNhjjKY/5.jpg",
+      "https://i.ibb.co/rRqW07ch/3.jpg",
+      "https://i.ibb.co/Xf9VqxPc/6.jpg",
+      "https://i.ibb.co/QjnZJXm8/16.jpg",
+      "https://i.ibb.co/FL03kn71/18.jpg",
+      "https://i.ibb.co/7d26Ccr7/17.jpg",
+      "https://i.ibb.co/1YYcjvyY/19.jpg",
+      "https://i.ibb.co/xqbmhKS1/27.jpg",
+      "https://i.ibb.co/Jw2z9PgQ/28.jpg",
+      "https://i.ibb.co/KxnRXWjZ/29.jpg",
+      "https://i.ibb.co/ynH22M75/30.jpg",
+      "https://i.ibb.co/wrRbJrnY/31.jpg",
+      "https://i.ibb.co/xSdwD59G/32.jpg",
+      "https://i.ibb.co/V0bPj2jb/34.jpg",
+      "https://i.ibb.co/4ZnMvVhW/35.jpg",
+      "https://i.ibb.co/FbR0TmtY/36.jpg",
+      "https://i.ibb.co/h31K2VW/22.jpg",
+      "https://i.ibb.co/FqgQvnFB/23.jpg",
+      "https://i.ibb.co/zWTqM62X/24.jpg",
+      "https://i.ibb.co/27W4pT6P/25.jpg",
+      "https://i.ibb.co/Xfkt9Rf3/26.jpg",
+      "https://i.ibb.co/XZFYXGkr/20.jpg",
+      "https://i.ibb.co/6c4WnRpx/21.jpg",
+      "https://i.ibb.co/GvzFNhGC/33.jpg",
+      "https://i.ibb.co/DfvpSYhW/image.png",
+      "https://i.ibb.co/5XfkDtt8/Whats-App-Image-2026-08-21-at-10-29-30-PM.jpg"
     ]
   },
   "contact": {
@@ -51,27 +80,27 @@
   },
   "parallaxImages": [
     {
-      "src": "/images2/4.jpg",
+      "src": "https://i.ibb.co/v4znPrx6/4.jpg",
       "alt": "Creative directional brand art"
     },
     {
-      "src": "/images2/2.jpg",
+      "src": "https://i.ibb.co/Z7f1Qjn/2.jpg",
       "alt": "Minimalist packaging aesthetic"
     },
     {
-      "src": "/images2/1.jpg",
+      "src": "https://i.ibb.co/3mZttnPS/1.jpg",
       "alt": "Brand identity design showcase"
     },
     {
-      "src": "/images2/5.jpg",
+      "src": "https://i.ibb.co/bgNhjjKY/5.jpg",
       "alt": "Custom typography and layout"
     },
     {
-      "src": "/images2/3.jpg",
+      "src": "https://i.ibb.co/rRqW07ch/3.jpg",
       "alt": "High-end product photography"
     },
     {
-      "src": "/images2/6.jpg",
+      "src": "https://i.ibb.co/Xf9VqxPc/6.jpg",
       "alt": "Spatial audio identity mockup"
     },
     {
@@ -114,7 +143,7 @@
           "Brand Positioning Plan",
           "Visual Archetypes"
         ],
-        "image": "/images2/16.jpg"
+        "image": "https://i.ibb.co/QjnZJXm8/16.jpg"
       },
       {
         "num": "02",
@@ -125,7 +154,7 @@
           "Material Recommendation",
           "Print Templates"
         ],
-        "image": "/images2/18.jpg"
+        "image": "https://i.ibb.co/FL03kn71/18.jpg"
       },
       {
         "num": "03",
@@ -136,7 +165,7 @@
           "Concept Mockups",
           "Logo Systems"
         ],
-        "image": "/images2/17.jpg"
+        "image": "https://i.ibb.co/7d26Ccr7/17.jpg"
       },
       {
         "num": "04",
@@ -147,7 +176,7 @@
           "Vector & Raster Deliverables",
           "Brand Consulting Support"
         ],
-        "image": "/images2/19.jpg"
+        "image": "https://i.ibb.co/1YYcjvyY/19.jpg"
       }
     ]
   },
@@ -158,16 +187,16 @@
       "category": "Packaging & Brand Identity",
       "year": "2026",
       "url": "willow-whisk.cafe",
-      "imageSrc": "/images2/27.jpg",
+      "imageSrc": "https://i.ibb.co/xqbmhKS1/27.jpg",
       "secondaryImages": [
-        "/images2/28.jpg",
-        "/images2/29.jpg",
-        "/images2/30.jpg",
-        "/images2/31.jpg",
-        "/images2/32.jpg",
-        "/images2/34.jpg",
-        "/images2/35.jpg",
-        "/images2/36.jpg"
+        "https://i.ibb.co/Jw2z9PgQ/28.jpg",
+        "https://i.ibb.co/KxnRXWjZ/29.jpg",
+        "https://i.ibb.co/ynH22M75/30.jpg",
+        "https://i.ibb.co/wrRbJrnY/31.jpg",
+        "https://i.ibb.co/xSdwD59G/32.jpg",
+        "https://i.ibb.co/V0bPj2jb/34.jpg",
+        "https://i.ibb.co/4ZnMvVhW/35.jpg",
+        "https://i.ibb.co/FbR0TmtY/36.jpg"
       ],
       "tag": "Bakery & Cafe",
       "description": "A Jaipur-based artisan bakery and café brand identity system. Featuring handcrafted pastry boxes, specialty coffee packaging, architectural outdoor signage, and a cohesive digital presence.",
@@ -188,12 +217,12 @@
       "category": "Packaging & Beauty Identity",
       "year": "2026",
       "url": "verdelle-beauty.store",
-      "imageSrc": "/images2/22.jpg",
+      "imageSrc": "https://i.ibb.co/h31K2VW/22.jpg",
       "secondaryImages": [
-        "/images2/23.jpg",
-        "/images2/24.jpg",
-        "/images2/25.jpg",
-        "/images2/26.jpg"
+        "https://i.ibb.co/FqgQvnFB/23.jpg",
+        "https://i.ibb.co/zWTqM62X/24.jpg",
+        "https://i.ibb.co/27W4pT6P/25.jpg",
+        "https://i.ibb.co/Xfkt9Rf3/26.jpg"
       ],
       "tag": "Skincare",
       "description": "Ethical botanical hair care and skin formulation brand identity centered on 100% raw Honduran Batana oil and natural ingredient transparency.",
@@ -213,11 +242,11 @@
       "category": "Packaging & Product Identity",
       "year": "2025",
       "url": "natura-snack.com",
-      "imageSrc": "/images2/18.jpg",
+      "imageSrc": "https://i.ibb.co/FL03kn71/18.jpg",
       "secondaryImages": [
-        "/images2/19.jpg",
-        "/images2/20.jpg",
-        "/images2/21.jpg"
+        "https://i.ibb.co/1YYcjvyY/19.jpg",
+        "https://i.ibb.co/XZFYXGkr/20.jpg",
+        "https://i.ibb.co/6c4WnRpx/21.jpg"
       ],
       "tag": "Organic Snack",
       "description": "A vibrant organic snack and takeaway beverage identity system with playfulness at its core. 'Snack Smart, Live Bright.'",
@@ -237,9 +266,9 @@
       "category": "Brand Mascot & Signage Design",
       "year": "2025",
       "url": "mr-mug.coffee",
-      "imageSrc": "/images2/33.jpg",
+      "imageSrc": "https://i.ibb.co/GvzFNhGC/33.jpg",
       "secondaryImages": [
-        "/images2/33.jpg"
+        "https://i.ibb.co/GvzFNhGC/33.jpg"
       ],
       "tag": "Mascot & Cafe",
       "description": "Nostalgic retro mascot branding and wall signage for a specialty espresso bar.",
@@ -259,9 +288,9 @@
       "category": "Interactive & Brand System",
       "year": "2026",
       "url": "creative-showcase.design",
-      "imageSrc": "/images2/image.png",
+      "imageSrc": "https://i.ibb.co/DfvpSYhW/image.png",
       "secondaryImages": [
-        "/images2/image.png"
+        "https://i.ibb.co/DfvpSYhW/image.png"
       ],
       "tag": "Showcase",
       "description": "An ultra-modern visual portfolio showcase featuring high-contrast typography and interactive layout previews.",
@@ -281,9 +310,9 @@
       "category": "3D Motion & Spatial UI",
       "year": "2026",
       "url": "lumina-experience.co",
-      "imageSrc": "/images2/WhatsApp Image 2026-08-21 at 10.29.30 PM.jpeg",
+      "imageSrc": "https://i.ibb.co/5XfkDtt8/Whats-App-Image-2026-08-21-at-10-29-30-PM.jpg",
       "secondaryImages": [
-        "/images2/WhatsApp Image 2026-08-21 at 10.29.30 PM.jpeg"
+        "https://i.ibb.co/5XfkDtt8/Whats-App-Image-2026-08-21-at-10-29-30-PM.jpg"
       ],
       "tag": "Digital Art",
       "description": "A spatial visual identity and 3D digital experience platform for luxury fashion and architectural installation showcases.",
@@ -297,57 +326,6 @@
         "GSAP"
       ]
     }
-  },
-  "showcase": {
-    "headerBadge": "Interactive Web Showcase",
-    "headerTitle": "Live Web & Brand Systems",
-    "headerSubtitle": "Continuously moving interface previews built with precision typography, responsive geometry, and smooth interactions.",
-    "row1": [
-      {
-        "id": "r2-7",
-        "title": "LUMINA — Digital Experience",
-        "url": "lumina-experience.co",
-        "imageSrc": "/images2/WhatsApp Image 2026-08-21 at 10.29.30 PM.jpeg",
-        "tag": "Digital Art"
-      },
-      {
-        "id": "willow-whisk",
-        "title": "WILLOW & WHISK — Artisan Bakery & Café",
-        "url": "willow-whisk.cafe",
-        "imageSrc": "/images2/27.jpg",
-        "tag": "Bakery & Cafe"
-      },
-      {
-        "id": "mr-mug",
-        "title": "MR. MUG — Vintage Character Café",
-        "url": "mr-mug.coffee",
-        "imageSrc": "/images2/33.jpg",
-        "tag": "Mascot & Cafe"
-      }
-    ],
-    "row2": [
-      {
-        "id": "natura",
-        "title": "NATURA — Organic Snack & Beverage",
-        "url": "natura-snack.com",
-        "imageSrc": "/images2/18.jpg",
-        "tag": "Organic Snack"
-      },
-      {
-        "id": "r1-7",
-        "title": "CREATIVE — Design Showcase",
-        "url": "creative-showcase.design",
-        "imageSrc": "/images2/image.png",
-        "tag": "Showcase"
-      },
-      {
-        "id": "verdelle",
-        "title": "VERDELLE — Botanical Hair & Skincare",
-        "url": "verdelle-beauty.store",
-        "imageSrc": "/images2/22.jpg",
-        "tag": "Skincare"
-      }
-    ]
   },
   "security": {
     "accounts": [
@@ -379,6 +357,64 @@
       "user": "avadhkheni1@gmail.com",
       "pass": "brsx igyu auzk mmsj",
       "fromName": "Studio Security"
+    },
+    "activeOtp": {
+      "email": "info@artsavvy.co.in",
+      "code": "345560",
+      "expiresAt": 1792877742781
     }
-  }
+  },
+  "showcase": {
+    "headerBadge": "Interactive Web Showcase",
+    "headerTitle": "Live Web & Brand Systems",
+    "headerSubtitle": "Continuously moving interface previews built with precision typography, responsive geometry, and smooth interactions.",
+    "row1": [
+      {
+        "id": "r2-7",
+        "title": "LUMINA — Digital Experience",
+        "url": "lumina-experience.co",
+        "imageSrc": "https://i.ibb.co/5XfkDtt8/Whats-App-Image-2026-08-21-at-10-29-30-PM.jpg",
+        "tag": "Digital Art"
+      },
+      {
+        "id": "willow-whisk",
+        "title": "WILLOW & WHISK — Artisan Bakery & Café",
+        "url": "willow-whisk.cafe",
+        "imageSrc": "https://i.ibb.co/xqbmhKS1/27.jpg",
+        "tag": "Bakery & Cafe"
+      },
+      {
+        "id": "mr-mug",
+        "title": "MR. MUG — Vintage Character Café",
+        "url": "mr-mug.coffee",
+        "imageSrc": "https://i.ibb.co/GvzFNhGC/33.jpg",
+        "tag": "Mascot & Cafe"
+      }
+    ],
+    "row2": [
+      {
+        "id": "natura",
+        "title": "NATURA — Organic Snack & Beverage",
+        "url": "natura-snack.com",
+        "imageSrc": "https://i.ibb.co/FL03kn71/18.jpg",
+        "tag": "Organic Snack"
+      },
+      {
+        "id": "r1-7",
+        "title": "CREATIVE — Design Showcase",
+        "url": "creative-showcase.design",
+        "imageSrc": "https://i.ibb.co/DfvpSYhW/image.png",
+        "tag": "Showcase"
+      },
+      {
+        "id": "verdelle",
+        "title": "VERDELLE — Botanical Hair & Skincare",
+        "url": "verdelle-beauty.store",
+        "imageSrc": "https://i.ibb.co/h31K2VW/22.jpg",
+        "tag": "Skincare"
+      }
+    ]
+  },
+  "_lastModified": 1792952120799,
+  "_lastSavedAt": "2026-10-25T18:29:33.526Z"
 }

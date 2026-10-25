@@ -101,7 +101,7 @@ export function PageVarietyRenderer({
               className="min-w-[85vw] sm:min-w-[550px] lg:min-w-[700px] aspect-[16/10] bg-[#0c0d15] rounded-3xl border border-white/15 overflow-hidden relative group flex flex-col justify-end p-8 snap-center shrink-0 shadow-2xl"
             >
               <img
-                src={item.image || page.coverImage || "/images2/27.jpg"}
+                src={item.image || page.coverImage || "https://i.ibb.co/xqbmhKS1/27.jpg"}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60"
               />
@@ -219,7 +219,7 @@ export function PageVarietyRenderer({
             </div>
             <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-neutral-900 border border-white/10 shadow-2xl">
               <img
-                src={item.image || page.coverImage || "/images2/28.jpg"}
+                src={item.image || page.coverImage || "https://i.ibb.co/Jw2z9PgQ/28.jpg"}
                 alt=""
                 className="w-full h-full object-cover filter contrast-110"
               />

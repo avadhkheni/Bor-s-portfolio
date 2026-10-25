@@ -13,13 +13,13 @@ interface ZoomParallaxProps {
 }
 
 const defaultParallaxImages: Image[] = [
-  { src: "/images2/1.jpg", alt: "Brand identity design showcase" },
-  { src: "/images2/2.jpg", alt: "Minimalist packaging aesthetic" },
-  { src: "/images2/3.jpg", alt: "High-end product photography" },
-  { src: "/images2/4.jpg", alt: "Creative directional brand art" },
-  { src: "/images2/5.jpg", alt: "Custom typography and layout" },
-  { src: "/images2/6.jpg", alt: "Spatial audio identity mockup" },
-  { src: "/images2/7.jpg", alt: "Cyber beverage package composition" },
+  { src: "https://i.ibb.co/3mZttnPS/1.jpg", alt: "Brand identity design showcase" },
+  { src: "https://i.ibb.co/Z7f1Qjn/2.jpg", alt: "Minimalist packaging aesthetic" },
+  { src: "https://i.ibb.co/rRqW07ch/3.jpg", alt: "High-end product photography" },
+  { src: "https://i.ibb.co/v4znPrx6/4.jpg", alt: "Creative directional brand art" },
+  { src: "https://i.ibb.co/bgNhjjKY/5.jpg", alt: "Custom typography and layout" },
+  { src: "https://i.ibb.co/Xf9VqxPc/6.jpg", alt: "Spatial audio identity mockup" },
+  { src: "https://i.ibb.co/KpJfz5b6/7.jpg", alt: "Cyber beverage package composition" },
 ];
 
 export function ZoomParallax({ images }: ZoomParallaxProps) {

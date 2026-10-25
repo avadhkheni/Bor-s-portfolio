@@ -392,7 +392,7 @@ export function DynamicCustomSectionRenderer({
                 className="relative rounded-3xl overflow-hidden aspect-[16/10] bg-neutral-900 border border-white/15 shadow-2xl group"
               >
                 <img
-                  src={section.items[0].image || "/images2/27.jpg"}
+                  src={section.items[0].image || "https://i.ibb.co/xqbmhKS1/27.jpg"}
                   alt={section.items[0].title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -657,7 +657,7 @@ export function DynamicCustomSectionRenderer({
               >
                 <div className="aspect-square rounded-2xl overflow-hidden bg-neutral-900 border border-white/5">
                   <img
-                    src={item.image || "/images2/27.jpg"}
+                    src={item.image || "https://i.ibb.co/xqbmhKS1/27.jpg"}
                     alt={item.title}
                     className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500"
                   />
