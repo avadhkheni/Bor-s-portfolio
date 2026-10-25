@@ -275,6 +275,7 @@ export function ScrollExpandMedia({
                       alt={title || 'Media content'}
                       width={1280}
                       height={720}
+                      unoptimized
                       className='w-full h-full object-cover rounded-xl'
                     />
 

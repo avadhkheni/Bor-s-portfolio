@@ -192,6 +192,7 @@ export function ProcessSection() {
                     src={step.image}
                     alt={step.title}
                     fill
+                    unoptimized
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-w-768px) 100vw, 400px"
                   />
