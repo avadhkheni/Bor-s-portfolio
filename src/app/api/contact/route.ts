@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { promises as fs } from "fs";
 import path from "path";
-import { isMongoConfigured, getSiteDataFromMongo } from "@/lib/mongodb";
+import { isMongoConfigured, getSiteDataFromMongo, getMongoDb } from "@/lib/mongodb";
 
 const RUNTIME_DATA_PATH = path.join(process.cwd(), "data", "site-data.json");
 const FALLBACK_DATA_PATH = path.join(process.cwd(), "src", "data", "site-data.json");
@@ -74,7 +74,14 @@ export async function POST(request: NextRequest) {
     }
 
     const { smtp, contactEmail } = await getSiteSecurityAndContact();
-    const recipient = contactEmail || TARGET_EMAIL;
+    const domainEmail = contactEmail || TARGET_EMAIL;
+    const gmailAccount = smtp?.user || process.env.SMTP_USER || "avadhkheni1@gmail.com";
+
+    // Build recipient list containing BOTH your domain email and your personal Gmail
+    const recipientList = Array.from(
+      new Set([domainEmail, gmailAccount, TARGET_EMAIL, "avadhkheni1@gmail.com"])
+    ).filter((em): em is string => Boolean(em) && em.includes("@"));
+    const recipientString = recipientList.join(", ");
 
     // Configure Transporter
     const smtpUser = smtp?.user || process.env.SMTP_USER || "avadhkheni1@gmail.com";
@@ -196,7 +203,7 @@ export async function POST(request: NextRequest) {
                 <!-- FOOTER -->
                 <tr>
                   <td style="padding: 20px 36px; background-color: #0c0d12; border-top: 1px solid #1f202a; text-align: center; font-size: 11px; color: #5a5c6d;">
-                    ArtSavvy Portfolio Notification System &bull; Sent to ${recipient}
+                    ArtSavvy Portfolio Notification System &bull; Delivered to ${recipientString}
                   </td>
                 </tr>
 
@@ -208,18 +215,39 @@ export async function POST(request: NextRequest) {
       </html>
     `;
 
+    // 1. Dispatch email to BOTH Gmail and custom domain email
     await transporter.sendMail({
       from: `"${cleanName} via Portfolio" <${smtpUser}>`,
-      to: recipient,
+      to: recipientString,
       replyTo: cleanEmail,
       subject: `✨ Project Inquiry: ${cleanName} (${cleanType})`,
       html: htmlBody,
-      text: `New Inquiry from ${cleanName} (${cleanEmail})\nProject Type: ${cleanType}\n\nMessage:\n${cleanMessage}\n\nReceived: ${formattedDate}`,
+      text: `New Inquiry from ${cleanName} (${cleanEmail})\nProject Type: ${cleanType}\n\nMessage:\n${cleanMessage}\n\nReceived: ${formattedDate}\nDelivered to: ${recipientString}`,
     });
+
+    // 2. Also archive permanently in MongoDB database
+    if (isMongoConfigured()) {
+      try {
+        const db = await getMongoDb();
+        if (db) {
+          await db.collection("inquiries").insertOne({
+            name: cleanName,
+            email: cleanEmail,
+            projectType: cleanType,
+            message: cleanMessage,
+            recipients: recipientList,
+            receivedAt: new Date().toISOString(),
+            status: "unread",
+          });
+        }
+      } catch (dbErr) {
+        console.warn("Failed to archive inquiry in MongoDB:", dbErr);
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      message: `Thank you, ${cleanName}! Your message has been delivered to ${recipient}. We will get back to you shortly.`,
+      message: `Thank you, ${cleanName}! Your message has been sent to our team at ${recipientList.join(" & ")}. We will get back to you shortly.`,
     });
   } catch (error: any) {
     console.error("Error sending contact email:", error);
