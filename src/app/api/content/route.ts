@@ -52,17 +52,7 @@ async function getEffectiveSiteData(): Promise<any> {
   }
 
   // Fallback to local files
-  let fileData = await readRawFile();
-
-  // If MongoDB is configured but empty, seed it with the current file data!
-  if (isMongoConfigured() && fileData && Object.keys(fileData).length > 0) {
-    try {
-      await saveSiteDataToMongo(fileData);
-    } catch (e) {
-      console.warn("MongoDB initial seed failed:", e);
-    }
-  }
-
+  const fileData = await readRawFile();
   return fileData;
 }
 
@@ -135,19 +125,32 @@ export async function POST(request: NextRequest) {
     const existingData = await getEffectiveSiteData();
     const mergedData = {
       ...updatedData,
-      security: existingData.security || updatedData.security,
+      security: existingData?.security || updatedData.security,
+      _lastModified: Date.now(),
     };
+
+    let mongoSaved = false;
+    let mongoError: string | null = null;
 
     // 1. If MongoDB is configured, save to MongoDB Cloud!
     if (isMongoConfigured()) {
-      await saveSiteDataToMongo(mergedData);
+      try {
+        mongoSaved = await saveSiteDataToMongo(mergedData);
+        if (!mongoSaved) {
+          mongoError = "MongoDB write failed. Please check MongoDB Atlas IP Access List (ensure 0.0.0.0/0 is whitelisted).";
+        }
+      } catch (err: any) {
+        mongoError = err.message || "MongoDB write error";
+      }
     }
 
-    // 2. Keep runtime disk file synced
+    // 2. Keep runtime disk file synced (local development / ephemeral fallback)
+    let diskSaved = false;
     try {
       const runtimeDir = path.dirname(RUNTIME_DATA_FILE_PATH);
       await fs.mkdir(runtimeDir, { recursive: true });
       await fs.writeFile(RUNTIME_DATA_FILE_PATH, JSON.stringify(mergedData, null, 2), "utf-8");
+      diskSaved = true;
     } catch {}
 
     // 3. Keep fallback git repository file synced
@@ -156,6 +159,21 @@ export async function POST(request: NextRequest) {
       await fs.mkdir(fallbackDir, { recursive: true });
       await fs.writeFile(FALLBACK_DATA_FILE_PATH, JSON.stringify(mergedData, null, 2), "utf-8");
     } catch {}
+
+    // Check if persistence actually succeeded
+    const isProduction = process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL);
+    if (isProduction && isMongoConfigured() && !mongoSaved) {
+      console.error("CRITICAL: Failed to persist to MongoDB in production:", mongoError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: mongoError || "Database save failed: MongoDB Atlas rejected connection. Please ensure IP 0.0.0.0/0 (Anywhere) is whitelisted in MongoDB Atlas -> Network Access.",
+          savedToMongo: false,
+          savedToDisk: diskSaved,
+        },
+        { status: 500 }
+      );
+    }
 
     // 4. Force immediate on-demand cache purge so live pages reflect changes immediately
     try {
@@ -168,6 +186,8 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: "Site content updated successfully",
+        savedToMongo: mongoSaved,
+        savedToDisk: diskSaved,
         timestamp: Date.now(),
       },
       {

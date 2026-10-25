@@ -50,11 +50,12 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
       try {
         const res = await fetch(`/api/content?_t=${Date.now()}`, {
           cache: "no-store",
+          credentials: "include",
           headers: { "Cache-Control": "no-cache" }
         });
         if (res.ok) {
           const serverData = await res.json();
-          if (isMounted && serverData && !serverData.error) {
+          if (isMounted && serverData && !serverData.error && Object.keys(serverData).length > 2) {
             setData(serverData);
             setSavedData(serverData);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
@@ -113,10 +114,13 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch("/api/content", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify(dataToSave),
         });
 
-        if (res.ok) {
+        const resData = await res.json().catch(() => null);
+
+        if (res.ok && resData?.success !== false) {
           setData(dataToSave);
           setSavedData(dataToSave);
           setLastSaved(Date.now());
@@ -126,11 +130,19 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
           } catch {}
           return true;
         } else {
-          console.error("Save failed with status:", res.status);
+          const errMsg = resData?.error || `Save failed with status ${res.status}`;
+          console.error("Save failed:", errMsg);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("portfolio_save_error", { detail: errMsg }));
+          }
           return false;
         }
-      } catch (err) {
-        console.error("Save request error:", err);
+      } catch (err: any) {
+        const msg = err?.message || "Network communication error";
+        console.error("Save request error:", msg);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("portfolio_save_error", { detail: msg }));
+        }
         return false;
       } finally {
         setIsSaving(false);

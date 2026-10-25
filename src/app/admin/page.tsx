@@ -615,13 +615,29 @@ export default function AdminPage() {
     }
   };
 
+  const [lastSaveError, setLastSaveError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const handleSaveErr = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail) {
+        setLastSaveError(customEvent.detail);
+      }
+    };
+    window.addEventListener("portfolio_save_error", handleSaveErr);
+    return () => window.removeEventListener("portfolio_save_error", handleSaveErr);
+  }, []);
+
   const handleSave = async (explicitData?: SiteData) => {
+    setLastSaveError(null);
     const dataToSave = explicitData || data;
     const success = await saveChanges(dataToSave);
     if (success) {
       showToast("All changes published live successfully!", "success");
     } else {
-      showToast("Failed to save changes. Please try again.", "error");
+      setTimeout(() => {
+        showToast(lastSaveError || "Failed to save changes. Check database connection & Atlas IP whitelist.", "error");
+      }, 50);
     }
   };
 

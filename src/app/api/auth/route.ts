@@ -61,15 +61,6 @@ async function readSiteData(): Promise<SiteData> {
     }
   }
 
-  // If MongoDB is configured but empty, seed it with the current data!
-  if (isMongoConfigured() && fileData && Object.keys(fileData).length > 0) {
-    try {
-      await saveSiteDataToMongo(fileData);
-    } catch (e) {
-      console.warn("MongoDB initial seed failed:", e);
-    }
-  }
-
   return fileData;
 }
 

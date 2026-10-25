@@ -47,7 +47,18 @@ function isAuthorized(request: NextRequest): boolean {
   }
 }
 
+import { isMongoConfigured, getSiteDataFromMongo, saveSiteDataToMongo } from "@/lib/mongodb";
+
 async function getSiteConfig() {
+  if (isMongoConfigured()) {
+    try {
+      const mongoData = await getSiteDataFromMongo();
+      if (mongoData && Object.keys(mongoData).length > 0) {
+        return mongoData;
+      }
+    } catch {}
+  }
+
   try {
     const raw = await fs.readFile(RUNTIME_DATA_FILE_PATH, "utf-8");
     return JSON.parse(raw);
@@ -73,7 +84,14 @@ async function saveCloudUrlToHistory(url: string) {
     if (!siteData.cloudStorage.cloudHistory.includes(url)) {
       siteData.cloudStorage.cloudHistory.unshift(url);
     }
-    await fs.writeFile(RUNTIME_DATA_FILE_PATH, JSON.stringify(siteData, null, 2), "utf-8");
+
+    if (isMongoConfigured()) {
+      await saveSiteDataToMongo(siteData);
+    }
+
+    try {
+      await fs.writeFile(RUNTIME_DATA_FILE_PATH, JSON.stringify(siteData, null, 2), "utf-8");
+    } catch {}
   } catch (err) {
     console.error("Error saving cloud history:", err);
   }

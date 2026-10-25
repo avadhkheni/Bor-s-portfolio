@@ -2,21 +2,23 @@ import { MongoClient, Db } from "mongodb";
 import dns from "dns";
 import { SiteData } from "./site-types";
 
-if (process.platform === "win32") {
-  try {
-    dns.setServers(["8.8.8.8", "8.8.4.4"]);
-  } catch {}
-}
+try {
+  dns.setServers(["8.8.8.8", "8.8.4.4", "1.1.1.1"]);
+} catch {}
 
 const DEFAULT_MONGODB_URI =
   "mongodb+srv://artsavvy:pradeep%402002@artsavvy.qkycjx3.mongodb.net/portfolio?retryWrites=true&w=majority";
 
 const options = {
   maxPoolSize: 10,
-  serverSelectionTimeoutMS: 5000,
+  serverSelectionTimeoutMS: 4000,
+  connectTimeoutMS: 6000,
+  socketTimeoutMS: 30000,
 };
 
 let cachedClient: MongoClient | null = null;
+let lastFailTime = 0;
+const FAIL_COOLDOWN_MS = 10000; // 10s cooldown before retrying if server is completely rejecting connections
 
 export function getMongoUri(): string {
   return process.env.MONGODB_URI || DEFAULT_MONGODB_URI;
@@ -37,14 +39,25 @@ export async function getMongoClient(): Promise<MongoClient | null> {
         await cachedClient.db("admin").command({ ping: 1 });
         return cachedClient;
       } catch {
+        try {
+          await cachedClient.close();
+        } catch {}
         cachedClient = null;
       }
     }
+
+    // Cooldown check to avoid locking up serverless invocations if Atlas is unreachable
+    if (Date.now() - lastFailTime < FAIL_COOLDOWN_MS) {
+      return null;
+    }
+
     const c = new MongoClient(uri, options);
     await c.connect();
     cachedClient = c;
+    lastFailTime = 0;
     return cachedClient;
   } catch (error) {
+    lastFailTime = Date.now();
     console.error("MongoDB Connection Failed:", error);
     cachedClient = null;
     return null;
