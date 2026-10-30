@@ -149,7 +149,7 @@ export default function AdminPage() {
   const [isTestingSmtp, setIsTestingSmtp] = React.useState(false);
   const [emailDeliveredLive, setEmailDeliveredLive] = React.useState<boolean | null>(null);
 
-  // ImgBB Cloud API Key state
+  // Cloudinary Cloud API Key state
   const [imgbbKeyInput, setImgbbKeyInput] = React.useState("");
   const [isSavingKey, setIsSavingKey] = React.useState(false);
 
@@ -208,6 +208,7 @@ export default function AdminPage() {
   const [uploadedFiles, setUploadedFiles] = React.useState<string[]>([]);
   const [stockFiles, setStockFiles] = React.useState<string[]>([]);
   const [hasImgbbKey, setHasImgbbKey] = React.useState(false);
+  const [hasCloudinary, setHasCloudinary] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
   const [copiedUrl, setCopiedUrl] = React.useState<string | null>(null);
 
@@ -585,6 +586,7 @@ export default function AdminPage() {
         setUploadedFiles(json.uploads || []);
         setStockFiles(json.stock || []);
         setHasImgbbKey(json.hasImgbbKey || false);
+        setHasCloudinary(json.hasCloudinary || false);
       }
     } catch (e) {
       console.error("Failed to load media files", e);
@@ -609,7 +611,7 @@ export default function AdminPage() {
         },
       }));
       setHasImgbbKey(Boolean(imgbbKeyInput.trim()));
-      showToast("ImgBB Cloud Storage API key saved! Click 'Save & Publish' to persist.", "success");
+      showToast("Cloudinary Cloud Storage API key saved! Click 'Save & Publish' to persist.", "success");
     } finally {
       setIsSavingKey(false);
     }
@@ -848,8 +850,8 @@ export default function AdminPage() {
         category: "Interactive & Brand System",
         year: new Date().getFullYear().toString(),
         url: "example-studio.design",
-        imageSrc: cloudFiles[0] || uploadedFiles[0] || "https://i.ibb.co/xqbmhKS1/27.jpg",
-        secondaryImages: ["https://i.ibb.co/Jw2z9PgQ/28.jpg", "https://i.ibb.co/KxnRXWjZ/29.jpg"],
+        imageSrc: cloudFiles[0] || uploadedFiles[0] || "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg",
+        secondaryImages: ["https://res.cloudinary.com/dh4rilktz/image/upload/v1793384406/artsavvy/28.jpg", "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384407/artsavvy/29.jpg"],
         tag: "Branding",
         description: "A comprehensive brand identity and kinetic digital experience designed for high-impact presence.",
         challenge: "Developing a refined aesthetic identity that commands attention across digital and physical touchpoints.",
@@ -1285,7 +1287,7 @@ export default function AdminPage() {
               id: "sp1",
               title: "Handcrafted Typographic Systems",
               description: "Every letterform and kerning pair is tested across high-resolution print and retina screens.",
-              image: "https://i.ibb.co/xqbmhKS1/27.jpg",
+              image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg",
             },
             {
               id: "sp2",
@@ -1412,14 +1414,14 @@ export default function AdminPage() {
               title: "Raw Wireframe & Spatial Architecture",
               tag: "Stage 01: Strategy",
               description: "Rigorous wireframe grid establishing visual hierarchy and spatial rhythm.",
-              image: "https://i.ibb.co/Jw2z9PgQ/28.jpg",
+              image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384406/artsavvy/28.jpg",
             },
             {
               id: "cp2",
               title: "Polished Kinetic Flagship Masterpiece",
               tag: "Stage 02: Final Craft",
               description: "Hyper-refined typography, ambient lighting, and fluid interactive physics.",
-              image: "https://i.ibb.co/xqbmhKS1/27.jpg",
+              image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg",
             },
           ],
         };
@@ -1440,7 +1442,7 @@ export default function AdminPage() {
               id: "vr1",
               title: "Watch 2026 Studio Reel (60 FPS)",
               description: "Click to experience our high-definition motion showcase.",
-              image: "https://i.ibb.co/KxnRXWjZ/29.jpg",
+              image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384407/artsavvy/29.jpg",
             },
           ],
         };
@@ -1457,10 +1459,10 @@ export default function AdminPage() {
           animation: "fade-up",
           glowColor: "none",
           items: [
-            { id: "tm1", title: "Avadh Kheni", subtitle: "Founder & Lead Director", description: "Brand architecture, digital flagships, and spatial motion.", image: "https://i.ibb.co/xqbmhKS1/27.jpg" },
-            { id: "tm2", title: "Elena Vance", subtitle: "Design Systems & Type", description: "Bespoke variable fonts, token systems, and layout rhythm.", image: "https://i.ibb.co/Jw2z9PgQ/28.jpg" },
-            { id: "tm3", title: "Julian Croft", subtitle: "Creative Frontend Engineer", description: "WebGL shaders, Next.js optimization, and physics engines.", image: "https://i.ibb.co/KxnRXWjZ/29.jpg" },
-            { id: "tm4", title: "Sophia Thorne", subtitle: "3D Motion & CGI Artist", description: "Photorealistic lighting, soft-body simulations, and launch films.", image: "https://i.ibb.co/ynH22M75/30.jpg" },
+            { id: "tm1", title: "Avadh Kheni", subtitle: "Founder & Lead Director", description: "Brand architecture, digital flagships, and spatial motion.", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg" },
+            { id: "tm2", title: "Elena Vance", subtitle: "Design Systems & Type", description: "Bespoke variable fonts, token systems, and layout rhythm.", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384406/artsavvy/28.jpg" },
+            { id: "tm3", title: "Julian Croft", subtitle: "Creative Frontend Engineer", description: "WebGL shaders, Next.js optimization, and physics engines.", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384407/artsavvy/29.jpg" },
+            { id: "tm4", title: "Sophia Thorne", subtitle: "3D Motion & CGI Artist", description: "Photorealistic lighting, soft-body simulations, and launch films.", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384410/artsavvy/30.jpg" },
           ],
         };
         break;
@@ -1495,9 +1497,9 @@ export default function AdminPage() {
           animation: "fade-up",
           glowColor: "none",
           items: [
-            { id: "jp1", title: "The Death of Generic Flat Design", tag: "Design Essay", description: "Why tactile materiality and kinetic weight are reclaiming the digital web.", image: "https://i.ibb.co/xqbmhKS1/27.jpg" },
-            { id: "jp2", title: "Engineering 60 FPS Micro-Interactions", tag: "Technical", description: "Deep dive into spring physics, composite layers, and browser rendering.", image: "https://i.ibb.co/Jw2z9PgQ/28.jpg" },
-            { id: "jp3", title: "Why Custom Letterforms Build Moats", tag: "Strategy", description: "How proprietary logotypes instantly command higher category positioning.", image: "https://i.ibb.co/KxnRXWjZ/29.jpg" },
+            { id: "jp1", title: "The Death of Generic Flat Design", tag: "Design Essay", description: "Why tactile materiality and kinetic weight are reclaiming the digital web.", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg" },
+            { id: "jp2", title: "Engineering 60 FPS Micro-Interactions", tag: "Technical", description: "Deep dive into spring physics, composite layers, and browser rendering.", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384406/artsavvy/28.jpg" },
+            { id: "jp3", title: "Why Custom Letterforms Build Moats", tag: "Strategy", description: "How proprietary logotypes instantly command higher category positioning.", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384407/artsavvy/29.jpg" },
           ],
         };
         break;
@@ -1671,7 +1673,7 @@ export default function AdminPage() {
       title: "NEW STUDIO SUBPAGE",
       subtitle: "A bespoke dedicated narrative crafted for high-impact presence.",
       badge: "Special Release",
-      coverImage: cloudFiles[0] || uploadedFiles[0] || "https://i.ibb.co/xqbmhKS1/27.jpg",
+      coverImage: cloudFiles[0] || uploadedFiles[0] || "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg",
       category: "studio",
       variant: "standard-editorial",
       metaDescription: "Dedicated subpage describing bespoke capabilities.",
@@ -2338,7 +2340,7 @@ export default function AdminPage() {
                               setData((prev) => ({ ...prev, parallaxImages: newArr }));
                             }}
                             className="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
-                            placeholder="https://i.ibb.co/... or https://i.ibb.co/3mZttnPS/1.jpg"
+                            placeholder="https://res.cloudinary.com/... or https://res.cloudinary.com/dh4rilktz/image/upload/v1793384352/artsavvy/1.jpg"
                           />
                         </div>
 
@@ -2485,7 +2487,7 @@ export default function AdminPage() {
                       title: "New Workflow Step",
                       description: "Step description outlining deliverables and methodologies.",
                       details: ["Deliverable 1", "Deliverable 2"],
-                      image: "https://i.ibb.co/QjnZJXm8/16.jpg",
+                      image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384392/artsavvy/16.jpg",
                     };
                     setData((prev) => ({
                       ...prev,
@@ -4176,7 +4178,7 @@ export default function AdminPage() {
                         <input
                           type="text"
                           value={data.brand?.logoImage || ""}
-                          placeholder="e.g. https://i.ibb.co/... or /logo.png"
+                          placeholder="e.g. https://res.cloudinary.com/... or /logo.png"
                           onChange={(e) =>
                             setData((prev) => ({
                               ...prev,
@@ -4768,7 +4770,7 @@ export default function AdminPage() {
                     <span>Media & 100% Free Cloud Storage</span>
                   </h2>
                   <p className="text-xs text-white/50">
-                    Upload images straight to the cloud via ImgBB global CDN. Zero storage used on your computer.
+                    Upload images straight to the cloud via Cloudinary global CDN. Zero storage used on your computer.
                   </p>
                 </div>
                 <button
@@ -4786,15 +4788,21 @@ export default function AdminPage() {
                       <Globe className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-white">ImgBB Free Cloud Storage</h3>
-                      <p className="text-xs text-white/50">Unlimited free image hosting • Worldwide high-speed CDN</p>
+                      <h3 className="text-sm font-bold text-white">
+                        {hasCloudinary ? "Cloudinary Global Media CDN" : "Cloudinary Free Cloud Storage"}
+                      </h3>
+                      <p className="text-xs text-white/50">
+                        {hasCloudinary
+                          ? "Ultra-fast global edge CDN • High availability • Zero rate limits"
+                          : "Unlimited free image hosting • Worldwide high-speed CDN"}
+                      </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    {hasImgbbKey ? (
+                    {hasCloudinary || hasImgbbKey ? (
                       <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Cloud Active
+                        <CheckCircle2 className="w-3.5 h-3.5" /> {hasCloudinary ? "Cloudinary Active" : "Cloud Active"}
                       </span>
                     ) : (
                       <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold">
@@ -4811,7 +4819,7 @@ export default function AdminPage() {
                     </div>
                     <input
                       type="password"
-                      placeholder="Paste your Free ImgBB API Key here..."
+                      placeholder="Paste your Free Cloudinary API Key here..."
                       value={imgbbKeyInput ?? ""}
                       onChange={(e) => setImgbbKeyInput(e.target.value)}
                       className="w-full bg-black/50 border border-white/15 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
@@ -4864,8 +4872,8 @@ export default function AdminPage() {
                   {isUploading ? "Uploading Directly to Cloud..." : "Click or Drag & Drop Images Here"}
                 </h3>
                 <p className="text-xs text-white/50 max-w-sm">
-                  {hasImgbbKey
-                    ? "Images upload straight to ImgBB CDN and receive permanent HTTPS links."
+                  {hasCloudinary || hasImgbbKey
+                    ? `Images upload straight to ${hasCloudinary ? "Cloudinary" : "Cloud"} CDN and receive permanent HTTPS links.`
                     : "Supports JPG, PNG, WEBP, SVG, and GIF."}
                 </p>
               </div>
@@ -4873,7 +4881,7 @@ export default function AdminPage() {
               {cloudFiles.length > 0 && (
                 <div className="space-y-4">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-                    <Cloud className="w-4 h-4 text-blue-400" /> ImgBB Cloud Assets ({cloudFiles.length})
+                    <Cloud className="w-4 h-4 text-blue-400" /> Cloud Assets ({cloudFiles.length})
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                     {cloudFiles.map((url) => (
@@ -5554,14 +5562,14 @@ export default function AdminPage() {
 
                   <div className="flex-1 w-full space-y-3">
                     <label className="text-xs font-semibold text-white/60 block">
-                      Image Path or Online URL (Supports ImgBB Cloud or https://...)
+                      Image Path or Online URL (Supports Cloudinary Cloud or https://...)
                     </label>
                     <input
                       type="text"
                       value={editingProject.imageSrc ?? ""}
                       onChange={(e) => setEditingProject({ ...editingProject, imageSrc: e.target.value })}
                       className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
-                      placeholder="e.g. https://i.ibb.co/... or https://i.ibb.co/xqbmhKS1/27.jpg"
+                      placeholder="e.g. https://res.cloudinary.com/... or https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg"
                     />
 
                     <div className="flex flex-wrap items-center gap-3">

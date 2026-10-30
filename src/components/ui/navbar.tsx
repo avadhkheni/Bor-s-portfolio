@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Compass, X, ArrowUpRight } from "lucide-react";
 import { useSiteContent } from "@/lib/content-context";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 import { DEFAULT_PAGES_DATA } from "@/lib/default-pages-data";
 
 export function Navbar() {
@@ -49,11 +50,10 @@ export function Navbar() {
     <>
       <header
         id="navbar-header"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
             ? "py-4 bg-background/70 backdrop-blur-md border-b border-white/5"
             : "py-6 bg-transparent"
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
           {/* Brand Logo Link */}
@@ -64,7 +64,7 @@ export function Navbar() {
           >
             {(logoType === "image" || logoType === "both") && logoImage && !imageError && (
               <img
-                src={logoImage}
+                src={getOptimizedImageUrl(logoImage, 200)}
                 alt={brandName}
                 style={{ height: `${logoHeight}px`, maxHeight: "56px" }}
                 className="w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-105"

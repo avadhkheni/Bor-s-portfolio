@@ -2,6 +2,7 @@
 
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useRef } from "react";
+import { AppImage } from "@/components/ui/app-image";
 
 interface Image {
   src: string;
@@ -13,13 +14,13 @@ interface ZoomParallaxProps {
 }
 
 const defaultParallaxImages: Image[] = [
-  { src: "https://i.ibb.co/3mZttnPS/1.jpg", alt: "Brand identity design showcase" },
-  { src: "https://i.ibb.co/Z7f1Qjn/2.jpg", alt: "Minimalist packaging aesthetic" },
-  { src: "https://i.ibb.co/rRqW07ch/3.jpg", alt: "High-end product photography" },
-  { src: "https://i.ibb.co/v4znPrx6/4.jpg", alt: "Creative directional brand art" },
-  { src: "https://i.ibb.co/bgNhjjKY/5.jpg", alt: "Custom typography and layout" },
-  { src: "https://i.ibb.co/Xf9VqxPc/6.jpg", alt: "Spatial audio identity mockup" },
-  { src: "https://i.ibb.co/KpJfz5b6/7.jpg", alt: "Cyber beverage package composition" },
+  { src: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384352/artsavvy/1.jpg", alt: "Brand identity design showcase" },
+  { src: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384396/artsavvy/2.jpg", alt: "Minimalist packaging aesthetic" },
+  { src: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384409/artsavvy/3.jpg", alt: "High-end product photography" },
+  { src: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384420/artsavvy/4.jpg", alt: "Creative directional brand art" },
+  { src: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384423/artsavvy/5.jpg", alt: "Custom typography and layout" },
+  { src: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384424/artsavvy/6.jpg", alt: "Spatial audio identity mockup" },
+  { src: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384425/artsavvy/7.jpg", alt: "Cyber beverage package composition" },
 ];
 
 export function ZoomParallax({ images }: ZoomParallaxProps) {
@@ -74,11 +75,13 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
                   : ""
               } `}
             >
-              <div className="relative h-[25vh] w-[25vw]">
-                <img
+              <div className="relative h-[25vh] w-[25vw] overflow-hidden">
+                <AppImage
                   key={`${src}-${index}`}
-                  src={src || "/placeholder.svg"}
+                  src={src}
                   alt={alt || `Parallax image ${index + 1}`}
+                  sizes="(max-width: 768px) 50vw, 35vw"
+                  priority={index < 2}
                   className="h-full w-full object-cover transition-opacity duration-300"
                 />
               </div>

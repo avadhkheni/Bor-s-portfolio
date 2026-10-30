@@ -6,7 +6,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "About the Studio",
     subtitle: "A modern design practice creating disciplined brand architecture and kinetic digital flagships.",
     badge: "Studio Ethos",
-    coverImage: "https://i.ibb.co/xqbmhKS1/27.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg",
     category: "studio",
     metaDescription: "Learn about our philosophy, leadership, and obsessive craft.",
     featuredInNav: true,
@@ -69,7 +69,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Capabilities & Services",
     subtitle: "Comprehensive creative direction spanning brand identity, kinetic engineering, and packaging.",
     badge: "What We Do",
-    coverImage: "https://i.ibb.co/Jw2z9PgQ/28.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384406/artsavvy/28.jpg",
     category: "services",
     metaDescription: "Explore our full suite of branding, web development, and structural packaging services.",
     featuredInNav: true,
@@ -134,7 +134,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Visual Work Archive",
     subtitle: "A chronological index of brand identity systems, digital platforms, and packaging artifacts.",
     badge: "2020 — 2026",
-    coverImage: "https://i.ibb.co/KxnRXWjZ/29.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384407/artsavvy/29.jpg",
     category: "work",
     metaDescription: "Browse all client releases, packaging prototypes, and digital case studies.",
     featuredInNav: true,
@@ -145,12 +145,12 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
         title: "Selected Artifacts & Releases",
         badge: "Catalog",
         items: [
-          { title: "Verdelle Botanics", subtitle: "2025 • Luxury Identity & Glassware", tag: "Packaging & Web", image: "https://i.ibb.co/ynH22M75/30.jpg" },
-          { title: "Apex Dynamics", subtitle: "2025 • High-Speed EV Branding", tag: "Kinetic UI", image: "https://i.ibb.co/wrRbJrnY/31.jpg" },
-          { title: "Willow & Whisk", subtitle: "2024 • Artisanal Bakery Packaging", tag: "Print System", image: "https://i.ibb.co/xSdwD59G/32.jpg" },
-          { title: "Lumina Research Labs", subtitle: "2024 • AI Infrastructure Flagship", tag: "Next.js WebGL", image: "https://i.ibb.co/GvzFNhGC/33.jpg" },
-          { title: "Natura Apothecary", subtitle: "2023 • Minimalist Skin Wellness", tag: "Full Scope", image: "https://i.ibb.co/V0bPj2jb/34.jpg" },
-          { title: "Chronos Horology", subtitle: "2023 • Luxury Swiss Timepieces", tag: "CGI & Identity", image: "https://i.ibb.co/4ZnMvVhW/35.jpg" },
+          { title: "Verdelle Botanics", subtitle: "2025 • Luxury Identity & Glassware", tag: "Packaging & Web", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384410/artsavvy/30.jpg" },
+          { title: "Apex Dynamics", subtitle: "2025 • High-Speed EV Branding", tag: "Kinetic UI", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384411/artsavvy/31.jpg" },
+          { title: "Willow & Whisk", subtitle: "2024 • Artisanal Bakery Packaging", tag: "Print System", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384412/artsavvy/32.jpg" },
+          { title: "Lumina Research Labs", subtitle: "2024 • AI Infrastructure Flagship", tag: "Next.js WebGL", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384412/artsavvy/33.jpg" },
+          { title: "Natura Apothecary", subtitle: "2023 • Minimalist Skin Wellness", tag: "Full Scope", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384414/artsavvy/34.jpg" },
+          { title: "Chronos Horology", subtitle: "2023 • Luxury Swiss Timepieces", tag: "CGI & Identity", image: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384414/artsavvy/35.jpg" },
         ],
       },
       {
@@ -169,7 +169,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Studio Journal & Essays",
     subtitle: "Critical observations on design systems, kinetic aesthetics, and category positioning.",
     badge: "Thought Leadership",
-    coverImage: "https://i.ibb.co/FbR0TmtY/36.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384416/artsavvy/36.jpg",
     category: "resources",
     blocks: [
       {
@@ -206,7 +206,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Honors & Recognitions",
     subtitle: "Celebrating international acclaim for excellence in visual identity and digital design.",
     badge: "Trophy Case",
-    coverImage: "https://i.ibb.co/0R0hWDfB/37.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384417/artsavvy/37.jpg",
     category: "studio",
     blocks: [
       {
@@ -229,7 +229,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Creative Coding & R&D Lab",
     subtitle: "Open-source shaders, generative geometry, and experimental web physics.",
     badge: "Interactive Lab",
-    coverImage: "https://i.ibb.co/pBHyzrhx/38.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384418/artsavvy/38.jpg",
     category: "lab",
     blocks: [
       {
@@ -251,7 +251,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Interactive Brand Guidelines",
     subtitle: "A digital living design system showcasing color tokens, typography scales, and iconography rules.",
     badge: "Design System",
-    coverImage: "https://i.ibb.co/NdgGqpsv/39.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384419/artsavvy/39.jpg",
     category: "resources",
     blocks: [
       {
@@ -273,7 +273,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Tactile Packaging Lab",
     subtitle: "Material experimentation across embossing, foil stamping, rigid boxes, and FSC-certified stocks.",
     badge: "Physical Craft",
-    coverImage: "https://i.ibb.co/GSP4PCc/40.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384421/artsavvy/40.jpg",
     category: "lab",
     blocks: [
       {
@@ -302,7 +302,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Typography & Specimen Foundry",
     subtitle: "Custom logotypes, bespoke variable font cuts, and editorial kerning studies.",
     badge: "Letterform Craft",
-    coverImage: "https://i.ibb.co/v6PTsvYL/11.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384386/artsavvy/11.jpg",
     category: "lab",
     blocks: [
       {
@@ -320,7 +320,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "3D Motion & Spatial CGI",
     subtitle: "High-fidelity product visualizers, spatial simulations, and launch films.",
     badge: "Spatial Simulation",
-    coverImage: "https://i.ibb.co/4ZpWj7Sc/12.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384387/artsavvy/12.jpg",
     category: "lab",
     blocks: [
       {
@@ -342,7 +342,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Client Roster & Partnerships",
     subtitle: "Collaborating with visionary founders, creative directors, and industry disruptors globally.",
     badge: "Partners",
-    coverImage: "https://i.ibb.co/9HhH9y9C/13.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384388/artsavvy/13.jpg",
     category: "studio",
     blocks: [
       {
@@ -365,7 +365,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "The 7-Stage Process Manifesto",
     subtitle: "A methodical framework designed to eliminate guesswork and guarantee excellence.",
     badge: "Methodology",
-    coverImage: "https://i.ibb.co/Df5S3fJF/14.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384389/artsavvy/14.jpg",
     category: "studio",
     blocks: [
       {
@@ -391,7 +391,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Brand Strategy & Positioning",
     subtitle: "Architecting category dominance through clarity, contrast, and conviction.",
     badge: "Strategic Core",
-    coverImage: "https://i.ibb.co/cc2XzZTV/15.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384391/artsavvy/15.jpg",
     category: "services",
     blocks: [
       {
@@ -409,7 +409,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Careers & Creative Fellowships",
     subtitle: "We are always seeking exceptional designers, creative coders, and writers.",
     badge: "Join Us",
-    coverImage: "https://i.ibb.co/QjnZJXm8/16.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384392/artsavvy/16.jpg",
     category: "studio",
     blocks: [
       {
@@ -431,7 +431,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Special Collaborations & Drops",
     subtitle: "Limited edition physical artifacts, artist editions, and studio merchandise.",
     badge: "Limited Edition",
-    coverImage: "https://i.ibb.co/7d26Ccr7/17.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384393/artsavvy/17.jpg",
     category: "lab",
     blocks: [
       {
@@ -452,7 +452,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Sustainability & Material Ethics",
     subtitle: "Our commitment to 100% recyclable, plastic-free packaging and carbon-neutral digital hosting.",
     badge: "Eco Ethics",
-    coverImage: "https://i.ibb.co/FL03kn71/18.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384394/artsavvy/18.jpg",
     category: "resources",
     blocks: [
       {
@@ -474,7 +474,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Press Kit & Media Assets",
     subtitle: "High-resolution studio photography, vector logos, and founder bios for publication.",
     badge: "Media Assets",
-    coverImage: "https://i.ibb.co/1YYcjvyY/19.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384395/artsavvy/19.jpg",
     category: "resources",
     blocks: [
       {
@@ -496,7 +496,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Transparent Engagement Tiers",
     subtitle: "Clear project scopes and retainer structures tailored for ambitious brands.",
     badge: "Investment",
-    coverImage: "https://i.ibb.co/xqbmhKS1/27.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg",
     category: "services",
     blocks: [
       {
@@ -544,7 +544,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Client Knowledgebase & FAQ",
     subtitle: "Transparent answers regarding our collaboration process, IP ownership, and deliverables.",
     badge: "Knowledgebase",
-    coverImage: "https://i.ibb.co/Jw2z9PgQ/28.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384406/artsavvy/28.jpg",
     category: "resources",
     blocks: [
       {
@@ -575,7 +575,7 @@ export const DEFAULT_PAGES_DATA: Record<string, CustomPage> = {
     title: "Book a Strategy Consultation",
     subtitle: "Schedule a private 30-minute introductory discovery session with our founding directors.",
     badge: "Direct Access",
-    coverImage: "https://i.ibb.co/KxnRXWjZ/29.jpg",
+    coverImage: "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384407/artsavvy/29.jpg",
     category: "studio",
     blocks: [
       {

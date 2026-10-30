@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { AppImage } from "@/components/ui/app-image";
 
 import { useSiteContent } from "@/lib/content-context";
 
@@ -23,11 +24,11 @@ function BrowserCard({ item }: { item: ShowcaseItem }) {
     >
       {/* Screenshot / Image container */}
       <div className="relative aspect-[16/10] overflow-hidden bg-neutral-900">
-        <img
+        <AppImage
           src={item.imageSrc}
           alt={item.title}
-          className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
-          loading="lazy"
+          sizes="(max-width: 768px) 340px, 440px"
+          className="object-top transition-transform duration-700 ease-out group-hover:scale-105"
         />
 
         {/* Top-left glassmorphic category tag */}

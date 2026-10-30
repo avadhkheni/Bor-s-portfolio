@@ -8,6 +8,7 @@ import { ArrowLeft, ExternalLink, Maximize2, X, ChevronRight, ChevronLeft, Spark
 import { ALL_PROJECTS } from "@/lib/projects-data";
 import { useSiteContent } from "@/lib/content-context";
 import { Navbar } from "@/components/ui/navbar";
+import { AppImage } from "@/components/ui/app-image";
 
 export default function ProjectPage() {
   const { data } = useSiteContent();
@@ -141,10 +142,12 @@ export default function ProjectPage() {
             }}
             className="relative cursor-pointer overflow-hidden aspect-[16/10] sm:aspect-[16/9] bg-neutral-950"
           >
-            <img
+            <AppImage
               src={project.imageSrc}
               alt={project.title}
-              className="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-102"
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              priority
+              className="object-top transition-transform duration-700 hover:scale-102"
             />
             {/* Click overlay hint */}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -222,10 +225,11 @@ export default function ProjectPage() {
                   }}
                   className="relative group rounded-xl overflow-hidden border border-white/15 bg-neutral-900 aspect-[16/10] cursor-pointer"
                 >
-                  <img
+                  <AppImage
                     src={img}
                     alt={`${project.title} asset ${i + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Maximize2 className="w-6 h-6 text-white" />
@@ -325,11 +329,11 @@ export default function ProjectPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`w-16 h-12 rounded-md overflow-hidden border-2 transition-all cursor-pointer ${
+                    className={`relative w-16 h-12 rounded-md overflow-hidden border-2 transition-all cursor-pointer ${
                       activeImageIndex === idx ? "border-white scale-110" : "border-white/20 opacity-50 hover:opacity-100"
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <AppImage src={img} alt={`Thumbnail ${idx + 1}`} sizes="64px" className="object-cover" />
                   </button>
                 ))}
               </div>

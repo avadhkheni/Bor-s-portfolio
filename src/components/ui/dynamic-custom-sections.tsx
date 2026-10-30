@@ -7,6 +7,7 @@ import {
   CustomSectionItem,
   AnimationPreset,
 } from "@/lib/site-types";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 import {
   Sparkles,
   ChevronDown,
@@ -305,7 +306,7 @@ export function DynamicCustomSectionRenderer({
                 <div className="flex items-center gap-3 pt-4 border-t border-white/10">
                   {item.image ? (
                     <img
-                      src={item.image}
+                      src={getOptimizedImageUrl(item.image, 100)}
                       alt={item.title}
                       className="w-10 h-10 rounded-full object-cover border border-white/20"
                     />
@@ -355,9 +356,8 @@ export function DynamicCustomSectionRenderer({
                       {item.title}
                     </span>
                     <ChevronDown
-                      className={`w-5 h-5 text-white/50 transition-transform duration-300 ${
-                        isOpen ? "rotate-180 text-blue-400" : ""
-                      }`}
+                      className={`w-5 h-5 text-white/50 transition-transform duration-300 ${isOpen ? "rotate-180 text-blue-400" : ""
+                        }`}
                     />
                   </button>
 
@@ -392,7 +392,7 @@ export function DynamicCustomSectionRenderer({
                 className="relative rounded-3xl overflow-hidden aspect-[16/10] bg-neutral-900 border border-white/15 shadow-2xl group"
               >
                 <img
-                  src={section.items[0].image || "https://i.ibb.co/xqbmhKS1/27.jpg"}
+                  src={getOptimizedImageUrl(section.items[0].image || "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg", 1200)}
                   alt={section.items[0].title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -441,7 +441,7 @@ export function DynamicCustomSectionRenderer({
               >
                 {item.image ? (
                   <img
-                    src={item.image}
+                    src={getOptimizedImageUrl(item.image, 400)}
                     alt={item.title}
                     className="max-h-8 object-contain filter grayscale hover:grayscale-0 transition-all"
                   />
@@ -465,11 +465,10 @@ export function DynamicCustomSectionRenderer({
                   whileInView="visible"
                   viewport={{ once: true }}
                   variants={variants}
-                  className={`p-8 rounded-3xl flex flex-col justify-between space-y-6 relative transition-all ${
-                    isPopular
+                  className={`p-8 rounded-3xl flex flex-col justify-between space-y-6 relative transition-all ${isPopular
                       ? "bg-gradient-to-b from-blue-950/40 to-[#0e0f18] border-2 border-blue-500 shadow-2xl shadow-blue-500/20 md:-translate-y-2"
                       : "bg-[#0e0f18] border border-white/10"
-                  }`}
+                    }`}
                 >
                   {isPopular && (
                     <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
@@ -497,19 +496,17 @@ export function DynamicCustomSectionRenderer({
                   {item.link ? (
                     <a
                       href={item.link}
-                      className={`w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-center transition-all ${
-                        isPopular
+                      className={`w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-center transition-all ${isPopular
                           ? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/30"
                           : "bg-white/10 hover:bg-white/20 text-white"
-                      }`}
+                        }`}
                     >
                       Book Engagement &rarr;
                     </a>
                   ) : (
                     <div
-                      className={`w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-center ${
-                        isPopular ? "bg-blue-600 text-white" : "bg-white/10 text-white"
-                      }`}
+                      className={`w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-center ${isPopular ? "bg-blue-600 text-white" : "bg-white/10 text-white"
+                        }`}
                     >
                       Inquire Tier
                     </div>
@@ -606,7 +603,7 @@ export function DynamicCustomSectionRenderer({
                 </span>
                 {item.image && (
                   <div className="aspect-[16/10] rounded-2xl overflow-hidden bg-black/60 border border-white/10">
-                    <img src={item.image} alt="" className="w-full h-full object-cover" />
+                    <img src={getOptimizedImageUrl(item.image, 600)} alt="" className="w-full h-full object-cover" />
                   </div>
                 )}
                 <h4 className="text-xl font-bold text-white">{item.title}</h4>
@@ -627,7 +624,7 @@ export function DynamicCustomSectionRenderer({
           >
             {section.items[0]?.image && (
               <img
-                src={section.items[0].image}
+                src={getOptimizedImageUrl(section.items[0].image, 1400)}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
               />
@@ -657,7 +654,7 @@ export function DynamicCustomSectionRenderer({
               >
                 <div className="aspect-square rounded-2xl overflow-hidden bg-neutral-900 border border-white/5">
                   <img
-                    src={item.image || "https://i.ibb.co/xqbmhKS1/27.jpg"}
+                    src={getOptimizedImageUrl(item.image || "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg", 600)}
                     alt={item.title}
                     className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500"
                   />
@@ -713,7 +710,7 @@ export function DynamicCustomSectionRenderer({
               >
                 {item.image && (
                   <div className="aspect-[16/10] rounded-2xl overflow-hidden bg-neutral-900 border border-white/5">
-                    <img src={item.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={getOptimizedImageUrl(item.image, 800)} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
                 )}
                 <div className="space-y-2">

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSiteContent } from "@/lib/content-context";
 import { DEFAULT_PAGES_DATA } from "@/lib/default-pages-data";
 import { CustomPage, PageBlock } from "@/lib/site-types";
+import { AppImage } from "@/components/ui/app-image";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -162,10 +163,12 @@ export default function DynamicCustomPage() {
             transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="mt-12 rounded-3xl overflow-hidden aspect-[21/9] bg-neutral-900 border border-white/10 shadow-2xl relative"
           >
-            <img
+            <AppImage
               src={page.coverImage}
               alt={page.title}
-              className="w-full h-full object-cover"
+              sizes="100vw"
+              priority
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
           </motion.div>
@@ -275,8 +278,8 @@ export default function DynamicCustomPage() {
                     className="p-8 rounded-3xl bg-[#0e0f18] border border-white/10 hover:border-white/25 transition-all duration-300 flex flex-col justify-between space-y-6 shadow-xl hover:-translate-y-1"
                   >
                     {item.image && (
-                      <div className="rounded-2xl overflow-hidden aspect-[16/10] bg-neutral-900 border border-white/10 mb-2">
-                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                      <div className="relative rounded-2xl overflow-hidden aspect-[16/10] bg-neutral-900 border border-white/10 mb-2">
+                        <AppImage src={item.image} alt={item.title} sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                       </div>
                     )}
                     <div className="space-y-3">

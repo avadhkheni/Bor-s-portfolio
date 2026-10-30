@@ -3,6 +3,7 @@
 import * as React from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { ArrowUpRight } from "lucide-react";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 
 interface ProjectCardProps {
   id: string;
@@ -225,7 +226,7 @@ export function ProjectCard({
       {/* Optional real image */}
       {imageUrl && (
         <img
-          src={imageUrl}
+          src={getOptimizedImageUrl(imageUrl, 800)}
           alt={title}
           className="absolute inset-0 w-full h-full object-cover opacity-20"
           draggable={false}

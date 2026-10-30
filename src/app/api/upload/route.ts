@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import crypto from "crypto";
+import { v2 as cloudinary } from "cloudinary";
 
 const RUNTIME_DATA_FILE_PATH = path.join(process.cwd(), "data", "site-data.json");
 const FALLBACK_DATA_FILE_PATH = path.join(process.cwd(), "src", "data", "site-data.json");
@@ -101,6 +102,10 @@ export async function GET(request: NextRequest) {
   try {
     const siteConfig = await getSiteConfig();
     const cloud = siteConfig?.cloudStorage?.cloudHistory || [];
+    const hasCloudinary = Boolean(
+      (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) ||
+      (siteConfig?.cloudStorage?.cloudinaryCloudName && siteConfig?.cloudStorage?.cloudinaryApiKey && siteConfig?.cloudStorage?.cloudinaryApiSecret)
+    );
     const hasImgbbKey = Boolean(
       siteConfig?.cloudStorage?.imgbbApiKey || process.env.IMGBB_API_KEY
     );
@@ -130,6 +135,7 @@ export async function GET(request: NextRequest) {
       cloud,
       uploads,
       stock,
+      hasCloudinary,
       hasImgbbKey,
     });
   } catch (err: any) {
@@ -180,12 +186,54 @@ export async function POST(request: NextRequest) {
     const base64Image = buffer.toString("base64");
 
     const siteConfig = await getSiteConfig();
+
+    // 4. Cloudinary Storage (Primary & Recommended)
+    const cCloudName = process.env.CLOUDINARY_CLOUD_NAME || siteConfig?.cloudStorage?.cloudinaryCloudName;
+    const cApiKey = process.env.CLOUDINARY_API_KEY || siteConfig?.cloudStorage?.cloudinaryApiKey;
+    const cApiSecret = process.env.CLOUDINARY_API_SECRET || siteConfig?.cloudStorage?.cloudinaryApiSecret;
+
+    if (cCloudName && cApiKey && cApiSecret) {
+      try {
+        cloudinary.config({
+          cloud_name: cCloudName,
+          api_key: cApiKey,
+          api_secret: cApiSecret,
+        });
+
+        const dataUri = `data:${file.type || "image/jpeg"};base64,${base64Image}`;
+        const safeBaseName = path.basename(file.name, fileExt).replace(/[^a-zA-Z0-9_-]/g, "_");
+
+        const cRes = await cloudinary.uploader.upload(dataUri, {
+          folder: "artsavvy",
+          public_id: `${Date.now()}_${safeBaseName}`,
+          resource_type: "image",
+          overwrite: true,
+        });
+
+        if (cRes?.secure_url) {
+          const cloudUrl = cRes.secure_url;
+          await saveCloudUrlToHistory(cloudUrl);
+
+          return NextResponse.json({
+            success: true,
+            url: cloudUrl,
+            displayUrl: cloudUrl,
+            provider: "cloudinary",
+            filename: file.name,
+            size: file.size,
+          });
+        }
+      } catch (cloudErr) {
+        console.error("Cloudinary upload error:", cloudErr);
+      }
+    }
+
     const apiKey =
       customApiKey ||
       siteConfig?.cloudStorage?.imgbbApiKey ||
       process.env.IMGBB_API_KEY;
 
-    // 4. If ImgBB API Key is available, upload directly to ImgBB Cloud!
+    // 5. If ImgBB API Key is available, upload directly to ImgBB Cloud!
     if (apiKey && apiKey.trim().length > 5) {
       try {
         const imgbbForm = new FormData();

@@ -248,7 +248,10 @@ export interface SiteData {
     copyright: string;
   };
   cloudStorage?: {
-    provider?: "imgbb" | "local";
+    provider?: "cloudinary" | "imgbb" | "local";
+    cloudinaryCloudName?: string;
+    cloudinaryApiKey?: string;
+    cloudinaryApiSecret?: string;
     imgbbApiKey?: string;
     cloudHistory?: string[];
   };

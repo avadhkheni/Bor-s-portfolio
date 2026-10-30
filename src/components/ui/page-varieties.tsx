@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { CustomPage, PageLayoutVariant, PageBlock } from "@/lib/site-types";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 import {
   Sparkles,
   ArrowRight,
@@ -101,7 +102,7 @@ export function PageVarietyRenderer({
               className="min-w-[85vw] sm:min-w-[550px] lg:min-w-[700px] aspect-[16/10] bg-[#0c0d15] rounded-3xl border border-white/15 overflow-hidden relative group flex flex-col justify-end p-8 snap-center shrink-0 shadow-2xl"
             >
               <img
-                src={item.image || page.coverImage || "https://i.ibb.co/xqbmhKS1/27.jpg"}
+                src={getOptimizedImageUrl(item.image || page.coverImage || "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384405/artsavvy/27.jpg", 1000)}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60"
               />
@@ -140,7 +141,7 @@ export function PageVarietyRenderer({
             >
               {item.image && (
                 <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity">
-                  <img src={item.image} alt="" className="w-full h-full object-cover" />
+                  <img src={getOptimizedImageUrl(item.image, 800)} alt="" className="w-full h-full object-cover" />
                 </div>
               )}
               <div className="relative z-10 flex items-center justify-between">
@@ -219,7 +220,7 @@ export function PageVarietyRenderer({
             </div>
             <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-neutral-900 border border-white/10 shadow-2xl">
               <img
-                src={item.image || page.coverImage || "https://i.ibb.co/Jw2z9PgQ/28.jpg"}
+                src={getOptimizedImageUrl(item.image || page.coverImage || "https://res.cloudinary.com/dh4rilktz/image/upload/v1793384406/artsavvy/28.jpg", 1000)}
                 alt=""
                 className="w-full h-full object-cover filter contrast-110"
               />
@@ -365,7 +366,7 @@ export function PageVarietyRenderer({
         >
           {item.image && (
             <div className="rounded-2xl overflow-hidden aspect-[16/10] bg-neutral-900 border border-white/10 mb-2">
-              <img src={item.image} alt="" className="w-full h-full object-cover" />
+              <img src={getOptimizedImageUrl(item.image, 800)} alt="" className="w-full h-full object-cover" />
             </div>
           )}
           <div className="space-y-3">
